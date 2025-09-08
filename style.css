@@ -261,3 +261,88 @@ body {
     color: var(--map-green); 
     font-weight: 500; 
 }
+
+/* --- Parking Spaces Page --- */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.header-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-primary {
+    background-color: var(--primary-blue);
+    color: white;
+}
+
+.btn-secondary {
+    background-color: white;
+    color: var(--text-color-dark);
+    border: 1px solid var(--border-color);
+}
+
+.parking-grid {
+    display: grid;
+    /* Use auto-fit to better handle wrapping and alignment */
+    grid-template-columns: repeat(auto-fit, 349px); /* can be changed to 3 if want to be accurate to figma hehe */
+    gap: 20px; /* This value controls the space between cards */
+
+}
+
+.parking-space-card {
+    position: relative;
+    width: 349px;
+    height: 288px;  /* locked to Figma ratio */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+    color: white;
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+
+
+.parking-space-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 50%);
+    z-index: 1;
+}
+
+.parking-space-card * {
+    position: relative;
+    z-index: 2;
+}
+
+.parking-space-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.parking-space-availability {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+}
