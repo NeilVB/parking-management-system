@@ -12,37 +12,18 @@ document.addEventListener('DOMContentLoaded', function () {
             imageUrl: 'assets/football-field-front.png'
         },
         {
-            name: 'Cafeteria Front',
-            available: 9,
-            total: 15,
-            imageUrl: 'assets/cafeteria-front.png'
-        },
-        {
             name: 'Football Field Side',
-            available: 9,
-            total: 15,
+            available: 15,
+            total: 20,
             imageUrl: 'assets/football-field-side.png'
         },
-        
-                {
-            name: 'Football Fiel5d Front',
-            available: 13,
-            total: 25,
-            imageUrl: 'assets/football-field-front.png'
-        },
         {
-            name: 'Cafeter5ia Front',
-            available: 9,
-            total: 15,
+            name: 'Cafeteria Front',
+            available: 5,
+            total: 30,
             imageUrl: 'assets/cafeteria-front.png'
-        },
-        {
-            name: 'Footb5all Field Side',
-            available: 9,
-            total: 15,
-            imageUrl: 'assets/football-field-side.png'
-        },
-        
+        }
+
         
     ];
 
@@ -64,7 +45,75 @@ document.addEventListener('DOMContentLoaded', function () {
 
             grid.appendChild(card);
         });
+
+        // **This is the new part:**
+        // Now, create and append the "Add Parking Space" card at the end
+        const addCardHTML = `
+            <div class="add-space-card">
+                <div class="add-space-content">
+                    <i class="fas fa-plus"></i>
+                    <span>Add Parking Space</span>
+                </div>
+            </div>
+        `;
+        grid.insertAdjacentHTML('beforeend', addCardHTML);
+
+        // Add event listener for the newly created "Add" card
+        const addSpaceBtn = grid.querySelector('.add-space-card');
+        if (addSpaceBtn) {
+            addSpaceBtn.addEventListener('click', openAddSpaceModal);
+        }
+
         parkingSpacesRendered = true; // Set the flag to true
+    }
+
+    // --- Modal Functionality ---
+    const addSpaceModal = document.getElementById('add-space-modal');
+    const closeModalBtn = document.querySelector('.close-btn');
+    const addSpaceForm = document.getElementById('add-space-form');
+
+    function openAddSpaceModal() {
+        if (addSpaceModal) {
+            addSpaceModal.style.display = 'flex';
+        }
+    }
+
+    function closeAddSpaceModal() {
+        if (addSpaceModal) {
+            addSpaceModal.style.display = 'none';
+        }
+    }
+
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', closeAddSpaceModal);
+    }
+
+    window.addEventListener('click', (event) => {
+        if (event.target == addSpaceModal) {
+            closeAddSpaceModal();
+        }
+    });
+
+    if (addSpaceForm) {
+        addSpaceForm.addEventListener('submit', (event) => {
+            event.preventDefault(); // Prevent actual form submission
+            
+            const spaceName = document.getElementById('new-space-name').value;
+            const studentSlots = document.getElementById('student-visitor-slots').value;
+            const facultySlots = document.getElementById('faculty-slots').value;
+            const executiveSlots = document.getElementById('executive-slots').value;
+
+            console.log('New Parking Area:', {
+                name: spaceName,
+                student: studentSlots,
+                faculty: facultySlots,
+                executives: executiveSlots
+            });
+
+            alert(`Parking area "${spaceName}" would be created! Check the console for details.`);
+            addSpaceForm.reset();
+            closeAddSpaceModal();
+        });
     }
 
     // --- Initial Page Load ---

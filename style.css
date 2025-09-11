@@ -346,3 +346,139 @@ body {
     font-weight: 700;
     line-height: 1.1;
 }
+
+/* --- Add Parking Space Card --- */
+.add-space-card {
+    width: 349px;
+    height: 288px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+    border: 2px dashed #adb5bd;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.add-space-card:hover {
+    background-color: #e2e2e2;
+    border-color: #495057;
+}
+
+.add-space-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    color: #495057;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.add-space-content i {
+    font-size: 2.2rem;
+}
+
+/* --- Modal Styles --- */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #f4f4f4;
+    margin: auto;
+    padding: 30px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.close-btn {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: #333;
+}
+
+#add-space-form .form-group {
+    margin-bottom: 20px;
+}
+
+#add-space-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+}
+
+#add-space-form input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#add-space-form .form-group-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#add-space-form .number-input input[type="number"] {
+    width: 70px;
+    text-align: center;
+    font-size: 1rem;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Hides the default arrows on number inputs for some browsers */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+#add-space-form .btn-add-space {
+    width: 100%;
+    padding: 12px;
+    background-color: #28a745;
+    color: white;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+#add-space-form .btn-add-space:hover {
+    background-color: #218838;
+}
