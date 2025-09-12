@@ -1,150 +1,178 @@
 document.addEventListener('DOMContentLoaded', function () {
     const navLinks = document.querySelectorAll('.nav-item a');
     const contentSections = document.querySelectorAll('.content-section');
-    let parkingSpacesRendered = false; // Add a flag to track if we've rendered the cards
 
-    // --- Data for Parking Spaces ---
-    const parkingSpacesData = [
-        {
-            name: 'Football Field Front',
-            available: 13,
-            total: 25,
-            imageUrl: 'assets/football-field-front.png'
-        },
-        {
-            name: 'Football Field Side',
-            available: 15,
-            total: 20,
-            imageUrl: 'assets/football-field-side.png'
-        },
-        {
-            name: 'Cafeteria Front',
-            available: 5,
-            total: 30,
-            imageUrl: 'assets/cafeteria-front.png'
-        }
-
-        
-    ];
-
-    // --- Function to Render Parking Spaces ---
-    function renderParkingSpaces() {
-        const grid = document.querySelector('.parking-grid');
-        if (!grid || parkingSpacesRendered) return; // Don't re-render if already done
-        grid.innerHTML = ''; // Clear existing content
-
-        parkingSpacesData.forEach(space => {
-            const card = document.createElement('div');
-            card.className = 'parking-space-card';
-            card.style.backgroundImage = `url('${space.imageUrl}')`;
-
-            card.innerHTML = `
-                <span class="parking-space-name">${space.name}</span>
-                <span class="parking-space-availability">${space.available}/${space.total}</span>
-            `;
-
-            grid.appendChild(card);
-        });
-
-        // **This is the new part:**
-        // Now, create and append the "Add Parking Space" card at the end
-        const addCardHTML = `
-            <div class="add-space-card">
-                <div class="add-space-content">
-                    <i class="fas fa-plus"></i>
-                    <span>Add Parking Space</span>
-                </div>
-            </div>
-        `;
-        grid.insertAdjacentHTML('beforeend', addCardHTML);
-
-        // Add event listener for the newly created "Add" card
-        const addSpaceBtn = grid.querySelector('.add-space-card');
-        if (addSpaceBtn) {
-            addSpaceBtn.addEventListener('click', openAddSpaceModal);
-        }
-
-        parkingSpacesRendered = true; // Set the flag to true
-    }
-
-    // --- Modal Functionality ---
+    // --- Modal Elements (Add) ---
     const addSpaceModal = document.getElementById('add-space-modal');
-    const closeModalBtn = document.querySelector('.close-btn');
     const addSpaceForm = document.getElementById('add-space-form');
 
     function openAddSpaceModal() {
         if (addSpaceModal) {
             addSpaceModal.style.display = 'flex';
+            addSpaceModal.style.zIndex = '9999';
         }
     }
-
     function closeAddSpaceModal() {
-        if (addSpaceModal) {
-            addSpaceModal.style.display = 'none';
-        }
+        if (addSpaceModal) addSpaceModal.style.display = 'none';
     }
 
-    if (closeModalBtn) {
-        closeModalBtn.addEventListener('click', closeAddSpaceModal);
-    }
-
+    // Close add modal
+    document.querySelectorAll('#add-space-modal .close-btn').forEach(btn => {
+        btn.addEventListener('click', closeAddSpaceModal);
+    });
     window.addEventListener('click', (event) => {
-        if (event.target == addSpaceModal) {
+        if (event.target === addSpaceModal) {
             closeAddSpaceModal();
         }
     });
 
-    if (addSpaceForm) {
-        addSpaceForm.addEventListener('submit', (event) => {
-            event.preventDefault(); // Prevent actual form submission
-            
-            const spaceName = document.getElementById('new-space-name').value;
-            const studentSlots = document.getElementById('student-visitor-slots').value;
-            const facultySlots = document.getElementById('faculty-slots').value;
-            const executiveSlots = document.getElementById('executive-slots').value;
+    // --- Modal Elements (Edit) ---
+    const editSpaceModal = document.getElementById('edit-space-modal');
+    const editSpaceForm = document.getElementById('edit-space-form');
+    const deleteSpaceBtn = document.getElementById('delete-space-btn');
 
-            console.log('New Parking Area:', {
-                name: spaceName,
-                student: studentSlots,
-                faculty: facultySlots,
-                executives: executiveSlots
+    function openEditSpaceModal(space) {
+        document.getElementById('edit-space-id').value = space.id;
+        document.getElementById('edit-space-name').value = space.name;
+        document.getElementById('edit-space-max').value = space.max_space;
+        editSpaceModal.style.display = 'flex';
+    }
+    function closeEditSpaceModal() {
+        editSpaceModal.style.display = 'none';
+    }
+    document.querySelectorAll('#edit-space-modal .close-btn').forEach(btn => {
+        btn.addEventListener('click', closeEditSpaceModal);
+    });
+
+    // --- Fetch spaces from backend ---
+    async function loadParkingSpaces() {
+        try {
+            const response = await fetch('get_spaces.php');
+            const spaces = await response.json();
+            renderParkingSpaces(spaces);
+        } catch (err) {
+            console.error("Error loading parking spaces:", err);
+        }
+    }
+
+    // --- Render spaces into grid ---
+    function renderParkingSpaces(spaces) {
+        const grid = document.querySelector('.parking-grid');
+        if (!grid) return;
+        grid.innerHTML = '';
+
+        spaces.forEach(space => {
+            const available = space.max_space - space.used_space;
+            const card = document.createElement('div');
+            card.className = 'parking-space-card';
+
+            card.innerHTML = `
+                <span class="parking-space-name">${space.name}</span>
+                <span class="parking-space-availability">${available}/${space.max_space}</span>
+                <button class="btn-edit" data-id="${space.id}"><i class="fas fa-edit"></i></button>
+            `;
+
+            grid.appendChild(card);
+        });
+
+        // Bind edit button events
+        grid.querySelectorAll('.btn-edit').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                const space = spaces.find(s => s.id == id);
+                if (space) openEditSpaceModal(space);
             });
+        });
 
-            alert(`Parking area "${spaceName}" would be created! Check the console for details.`);
-            addSpaceForm.reset();
-            closeAddSpaceModal();
+        // Re-create the "Add Parking Space" card
+        const addCard = document.createElement('div');
+        addCard.className = 'add-space-card';
+        addCard.innerHTML = `
+            <div class="add-space-content">
+                <i class="fas fa-plus"></i>
+                <span>Add Parking Space</span>
+            </div>
+        `;
+        addCard.addEventListener('click', openAddSpaceModal);
+        grid.appendChild(addCard);
+    }
+
+    // --- Handle Add form submission ---
+    if (addSpaceForm) {
+        addSpaceForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const formData = new FormData(addSpaceForm);
+            try {
+                const response = await fetch('add_space.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                alert(result.message);
+                if (result.success) {
+                    addSpaceForm.reset();
+                    closeAddSpaceModal();
+                    loadParkingSpaces();
+                }
+            } catch (err) {
+                console.error("Error adding parking space:", err);
+                alert("Error adding parking space. Check console for details.");
+            }
         });
     }
 
-    // --- Initial Page Load ---
-    // We remove the initial call from here.
-    // renderParkingSpaces(); 
+    // --- Handle Edit form submission ---
+    if (editSpaceForm) {
+        editSpaceForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(editSpaceForm);
+            const response = await fetch('edit_space.php', { method: 'POST', body: formData });
+            const result = await response.json();
+            alert(result.message);
+            if (result.success) {
+                closeEditSpaceModal();
+                loadParkingSpaces();
+            }
+        });
+    }
+
+    // --- Handle Delete button ---
+    if (deleteSpaceBtn) {
+        deleteSpaceBtn.addEventListener('click', async () => {
+            if (!confirm("Are you sure you want to delete this parking space?")) return;
+            const id = document.getElementById('edit-space-id').value;
+            const response = await fetch('delete_space.php', {
+                method: 'POST',
+                body: new URLSearchParams({ id })
+            });
+            const result = await response.json();
+            alert(result.message);
+            if (result.success) {
+                closeEditSpaceModal();
+                loadParkingSpaces();
+            }
+        });
+    }
 
     // --- Navigation Logic ---
     navLinks.forEach(link => {
         link.addEventListener('click', function (e) {
             e.preventDefault();
-
             const targetId = this.getAttribute('data-target');
 
-            // --- New logic to render on demand ---
             if (targetId === 'parking-spaces') {
-                renderParkingSpaces();
+                loadParkingSpaces();
             }
 
-            // Update active state for nav items
+            // Update active state
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
             });
             this.parentElement.classList.add('active');
 
-            // Show the target content and hide others
+            // Show target content
             contentSections.forEach(section => {
-                if (section.id === targetId) {
-                    section.classList.add('active');
-                } else {
-                    section.classList.remove('active');
-                }
+                section.classList.toggle('active', section.id === targetId);
             });
         });
     });

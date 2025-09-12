@@ -158,40 +158,48 @@
 
     <!-- Add Parking Space Modal -->
     <div id="add-space-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <form id="add-space-form">
-                <div class="form-group">
-                    <label for="new-space-name">Parking Space Name</label>
-                    <input type="text" id="new-space-name" name="name" placeholder="e.g., Sampaloc Lane" required>
-                </div>
-
-                <div class="form-group-row">
-                    <label for="student-visitor-slots">Student/Visitor:</label>
-                    <div class="number-input">
-                        <input type="number" id="student-visitor-slots" name="student_visitor" value="0" min="0">
-                    </div>
-                </div>
-
-                <div class="form-group-row">
-                    <label for="faculty-slots">Faculty:</label>
-                    <div class="number-input">
-                        <input type="number" id="faculty-slots" name="faculty" value="0" min="0">
-                    </div>
-                </div>
-
-                <div class="form-group-row">
-                    <label for="executive-slots">Executives:</label>
-                    <div class="number-input">
-                        <input type="number" id="executive-slots" name="executives" value="0" min="0">
-                    </div>
-                </div>
-
-                <button type="submit" class="btn btn-add-space"><i class="fas fa-plus"></i> Add Parking Space</button>
-            </form>
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h3>Add Parking Space</h3>
+        <form id="add-space-form">
+        <div class="form-group">
+            <label for="new-space-name">Parking Space Name</label>
+            <input type="text" id="new-space-name" name="name" required>
         </div>
+        <div class="form-group">
+            <label for="new-space-max">Maximum Slots</label>
+            <input type="number" id="new-space-max" name="max_space" required min="1">
+        </div>
+        <button type="submit" class="btn-add-space">Add Space</button>
+        </form>
+    </div>
     </div>
 
+    <!-- Edit Parking Space Modal -->
+    <div id="edit-space-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h3>Edit Parking Space</h3>
+        <form id="edit-space-form">
+        <input type="hidden" id="edit-space-id" name="id">
+
+        <div class="form-group">
+            <label for="edit-space-name">Parking Space Name</label>
+            <input type="text" id="edit-space-name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="edit-space-max">Maximum Slots</label>
+            <input type="number" id="edit-space-max" name="max_space" required min="1">
+        </div>
+
+        <div class="modal-actions">
+            <button type="submit" class="btn-save">Save Changes</button>
+            <button type="button" class="btn-delete" id="delete-space-btn">Delete</button>
+        </div>
+        </form>
+    </div>
+    </div>
+    
     <script src="script.js"></script>
 </body>
 </html>

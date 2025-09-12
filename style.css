@@ -322,7 +322,6 @@ body {
 }
 
 
-
 .parking-space-card::before {
     content: '';
     position: absolute;
@@ -380,6 +379,43 @@ body {
 }
 
 /* --- Modal Styles --- */
+.btn-edit {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.btn-save {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-delete {
+    background-color: #e74c3c;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
 .modal {
     display: none; /* Hidden by default */
     position: fixed;
