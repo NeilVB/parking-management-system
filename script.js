@@ -48,8 +48,15 @@ document.addEventListener('DOMContentLoaded', function () {
     async function loadParkingSpaces() {
         try {
             const response = await fetch('get_spaces.php');
-            const spaces = await response.json();
+            const data = await response.json();
+
+            // 0 handle both array OR {spaces, summary}
+            const spaces = Array.isArray(data) ? data : data.spaces;
+            const summary = data.summary || null;
+
             renderParkingSpaces(spaces);
+            if (summary) updateDashboardSummary(summary);
+
         } catch (err) {
             console.error("Error loading parking spaces:", err);
         }
@@ -97,6 +104,17 @@ document.addEventListener('DOMContentLoaded', function () {
         grid.appendChild(addCard);
     }
 
+    // --- Update Dashboard Counters ---
+    function updateDashboardSummary(summary) {
+        const availableEl = document.querySelector('.card-value.available');
+        const takenEl = document.querySelector('.card-value.taken');
+        const reservedEl = document.querySelector('.card-value.reserved');
+
+        if (availableEl) availableEl.textContent = summary.available;
+        if (takenEl) takenEl.textContent = summary.taken;
+        if (reservedEl) reservedEl.textContent = summary.reserved;
+    }
+
     // --- Handle Add form submission ---
     if (addSpaceForm) {
         addSpaceForm.addEventListener('submit', async (event) => {
@@ -135,7 +153,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-
     // --- Handle Delete button ---
     if (deleteSpaceBtn) {
         deleteSpaceBtn.addEventListener('click', async () => {
@@ -153,15 +170,14 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-
     // --- Navigation Logic ---
     navLinks.forEach(link => {
         link.addEventListener('click', function (e) {
             e.preventDefault();
             const targetId = this.getAttribute('data-target');
 
-            if (targetId === 'parking-spaces') {
-                loadParkingSpaces();
+            if (targetId === 'parking-spaces' || targetId === 'dashboard') {
+                loadParkingSpaces(); // refresh both spaces + summary
             }
 
             // Update active state
@@ -176,4 +192,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     });
+
+    // load data on first page load
+    loadParkingSpaces();
 });
