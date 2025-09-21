@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         // Redirect to dashboard
-        header("Location: /../dashboard.php");
+        header("Location: dashboard.php");
         exit();
     } else {
         $error_message = $login_result['message'];
@@ -65,10 +65,11 @@ if (!isset($_SESSION['user_id']) && isset($_COOKIE['remember_user'])) {
         $_SESSION['email']     = $user_data['email'];
         $_SESSION['user_type'] = $user_data['user_type'];
 
-        header("Location: /../dashboard.php");
+        header("Location: dashboard.php");
         exit();
     }
 }
 
 // Include the login view
 include __DIR__ . '/../views/login.php';
+?>

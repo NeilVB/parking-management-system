@@ -124,7 +124,7 @@
                 </div>
                 <div class="maincontainer text-container">
                     <div class="textsubcontainer logo-container">
-                        <img src="assets/NULogo.png" alt="NULogo" class="logo">
+                        <img src="../assets/NULogo.png" alt="NULogo" class="logo">
                     </div>
                     <div class="textsubcontainer brand-container">
                         <h1><span class="bluehighlight-color">NU</span>Space</h1>

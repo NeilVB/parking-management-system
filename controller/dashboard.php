@@ -7,14 +7,20 @@
 // Start session to check user authentication
 session_start();
 
-// Include database configuration
-require_once 'controller/config.php';
+// Include database configuration and User model
+require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/../models/User.php';
 
-// Check if user is logged in, if not redirect to login page
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit();
-}
+// Initialize variables for the view
+$error_message = '';
+$success_message = '';
+$email = '';
+
+// // Check if user is logged in, if not redirect to login page
+// if (!isset($_SESSION['user_id'])) {
+//     header("Location: login.php");
+//     exit();
+// }
 
 // Get user information from session
 $user_id = $_SESSION['user_id'];
@@ -38,4 +44,7 @@ if (isset($_GET['logout'])) {
     header("Location: login.php?logout=success");
     exit();
 }
+
+// Include the dashboard view
+include __DIR__ . '/../views/dashboard.php';
 ?>
