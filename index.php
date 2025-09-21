@@ -14,7 +14,7 @@
 	<div class="dashboard-container">
 		<header class="header">
 			<div class="header-logo">
-				<h2><i class="fas fa-car-side"></i> NUSpace</h2>
+				<h2><img src="assets/nu-logo.png" alt="NUSpace_Logo" class="nu-logo"> NUSpace</h2>
 			</div>
 			<div class="user-profile">
 				<i class="fas fa-bell"></i>
@@ -23,6 +23,12 @@
 			</div>
 		</header>
 		<div class="dashboard-body">
+			<input type="checkbox" id="menu-toggle" class="menu-toggle" aria-hidden="true">
+				<label for="menu-toggle" class="hamburger-btn" aria-hidden="true">
+					<span class="hamburger-line"></span>
+					<span class="hamburger-line"></span>
+					<span class="hamburger-line"></span>
+				</label>
 			<nav class="sidebar">
 				<ul class="nav-menu">
 					<li class="nav-item active">
@@ -47,6 +53,7 @@
 				<!-- Dashboard Content -->
 				<div id="dashboard" class="content-section active">
 					<h3>Featured</h3>
+					<p class="section-subtitle">Availability</p>
 					<div class="featured-cards">
 						<div class="card">
 							<div class="card-icon"><i class="fas fa-car"></i></div>
@@ -56,18 +63,21 @@
 							</div>
 						</div>
 						<div class="card">
-							<div class="card-icon"><i class="fas fa-parking"></i></div>
+							<div class="card-icon"><i class="fa-solid fa-motorcycle"></i></div>
 							<div class="card-content">
 								<div class="card-value taken">0</div>
-								<div class="card-label">Taken Spaces</div>
+								<div class="card-label">Available Spaces</div>
 							</div>
 						</div>
-						<div class="card">
-							<div class="card-icon"><i class="fas fa-calendar-check"></i></div>
-							<div class="card-content">
-								<div class="card-value reserved">0</div>
-								<div class="card-label">Reserved Spaces</div>
-							</div>
+					</div>
+					<div class="availability-legend">
+    					<div class="legend-item">
+							<i class="fa-solid fa-square-full"></i>
+							<span class="legend-text">Parking Available</span>
+						</div>
+						<div class="legend-item">
+							<i class="fa-solid fa-square-full"></i>
+							<span class="legend-text">No Spaces Left</span>
 						</div>
 					</div>
 
