@@ -4,11 +4,25 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>NU Space - Log In</title>
-	<link rel="stylesheet" href="loginstyle.css">
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+	<link rel="stylesheet" href="../views/loginstyle.css">
+	<style>
+		/* Style for error and success messages */
+		.message {
+			padding: 10px;
+			margin: 10px 0;
+			border-radius: 5px;
+		}
+		.error {
+			background-color: #f8d7da;
+			color: #721c24;
+			border: 1px solid #f5c6cb;
+		}
+		.success {
+			background-color: #d4edda;
+			color: #155724;
+			border: 1px solid #c3e6cb;
+		}
+	</style>
 </head>
 <body>
 	<div class="login-container">
@@ -29,7 +43,7 @@
                     <div class="textsubcontainer brand-container">
                         <h1><span class="yellowhighlight-color">NU</span>Space</h1>
                         <section>
-                            <p>Save time, reserve <span class="yellowhighlight-color">smart</span> –</p>
+                            <p>Save time, reserve <span class="yellowhighlight-color">smart</span> —</p>
                             <p>Log in to secure your <span class="yellowhighlight-color">spot</span>!</p>
                         </section>
                     </div>
@@ -39,10 +53,23 @@
                         <h2>Log In</h2>
                     </div>
                     <div class="inputsubcontainer formcontainer">
+                        
+                        <!-- Display error or success messages (passed from controller) -->
+                        <?php 
+                        if (!empty($error_message)): 
+                        ?>
+                            <div class="message error"><?php echo htmlspecialchars($error_message); ?></div>
+                        <?php endif; ?>
+                        
+                        <?php if (!empty($success_message)): ?>
+                            <div class="message success"><?php echo htmlspecialchars($success_message); ?></div>
+                        <?php endif; ?>
+                        
                         <form action="login.php" method="POST">
                             <div class="input-group">
                                 <label for="Email">Email</label>
-                                <input type="email" id="Email" name="Email" required placeholder="doej@students.nu-laguna.edu.ph">
+                                <input type="email" id="Email" name="Email" required placeholder="doej@students.nu-laguna.edu.ph"
+                                       value="<?php echo htmlspecialchars($email ?? ''); ?>">
                             </div>  
                             <div class="input-group">
                                 <label for="password">Password</label>
@@ -53,7 +80,7 @@
                                     <input type="checkbox" id="remember" name="remember">
                                     <label for="remember">Remember Me</label>
                                 </section>
-                                <label for="forgot-password"><a href="#">Forgot Password?</a></label>
+                                <label for="forgot-password"><a href="forgot_password.php">Forgot Password?</a></label>
                             </div>
                             <button type="submit" class="login-button">Log In</button>
                         </form>

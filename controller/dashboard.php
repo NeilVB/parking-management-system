@@ -1,0 +1,41 @@
+<?php
+/**
+ * Main Dashboard (index.php)
+ * Protected page that requires user authentication
+ */
+
+// Start session to check user authentication
+session_start();
+
+// Include database configuration
+require_once 'controller/config.php';
+
+// Check if user is logged in, if not redirect to login page
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+// Get user information from session
+$user_id = $_SESSION['user_id'];
+$firstname = $_SESSION['firstname'] ?? 'User';
+$lastname = $_SESSION['lastname'] ?? '';
+$email = $_SESSION['email'] ?? '';
+$user_type = $_SESSION['user_type'] ?? 'Guest';
+
+// Handle logout request
+if (isset($_GET['logout'])) {
+    // Destroy all session data
+    session_unset();
+    session_destroy();
+    
+    // Remove remember me cookie if it exists
+    if (isset($_COOKIE['remember_user'])) {
+        setcookie('remember_user', '', time() - 3600, '/');
+    }
+    
+    // Redirect to login page with logout message
+    header("Location: login.php?logout=success");
+    exit();
+}
+?>
