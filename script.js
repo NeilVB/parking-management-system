@@ -195,4 +195,37 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // load data on first page load
     loadParkingSpaces();
+
+    const footerLinks = document.querySelectorAll('.footer-links a[data-target]');
+    console.log('Footer links found:', footerLinks);
+
+    footerLinks.forEach(link => {
+        console.log('Adding listener to:', link);
+        link.addEventListener('click', function (e) {
+            console.log('Footer link clicked:', this.getAttribute('data-target'));
+            e.preventDefault();
+
+            const targetId = this.getAttribute('data-target');
+            console.log('Target ID:', targetId);
+
+            const allSections = document.querySelectorAll('.content-section');
+            allSections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            const targetSection = document.getElementById(targetId);
+            console.log('Target section found:', targetSection);
+            if (targetSection) {
+                targetSection.classList.add('active');
+                console.log('Added active class to target section');
+            }
+
+            const allNavItems = document.querySelectorAll('.nav-item');
+            allNavItems.forEach(item => {
+                item.classList.remove('active');
+            });
+        });
+    });
+
+
 });
