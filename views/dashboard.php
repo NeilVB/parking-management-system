@@ -1,3 +1,4 @@
+<!-- views/dashboard.php -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -113,8 +114,8 @@
 						</div>
 					</section>
 				</div>
-				<!-- Parking Spaces Content -->
-				<?php require "controller/connection.php"; ?>
+				<!-- Parking Spaces Content
+				<?php require "controller/connfig.php"; ?>
 
 				<div id="parking-spaces" class="content-section">
 					<div class="page-header">
@@ -193,6 +194,6 @@
 			</form>
 		</div>
 	</div>
-	<script src="script.js"></script>
+	<script src="script.js"></script> -->
 </body>
 </html>

@@ -1,19 +1,14 @@
 <?php
-/**
- * User Model Class
- * Handles all user-related database operations
- */
 class User {
     private $conn;
-    
-    public function __construct($database_connection) {
-        $this->conn = $database_connection;
+    private $table = "users_table";
+
+    public function __construct($db) {
+        $this->conn = $db;
     }
-    
+
     /**
-     * Register a new user
-     * @param array $userData - User registration data
-     * @return array - Result with success/error status and message
+     * Register new user
      */
     public function register($userData) {
         // Extract user data
@@ -72,7 +67,7 @@ class User {
             return ['success' => false, 'message' => 'Registration failed: ' . $error_message];
         }
     }
-    
+
     /**
      * Authenticate user login
      * @param string $email - User email

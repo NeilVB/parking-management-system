@@ -1,6 +1,6 @@
 <?php
 /**
- * Database Connection Class
+ * models/Database.php
  * Handles database connection and provides reusable connection methods
  */
 class Database {

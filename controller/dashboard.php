@@ -1,6 +1,6 @@
 <?php
 /**
- * Main Dashboard (index.php)
+ * controller/dashboard.php
  * Protected page that requires user authentication
  */
 
