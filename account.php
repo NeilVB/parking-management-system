@@ -22,7 +22,7 @@
                 <i class="fas fa-bell"></i>
                 <a href="account.php" class="user-profile-link">
                     <span>Hi, Chad</span> 
-                    <img src="https://i.pravatar.cc/40" alt="User Avatar" class="avatar">
+                    <img src="https://i.pravatar.cc/150" alt="User Avatar" class="avatar">
                 </a>
             </div>
         </header>
@@ -39,7 +39,7 @@
 
                 <ul class="account-details">
                     <li><i class="fas fa-user-tag"></i><div><span class="detail-label">Type</span><span class="detail-value">Student</span></div></li>
-                    <li><i class="fas fa-phone"></i><div><span class="detail-label">Phone Number</span><span class="detail-value">0912 345 6789</span></div></li>
+                    <li><i class="fas fa-phone"></i><div><span class="detail-label">Phone Number</span><span class="detail-value">0422 398 6120</span></div></li>
                     <li><i class="fas fa-envelope"></i><div><span class="detail-label">Email</span><span class="detail-value">villamorcn@students.nu-laguna.edu.ph</span></div></li>
                     <li><i class="fas fa-car-side"></i><div><span class="detail-label">Plate Number</span><span class="detail-value">CAR 100</span></div></li>
                 </ul>
