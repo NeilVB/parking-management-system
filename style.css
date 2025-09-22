@@ -729,6 +729,149 @@ body {
     transition: transform 0.3s ease;
 }
 
+/* === Terms & Policy Page Styles === */    
+#terms-container {
+    min-width: 50%;
+    max-width: 80%;
+    height: auto;
+    margin: 50px auto;
+    background: var(--main-bg);
+    padding: 30px;  
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    font-family: 'Roboto', sans-serif;
+    /* border: 1px solid red; */
+}
+
+#terms-container h3 {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color-dark);
+}
+
+#terms-container .last-updated {
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.terms-list {
+    padding-left: 20px;
+    line-height: 1.6;
+    color: var(--text-color-dark);
+}
+
+.terms-list li {
+    margin-bottom: 20px;
+}
+
+.terms-list strong {
+    color: var(--icon-blue);
+}
+
+.terms-list ul {
+    margin-top: 8px;
+    padding-left: 20px;
+    list-style-type: disc;
+}
+
+.btn-back {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 10px 20px;
+    background: var(--primary-blue);
+    color: #fff;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+
+.btn-back:hover {
+    background: var(--icon-blue);
+}
+
+/* Policy Section Styling */
+#policy-container {
+    min-width: 50%;
+    max-width: 80%;
+    height: auto;
+    margin: 50px auto;
+    background: var(--main-bg);
+    padding: 30px;  
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    font-family: 'Roboto', sans-serif;
+    /* border: 1px solid red; */
+}
+
+#policy-container h3 {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color-dark);
+}
+
+#policy-container .last-updated {
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.policy-section {
+    margin-bottom: 2rem;
+}
+
+.policy-section h4 {
+    color: var(--primary-blue);
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.policy-section h5 {
+    color: var(--map-green);
+    font-size: 1.1rem;
+    margin: 1rem 0 0.5rem 0;
+    font-weight: 500;
+}
+
+.violation-type {
+    margin: 1rem 0;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-left: 4px solid var(--primary-blue);
+}
+
+.policy-section ul {
+    margin: 0.5rem 0;
+    padding-left: 1.5rem;
+}
+
+.policy-section li {
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* Phone Display */
 @media screen and (max-width: 425px) {
     .dashboard-container {
