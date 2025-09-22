@@ -29,7 +29,7 @@
 	<div class="register-container">
 		<header class="header">
 			<div class="header-logo">
-				<h2><i class="fas fa-car-side"></i> NUSpace</h2>
+				<a href="../index.php"><h2><i class="fas fa-car-side"></i> NUSpace</h2></a>
 			</div>
 			<div class="user-profile">
 				<i class="fas fa-bell"></i>

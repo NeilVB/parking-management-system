@@ -4,10 +4,6 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: ../controller/login.php");
     exit();
 }
-
-// Optional: fetch session variables for display
-$user_id = $_SESSION['user_id'];
-$firstname = $_SESSION['firstname'] ?? 'User'; 
 ?>
 <!-- views/dashboard.php -->
 <!DOCTYPE html>
@@ -30,7 +26,7 @@ $firstname = $_SESSION['firstname'] ?? 'User';
 			</div>
 			<div class="user-profile">
 				<i class="fas fa-bell"></i>
-				<!-- ✅ Display actual user name from session -->
+				<!-- Display actual user name from session -->
 				<span>Hi, <?php echo htmlspecialchars($firstname); ?></span> 
 				<img src="https://i.pravatar.cc/40?u=<?php echo $user_id; ?>" alt="User Avatar" class="avatar">
 			</div>
@@ -52,8 +48,8 @@ $firstname = $_SESSION['firstname'] ?? 'User';
 					</li>
 				</ul>
 				<div class="log-out">
-					<!-- ✅ Fixed logout: point to controller/logout.php -->
-					<a href="../controller/logout.php" onclick="return confirm('Are you sure you want to logout?')">
+					<!-- Updated logout link with proper functionality -->
+					<a href="?logout=1" onclick="return confirm('Are you sure you want to logout?')">
 						<i class="fas fa-sign-out-alt"></i>
 						<span>Log Out</span>
 					</a>
@@ -126,7 +122,7 @@ $firstname = $_SESSION['firstname'] ?? 'User';
 					</section>
 				</div>
 				<!-- Parking Spaces Content -->
-				<?php require "controller/config.php"; ?>
+				<?php require "controller/connection.php"; ?>
 
 				<div id="parking-spaces" class="content-section">
 					<div class="page-header">
