@@ -14,7 +14,7 @@
 	<div class="register-container">
 		<header class="header">
 			<div class="header-logo">
-				<h2><i class="fas fa-car-side"></i> NUSpace</h2>
+				<h2><img src="assets/nu-logo.png" alt="NUSpace_Logo" class="nu-logo"> NUSpace</h2>
 			</div>
 			<div class="user-profile">
 				<i class="fas fa-bell"></i>

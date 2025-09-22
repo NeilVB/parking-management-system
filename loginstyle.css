@@ -48,8 +48,11 @@ body {
     border-bottom: 4px solid var(--accent-yellow);
 }
 
-.header-logo i {
-    margin-right: 8px;
+.header-logo img {
+    margin-right: 5px;
+    width: 35px;
+    height: auto;
+    vertical-align: middle;
 }
 
 .user-profile {
