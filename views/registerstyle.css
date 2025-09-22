@@ -178,12 +178,12 @@ body {
             color: var(--main-bg);
         }
 
-        label[for="TnC agree"], label[for="PnR agree"] {
+        label[for="tnc"], label[for="policy"] {
             font-size: var(--font-size-small);
             color: var(--main-bg);
         }
 
-        label[for="TnC agree"] a, label[for="PnR agree"] a{
+        label[for="tnc"] a, label[for="policy"] a{
             font-size: var(--font-size-small);
             color: var(--accent-yellow);
             text-decoration: none;

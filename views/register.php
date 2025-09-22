@@ -54,7 +54,7 @@
                             <div class="message success"><?php echo htmlspecialchars($success_message); ?></div>
                         <?php endif; ?>
                         
-                        <form action="register.php" method="POST">
+                        <form action="../controller/register.php" method="POST">
                             <div class="input-group">
                                 <div class="name-group">
                                     <section>
