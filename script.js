@@ -173,20 +173,20 @@ document.addEventListener('DOMContentLoaded', function () {
     // --- Navigation Logic ---
     navLinks.forEach(link => {
         link.addEventListener('click', function (e) {
-            e.preventDefault();
             const targetId = this.getAttribute('data-target');
+            if (!targetId) return;
+
+            e.preventDefault();
 
             if (targetId === 'parking-spaces' || targetId === 'dashboard') {
-                loadParkingSpaces(); // refresh both spaces + summary
+                loadParkingSpaces();
             }
 
-            // Update active state
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
             });
             this.parentElement.classList.add('active');
 
-            // Show target content
             contentSections.forEach(section => {
                 section.classList.toggle('active', section.id === targetId);
             });
