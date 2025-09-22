@@ -501,10 +501,8 @@ body {
     cursor: pointer;
 }
 
-
 .modal {
     display: none;
-    /* Hidden by default */
     position: fixed;
     z-index: 1000;
     left: 0;
@@ -595,6 +593,15 @@ body {
 
 #add-space-form .btn-add-space:hover {
     background-color: #218838;
+}
+
+/* --- Go to Account Page --- */
+.user-profile-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: inherit;
 }
 
 /* Phone Display */

@@ -18,8 +18,10 @@
 			</div>
 			<div class="user-profile">
 				<i class="fas fa-bell"></i>
-				<span>Hi, Chad</span> 
-				<img src="https://i.pravatar.cc/40" alt="User Avatar" class="avatar">
+				<a href="account.php" class="user-profile-link">
+					<span>Hi, Chad</span> 
+					<img src="https://i.pravatar.cc/150" alt="User Avatar" class="avatar">
+				</a>
 			</div>
 		</header>
 		<div class="dashboard-body">
@@ -45,7 +47,7 @@
 					</li>
 				</ul>
 				<div class="log-out">
-					<a href="#"><span>Log Out</span></a>
+					<a href="login.php"><span>Log Out</span></a>
 				</div>
 			</nav>
 
