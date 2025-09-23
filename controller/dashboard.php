@@ -28,6 +28,9 @@ $firstname = $_SESSION['firstname'] ?? 'User';
 $lastname = $_SESSION['lastname'] ?? '';
 $email = $_SESSION['email'] ?? '';
 $user_type = $_SESSION['user_type'] ?? 'Guest';
+$phone_number = $_SESSION['phone_number'] ?? 'Not set';
+$plate_number = $_SESSION['plate_number'] ?? 'Not set';
+
 
 // Handle logout request
 if (isset($_GET['logout'])) {

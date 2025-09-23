@@ -14,8 +14,8 @@ class User {
         // Extract user data
         $firstName = trim($userData['FirstName']);
         $lastName = trim($userData['LastName']);
-        $plateNumber = trim($userData['PlateNumber']);
-        $phoneNumber = trim($userData['PhoneNumber']);
+        $plate_number = trim($userData['plate_number']);
+        $phone_number = trim($userData['phone_number']);
         $userType = $userData['Type'];
         $vehicleType = $userData['VehicleType'];
         $email = trim($userData['Email']);
@@ -55,7 +55,7 @@ class User {
             return ['success' => false, 'message' => 'Database error: ' . $this->conn->error];
         }
         
-        $insert_stmt->bind_param("ssiissss", $firstName, $lastName, $phoneNumber, $user_type_id, $vehicle_type_id, $plateNumber, $email, $hashed_password);
+        $insert_stmt->bind_param("ssiissss", $firstName, $lastName, $phone_number, $user_type_id, $vehicle_type_id, $plate_number, $email, $hashed_password);
         
         // Execute the insert statement
         if ($insert_stmt->execute()) {
@@ -85,10 +85,11 @@ class User {
         }
         
         // Prepare SQL statement to find user by email
-        $login_query = "SELECT u.user_id, u.firstname, u.lastname, u.email, u.password, ut.user_type 
-                       FROM users_table u 
-                       JOIN user_type_table ut ON u.user_type_id = ut.user_type_id 
-                       WHERE u.email = ?";
+        $login_query = "SELECT u.user_id, u.firstname, u.lastname, u.email, u.phone_number, u.plate_number, u.password, ut.user_type 
+                FROM users_table u 
+                JOIN user_type_table ut ON u.user_type_id = ut.user_type_id 
+                WHERE u.email = ?";
+
         
         $login_stmt = $this->conn->prepare($login_query);
         if (!$login_stmt) {
@@ -110,13 +111,16 @@ class User {
                     'success' => true,
                     'message' => 'Login successful!',
                     'user' => [
-                        'user_id' => $user['user_id'],
-                        'firstname' => $user['firstname'],
-                        'lastname' => $user['lastname'],
-                        'email' => $user['email'],
-                        'user_type' => $user['user_type']
+                        'user_id'      => $user['user_id'],
+                        'firstname'    => $user['firstname'],
+                        'lastname'     => $user['lastname'],
+                        'email'        => $user['email'],
+                        'user_type'    => $user['user_type'],
+                        'phone_number' => $user['phone_number'],
+                        'plate_number' => $user['plate_number']
                     ]
                 ];
+
             } else {
                 $login_stmt->close();
                 return ['success' => false, 'message' => 'Invalid email or password!'];
@@ -133,10 +137,11 @@ class User {
      * @return array|false - User data or false if not found
      */
     public function getUserById($user_id) {
-        $query = "SELECT u.user_id, u.firstname, u.lastname, u.email, ut.user_type 
-                 FROM users_table u 
-                 JOIN user_type_table ut ON u.user_type_id = ut.user_type_id 
-                 WHERE u.user_id = ?";
+        $query = "SELECT u.user_id, u.firstname, u.lastname, u.email, u.phone_number, u.plate_number, ut.user_type 
+          FROM users_table u 
+          JOIN user_type_table ut ON u.user_type_id = ut.user_type_id 
+          WHERE u.user_id = ?";
+
         
         $stmt = $this->conn->prepare($query);
         if (!$stmt) {
@@ -150,8 +155,17 @@ class User {
         if ($result->num_rows == 1) {
             $user = $result->fetch_assoc();
             $stmt->close();
-            return $user;
+            return [
+                'user_id'      => $user['user_id'],
+                'firstname'    => $user['firstname'],
+                'lastname'     => $user['lastname'],
+                'email'        => $user['email'],
+                'user_type'    => $user['user_type'],
+                'phone_number' => $user['phone_number'],
+                'plate_number' => $user['plate_number']
+            ];
         }
+
         
         $stmt->close();
         return false;
