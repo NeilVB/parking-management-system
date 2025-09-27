@@ -47,6 +47,9 @@
                                 Management</span></a>
                     </li>
                     <li class="nav-item">
+                        <a href="#" data-target="vehicle-management"><i class="fa-solid fa-car-side"></i><span>Vehicle Management</span></a> 
+                    </li>
+                    <li class="nav-item">
                         <a href="#" data-target="monitoring"><i class="fas fa-desktop"></i><span>Monitoring and
                                 Enforcement</span></a>
                     </li>
@@ -189,6 +192,9 @@
 
                 <!-- Users Management Content -->
                 <div id="users-management" class="content-section"></div>
+
+                <!-- Vehicle Management Content -->
+                <div id="vehicle-management" class="content-section"></div>
 
                 <!-- Monitoring and Enforcement Content -->
                 <div id="monitoring" class="content-section"></div>
