@@ -1,7 +1,6 @@
 <?php
 class User {
     private $conn;
-    private $table = "users_table";
 
     public function __construct($db) {
         $this->conn = $db;
@@ -12,14 +11,14 @@ class User {
      */
     public function register($userData) {
         // Extract user data
-        $firstName = trim($userData['FirstName']);
-        $lastName = trim($userData['LastName']);
-        $plate_number = trim($userData['plate_number']);
-        $phone_number = trim($userData['phone_number']);
-        $userType = $userData['Type'];
-        $vehicleType = $userData['VehicleType'];
-        $email = trim($userData['Email']);
-        $password = $userData['password'];
+        $firstName    = trim($userData['FirstName']);
+        $lastName     = trim($userData['LastName']);
+        $plate_number = trim($userData['PlateNumber']);   // ✅ Fixed
+        $phone_number = trim($userData['PhoneNumber']);   // ✅ Fixed
+        $userType     = $userData['Type'];
+        $vehicleType  = $userData['VehicleType'];
+        $email        = trim($userData['Email']);
+        $password     = $userData['password'];
         
         // Validate input data
         $validation = $this->validateRegistrationData($userData);

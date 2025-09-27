@@ -51,4 +51,4 @@ if (!isset($_SESSION['admin_id']) && isset($_COOKIE['remember_admin'])) {
     }
 }
 
-include __DIR__ . '/../views/admin_login.php';
+include __DIR__ . '../views/admin_login.php';

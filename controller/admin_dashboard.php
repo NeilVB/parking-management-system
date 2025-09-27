@@ -11,7 +11,7 @@ $email = '';
 
 // Access control
 if (!isset($_SESSION['admin_id']) || $_SESSION['user_type'] !== 'admin') {
-    header("Location: login.php?access=denied");
+    header("Location: admin_login.php?access=denied");
     exit();
 }
 
@@ -30,8 +30,8 @@ if (isset($_GET['logout'])) {
         setcookie('remember_admin', '', time() - 3600, '/');
     }
 
-    header("Location: login.php?logout=success");
+    header("Location: admin_login.php?logout=success");
     exit();
 }
 
-include __DIR__ . '/../views/admin_dashboard.php';
+include __DIR__ . '../views/admin_dashboard.php';
