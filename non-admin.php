@@ -43,7 +43,11 @@
                                 Spaces</span></a>
                     </li>
                     <li class="nav-item">
-                        <a href="account.php"><i class="fas fa-user"></i><span>Account</span></a>
+                        <a href="#" data-target="vehicle-registration"><i class="fa-solid fa-car-side"></i><span>Vehicle Registration</span></a> 
+                    </li>
+                    <li class="nav-item">
+                        <!-- change to log in/register -->
+                        <a href="account.php"><i class="fas fa-user"></i><span>Account</span></a> 
                     </li>
                 </ul>
                 <div class="log-out">
