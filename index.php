@@ -1,429 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NU Space - Dashboard</title>
-    <link rel="stylesheet" href="style.css">
+    <title>NU Space - Public View</title>
+
+    <!-- External styles -->
+    <link rel="stylesheet" href="publicstyle.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
-
 <body>
-    <div class="dashboard-container">
-        <header class="header">
-            <div class="header-logo">
-                <h2><img src="assets/nu-logo.png" alt="NUSpace_Logo" class="nu-logo"> NUSpace</h2>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-logo">
+            <img src="assets/NULogo.png" alt="NUSpace_Logo" class="nu-logo">
+            <h1 class="site-title">NUSpace</h1>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="overlay"></div>
+        <div class="hero-content">
+            <h1>Welcome to NUSpace</h1>
+            <p class="tagline">Smart Parking Management for NU Laguna</p>
+
+            <ul class="features">
+                <li><i class="fas fa-parking"></i> Real-time available parking slots</li>
+                <li><i class="fas fa-user-plus"></i> Easy login and registration</li>
+            </ul>
+
+            <div class="hero-buttons">
+                <a href="controller/register.php" class="btn btn-primary"><i class="fas fa-user-plus"></i> Create Account</a>
+                <a href="controller/login.php" class="btn btn-outline"><i class="fas fa-sign-in-alt"></i> Login Now</a>
             </div>
-            <div class="user-profile">
-                <i class="fas fa-bell"></i>
-                <a href="account.php" class="user-profile-link">
-                    <span>Hi, Chad</span>
-                    <img src="https://i.pravatar.cc/150" alt="User Avatar" class="avatar">
-                </a>
-            </div>
-        </header>
-        <div class="dashboard-body">
-            <input type="checkbox" id="menu-toggle" class="menu-toggle" aria-hidden="true">
-            <label for="menu-toggle" class="hamburger-btn" aria-hidden="true">
-                <span class="hamburger-line"></span>
-                <span class="hamburger-line"></span>
-                <span class="hamburger-line"></span>
-            </label>
-            <nav class="sidebar">
-                <ul class="nav-menu">
-                    <li class="nav-item active">
-                        <a href="#" data-target="dashboard"><i class="fas fa-th-large"></i><span>Dashboard</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" data-target="parking-spaces"><i class="fas fa-car-alt"></i><span>Parking
-                                Spaces</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" data-target="users-management"><i class="fas fa-user"></i><span>Users
-                                Management</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" data-target="vehicle-management"><i class="fa-solid fa-car-side"></i><span>Vehicle Management</span></a> 
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" data-target="monitoring"><i class="fas fa-desktop"></i><span>Monitoring and
-                                Enforcement</span></a>
-                    </li>
-                </ul>
-                <div class="log-out">
-                    <a href="login.php"><span>Log Out</span></a>
-                </div>
-            </nav>
-
-            <main class="main-content">
-                <!-- Dashboard Content -->
-                <div id="dashboard" class="content-section active">
-                    <h3>Featured</h3>
-                    <p class="section-subtitle">Availability</p>
-                    <div class="featured-cards">
-                        <div class="card">
-                            <div class="card-icon"><i class="fas fa-car"></i></div>
-                            <div class="card-content">
-                                <div class="card-value available">0</div>
-                                <div class="card-label">Available Spaces</div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-icon"><i class="fa-solid fa-motorcycle"></i></div>
-                            <div class="card-content">
-                                <div class="card-value taken">0</div>
-                                <div class="card-label">Available Spaces</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="availability-legend">
-                        <div class="legend-item">
-                            <i class="fa-solid fa-square-full"></i>
-                            <span class="legend-text">Parking Available</span>
-                        </div>
-                        <div class="legend-item">
-                            <i class="fa-solid fa-square-full"></i>
-                            <span class="legend-text">No Spaces Left</span>
-                        </div>
-                    </div>
-
-                    <section class="map-section">
-                        <h3>NU Laguna Park Space</h3>
-                        <div class="map-container">
-                            <img src="assets/nu-map.png" alt="NU Laguna Park Space Map" class="map-image">
-                            <div class="parking-slots-list">
-                                <h4>
-                                    <i class="fas fa-car"></i>
-                                    <span>Total Parking Slots</span>
-                                </h4>
-                                <div class="slot-item">
-                                    <span class="slot-count">78</span>
-                                    <span class="slot-name">Football Field Front</span>
-                                </div>
-                                <div class="slot-item">
-                                    <span class="slot-count">65</span>
-                                    <span class="slot-name">Football Field Side</span>
-                                </div>
-                                <div class="slot-item">
-                                    <span class="slot-count">31</span>
-                                    <span class="slot-name">Cafeteria Front</span>
-                                </div>
-                                <div class="slot-item">
-                                    <span class="slot-count">14</span>
-                                    <span class="slot-name">Gravel Parking</span>
-                                </div>
-                                <div class="slot-item">
-                                    <span class="slot-count">14</span>
-                                    <span class="slot-name">Sampalok Lane</span>
-                                </div>
-                                <div class="slot-item">
-                                    <span class="slot-count">14</span>
-                                    <span class="slot-name">Outside Parking</span>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-
-                <!-- Parking Spaces Content -->
-                <?php require "controller/connection.php"; ?>
-                <div id="parking-spaces" class="content-section">
-                    <div class="page-header">
-                        <h3>Available Parking Spaces</h3>
-                        <div class="featured-cards">
-                            <div class="card">
-                                <div class="card-icon"><i class="fas fa-car"></i></div>
-                                <div class="card-content">
-                                    <div class="card-value available">0</div>
-                                    <div class="card-label">Available Spaces</div>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-icon"><i class="fa-solid fa-motorcycle"></i></div>
-                                <div class="card-content">
-                                    <div class="card-value taken">0</div>
-                                    <div class="card-label">Available Spaces</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="availability-legend">
-                            <div class="legend-item">
-                                <i class="fa-solid fa-square-full"></i>
-                                <span class="legend-text">Parking Available</span>
-                            </div>
-                            <div class="legend-item">
-                                <i class="fa-solid fa-square-full"></i>
-                                <span class="legend-text">No Spaces Left</span>
-                            </div>
-                        </div>
-
-                        <div class="header-actions">
-                            <p>Map</p>
-                            <div class="dropdown">
-                                <input type="checkbox" id="dropdown-toggle" class="dropdown-checkbox">
-                                <label for="dropdown-toggle" class="btn btn-secondary">
-                                    Cars <i class="fas fa-chevron-down"></i>
-                                </label>
-                                <div class="dropdown-content">
-                                    <a href="#" data-filter="cars">Cars</a>
-                                    <a href="#" data-filter="motorcycles">Motorcycles</a>
-                                    <a href="#" data-filter="all">Student/Visitor</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="parking-grid">
-                        <!-- Parking space cards will be dynamically inserted here -->
-                        <div class="add-space-card">
-                            <div class="add-space-content">
-                                <i class="fas fa-plus"></i>
-                                <span>Add Parking Space</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bottom-action">
-                        <button class="btn btn-primary" id="Edit-Parking-Spaces-Bottom">Edit Parking Spaces</button>
-                    </div>
-                </div>
-
-                <!-- Users Management Content -->
-                <div id="users-management" class="content-section"></div>
-
-                <!-- Vehicle Management Content -->
-                <div id="vehicle-management" class="content-section"></div>
-
-                <!-- Monitoring and Enforcement Content -->
-                <div id="monitoring" class="content-section"></div>
-
-                <!-- Terms and Conditions Content -->
-                <div id="terms-container" class="content-section">
-                    <h3>Parking Terms and Conditions</h3>
-                    <p class="last-updated">Last Updated: September 2025</p>
-                    <p>By registering your vehicle and using the University Parking Management System (PMS), you agree
-                        to the following terms and conditions:</p>
-
-                    <ol class="terms-list">
-                        <li>
-                            <strong>Registration Requirements</strong>
-                            <ul>
-                                <li>You must provide accurate details, including your plate number, University ID, and
-                                    active phone number.</li>
-                                <li>Your phone number may be used for emergency purposes or to contact you if issues
-                                    arise
-                                    (e.g., incorrect parking, overstaying, blocking another vehicle).</li>
-                            </ul>
-                        </li>
-                        <li>
-                            <strong>Guard Verification</strong>
-                            <ul>
-                                <li>Security guards are authorized to check plate numbers and scan QR/barcodes.</li>
-                                <li>You must comply with guard instructions at all times.</li>
-                            </ul>
-                        </li>
-                        <li>
-                            <strong>Proper Use of Parking Spaces</strong>
-                            <ul>
-                                <li>Only registered vehicles are allowed to park.</li>
-                                <li>You must park in the assigned area (student or staff) based on your status.</li>
-                                <li>Overstaying, double-parking, or parking without notice/permission is prohibited.
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <strong>Violations & Consequences</strong>
-                            <ul>
-                                <li><strong>Minor Violations:</strong> Causing delays for other drivers, or incomplete
-                                    registration may result in warnings.</li>
-                                <li><strong>Major Violations (Troll Parking):</strong> Parking without notifying a
-                                    guard,
-                                    parking in the wrong area, using fake details, or repeated violations will result in
-                                    disciplinary action or loss of parking privileges.</li>
-                            </ul>
-                        </li>
-                        <li>
-                            <strong>Liability & Responsibility</strong>
-                            <ul>
-                                <li>The University is not liable for loss, theft, or damage to vehicles while inside the
-                                    premises.</li>
-                                <li>Users are responsible for their own vehicles and must ensure they are parked safely.
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <strong>Agreement</strong>
-                            <ul>
-                                <li>By proceeding with registration, you confirm that you have read, understood, and
-                                    agree
-                                    to abide by these terms and conditions.</li>
-                            </ul>
-                        </li>
-                    </ol>
-
-                    <div class="terms-footer">
-                        <a href="index.php" class="btn-back">← Back to Dashboard</a>
-                    </div>
-                </div>
-
-                <!-- Policy and Regulations Content -->
-                <div id="policy-container" class="content-section">
-                    <h3>Policy and Regulations</h3>
-                    <p class="last-updated">Last Updated: September 2025</p>
-
-                    <div class="policy-section">
-                        <h4>A. General Policy</h4>
-                        <p>The University provides regulated parking facilities for students, faculty, and staff. To
-                            ensure safety, fairness, and orderliness, all members of the University community who wish
-                            to avail of parking privileges must comply with the following policies and regulations.</p>
-                    </div>
-
-                    <div class="policy-section">
-                        <h4>B. Registration and Access</h4>
-                        <ul>
-                            <li>All vehicle owners must register their vehicle(s) through the University Parking
-                                Management System (PMS).</li>
-                            <li>Registration requires submission of accurate information, including name, plate number,
-                                college/department, and emergency contact number.</li>
-                            <li>Each registered user shall be issued a unique QR code which must be presented to the
-                                gate guard upon entry.</li>
-                            <li>Parking privileges are non-transferable. Lending or falsifying a parking QR code is
-                                subject to disciplinary action.</li>
-                        </ul>
-                    </div>
-
-                    <div class="policy-section">
-                        <h4>C. Role of Gate Guards</h4>
-                        <ul>
-                            <li>Gate guards shall verify the driver's identity and QR code.</li>
-                            <li>Guards will assign parking areas (student, faculty, staff, visitors) based on
-                                availability.</li>
-                            <li>Guards may issue reminders, warnings, or report violations directly to the Discipline
-                                Office (DO).</li>
-                        </ul>
-                    </div>
-
-                    <div class="policy-section">
-                        <h4>D. Parking Rules and Regulations</h4>
-                        <ul>
-                            <li>Vehicles must be parked only in the designated area assigned at entry.</li>
-                            <li>Unauthorized use of faculty/staff parking areas by students, or vice versa, is a
-                                violation.</li>
-                            <li>Waiting in parking areas is prohibited, a waiting zone is provided outside the field.
-                            </li>
-                            <li>Vehicles must be properly aligned and must not obstruct other vehicles or pedestrian
-                                pathways.</li>
-                            <li>Users must comply with all guard instructions at all times.</li>
-                        </ul>
-                    </div>
-
-                    <div class="policy-section">
-                        <h4>E. Violations and Consequences</h4>
-                        <div class="violation-type">
-                            <h5>Minor Violations (first/occasional offenses):</h5>
-                            <ul>
-                                <li>Improper parking, failure to follow guard instructions.</li>
-                                <li><strong>Sanction:</strong> Warning or violation slip.</li>
-                            </ul>
-                        </div>
-
-                        <div class="violation-type">
-                            <h5>Major Violations (habitual or deliberate misconduct):</h5>
-                            <ul>
-                                <li>"Troll parking" (parking without notifying the guard, blocking other cars, repeated
-                                    abuse of the system).</li>
-                                <li>Using falsified or borrowed QR codes.</li>
-                                <li>Parking in restricted or reserved zones.</li>
-                                <li><strong>Sanction:</strong> Suspension of parking privileges, disciplinary referral
-                                    to DO, and possible fines for damages.</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="policy-section">
-                        <h4>F. Emergency and Accountability</h4>
-                        <ul>
-                            <li>In case of emergencies, the University may contact the registered phone number of the
-                                vehicle owner.</li>
-                            <li>The University is not liable for loss, theft, or damage to vehicles or personal property
-                                within the parking premises.</li>
-                        </ul>
-                    </div>
-
-                    <div class="policy-section">
-                        <h4>G. Acceptance of Terms</h4>
-                        <p>By registering a vehicle and using the University's parking facilities, the student/faculty
-                            member agrees to abide by these policies and regulations and acknowledges the authority of
-                            the University to impose sanctions for violations.</p>
-                    </div>
-
-                    <!-- Reuse the terms-footer button -->
-                    <div class="terms-footer">
-                        <a href="index.php" class="btn-back">← Back to Dashboard</a>
-                    </div>
-                </div>
-
-                <!-- Footer -->
-                <footer class="footer">
-                    <div class="footer-content">
-                        <div class="copyright">
-                            <p>NUSpace &copy; 2025</p>
-                        </div>
-                        <div class="footer-links">
-                            <a href="#" data-target="terms-container">Terms and Conditions</a>
-                            <a href="#" data-target="policy-container">Policy and Regulations</a>
-                        </div>
-                    </div>
-                </footer>
-            </main>
         </div>
-    </div>
+    </section>
 
-    <!-- Add Parking Space Modal -->
-    <div id="add-space-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h3>Add Parking Space</h3>
-            <form id="add-space-form">
-                <div class="form-group">
-                    <label for="new-space-name">Parking Space Name</label>
-                    <input type="text" id="new-space-name" name="name" required>
-                </div>
-                <div class="form-group">
-                    <label for="new-space-max">Maximum Slots</label>
-                    <input type="number" id="new-space-max" name="max_space" required min="1">
-                </div>
-                <button type="submit" class="btn-add-space">Add Space</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Edit Parking Space Modal -->
-    <div id="edit-space-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h3>Edit Parking Space</h3>
-            <form id="edit-space-form">
-                <input type="hidden" id="edit-space-id" name="id">
-                <div class="form-group">
-                    <label for="edit-space-name">Parking Space Name</label>
-                    <input type="text" id="edit-space-name" name="name" required>
-                </div>
-                <div class="form-group">
-                    <label for="edit-space-max">Maximum Slots</label>
-                    <input type="number" id="edit-space-max" name="max_space" required min="1">
-                </div>
-                <div class="modal-actions">
-                    <button type="submit" class="btn-save">Save Changes</button>
-                    <button type="button" class="btn-delete" id="delete-space-btn">Delete</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; <?php echo date("Y"); ?> NU Laguna – Parking Management System</p>
+    </footer>
 </body>
-
 </html>

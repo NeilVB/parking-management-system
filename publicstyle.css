@@ -1,0 +1,135 @@
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #3fa2ff;
+    color: #333;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    padding: 15px 30px;
+    background: #35408E; /* solid NU blue */
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.nu-logo {
+    height: 45px;
+    width: auto;
+}
+
+.site-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+    color: #fff;
+}
+
+.hero {
+    position: relative;
+    background: url("assets/NUImage.png") no-repeat center center/cover;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.hero .overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(53, 64, 142, 0.75); 
+    backdrop-filter: blur(4px);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 700px;
+    padding: 20px;
+}
+
+.hero-content h1 {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.hero-content .tagline {
+    font-size: 1.3rem;
+    margin-bottom: 25px;
+    font-weight: 400;
+    color: #ffc107;
+}
+
+.features {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    font-size: 1.1rem;
+}
+
+.features li {
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.hero-buttons {
+    margin-top: 30px;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.btn {
+    padding: 12px 24px;
+    font-size: 1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-primary {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.btn-primary:hover {
+    background-color: #e0a800;
+}
+
+.btn-outline {
+    background-color: transparent;
+    color: #ffc107;
+    border: 2px solid #ffc107;
+}
+
+.btn-outline:hover {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.footer {
+    background-color: #35408E;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    font-size: 0.9rem;
+}

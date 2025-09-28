@@ -1,3 +1,4 @@
+<!-- Currently non functional, need to set up database for parking spaces first -->
 <?php
     include 'controller/connection.php';
 
