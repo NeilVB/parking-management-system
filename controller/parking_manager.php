@@ -197,8 +197,11 @@ try {
         $sel->close();
 
         if ($row && !empty($row['image_path'])) {
-            $fileToDelete = realpath(__DIR__ . '/../') . DIRECTORY_SEPARATOR . str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $row['image_path']);
-            if ($fileToDelete && file_exists($fileToDelete)) {
+            $uploadDirAbs = realpath(__DIR__ . '/../') . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'parking' . DIRECTORY_SEPARATOR;
+            $filename = basename($row['image_path']);
+            $fileToDelete = $uploadDirAbs . $filename;
+
+            if (file_exists($fileToDelete)) {
                 @unlink($fileToDelete);
             }
         }

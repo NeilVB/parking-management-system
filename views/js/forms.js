@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", () => {
     /* ===========================
        FORMS
     ============================ */
-
     const endpoint = "../controller/parking_manager.php"; // Ensure this matches your actual path
     const addModal = document.getElementById("add-space-modal");
     const editModal = document.getElementById("edit-space-modal");

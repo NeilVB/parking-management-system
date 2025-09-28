@@ -12,6 +12,13 @@ $firstname  = $_SESSION['firstname'] ?? 'Admin';
 $lastname   = $_SESSION['lastname'] ?? '';
 $email      = $_SESSION['email'] ?? '';
 $user_type  = $_SESSION['user_type'] ?? 'Administrator';
+
+require_once __DIR__ . '/../controller/config.php';
+require_once __DIR__ . '/../models/ParkingSpace.php';
+
+$model = new ParkingSpace($conn);
+$counts = $model->getVehicleCounts();
+$distribution = $model->getSlotDistribution();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -73,9 +80,6 @@ $user_type  = $_SESSION['user_type'] ?? 'Administrator';
                     <a href="#" data-target="users-management"><i class="fas fa-users"></i><span>Users Management</span></a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" data-target="reservations"><i class="fas fa-calendar-alt"></i><span>Reservations</span></a>
-                </li>
-                <li class="nav-item">
                     <a href="#" data-target="monitoring"><i class="fas fa-desktop"></i><span>Monitoring & Reports</span></a>
                 </li>
                 <li class="nav-item">
@@ -99,15 +103,20 @@ $user_type  = $_SESSION['user_type'] ?? 'Administrator';
                     <div class="card">
                         <div class="card-icon"><i class="fas fa-car"></i></div>
                         <div class="card-content">
-                            <div class="card-value available">0</div>
+                            <div class="card-value available">
+                                <?php echo $counts['car']; ?>
+                            </div>
                             <div class="card-label">Available Spaces</div>
                         </div>
                     </div>
                     <div class="card">
                         <div class="card-icon"><i class="fa-solid fa-motorcycle"></i></div>
                         <div class="card-content">
-                            <div class="card-value taken">0</div>
-                            <div class="card-label">Taken Spaces</div>
+                            <div class="card-value taken">
+                                <?php echo $counts['motorcycle']; ?>
+                            </div>
+
+                            <div class="card-label">Available Spaces</div>
                         </div>
                     </div>
                 </div>
@@ -117,11 +126,20 @@ $user_type  = $_SESSION['user_type'] ?? 'Administrator';
                     <div class="map-container">
                         <img src="../assets/nu-map.png" alt="NU Laguna Park Space Map" class="map-image">
                         <div class="parking-slots-list">
+                            
+                            <!-- Bottom Right: Display Location with Available Spaces count -->
                             <h4><i class="fas fa-list"></i> Parking Areas Distribution</h4>
-                            <div class="slot-item"><span class="slot-count">78</span><span class="slot-name">Football Field Front</span><span class="slot-status available">Active</span></div>
-                            <div class="slot-item"><span class="slot-count">65</span><span class="slot-name">Football Field Side</span><span class="slot-status available">Active</span></div>
-                            <div class="slot-item"><span class="slot-count">31</span><span class="slot-name">Cafeteria Front</span><span class="slot-status available">Active</span></div>
-                            <div class="slot-item"><span class="slot-count">14</span><span class="slot-name">Gravel Parking</span><span class="slot-status available">Active</span></div>
+                            <?php if (!empty($distribution)): ?>
+                                <?php foreach ($distribution as $slot): ?>
+                                    <div class="slot-item">
+                                        <span class="slot-count"><?php echo $slot['slots']; ?></span>
+                                        <span class="slot-name"><?php echo htmlspecialchars($slot['location']); ?></span>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <p>No parking areas found.</p>
+                            <?php endif; ?>                          
+
                         </div>
                     </div>
                 </section>
@@ -229,12 +247,6 @@ $user_type  = $_SESSION['user_type'] ?? 'Administrator';
                     <p><strong>Admin ID:</strong> #<?php echo htmlspecialchars($admin_id); ?></p>
                     <p><strong>Session Started:</strong> <?php echo date('Y-m-d H:i:s'); ?></p>
                 </div>
-            </div>
-
-            <!-- Reservations -->
-            <div id="reservations" class="content-section">
-                <h3><i class="fas fa-calendar-alt"></i> Reservations Management</h3>
-                <p class="placeholder-text">Reservations module coming soon.</p>
             </div>
 
             <!-- Monitoring -->
@@ -351,6 +363,5 @@ $user_type  = $_SESSION['user_type'] ?? 'Administrator';
     </div>
 </div>
 
-<!-- <script src="../views/admin_dashboard.js"></script> -->
 </body>
 </html>
