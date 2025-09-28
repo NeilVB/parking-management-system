@@ -8,6 +8,13 @@ if (!isset($_SESSION['user_id'])) {
 // Optional: fetch session variables for display
 $user_id = $_SESSION['user_id'];
 $firstname = $_SESSION['firstname'] ?? 'User'; 
+
+require_once __DIR__ . '/../controller/config.php';
+require_once __DIR__ . '/../models/ParkingSpace.php';
+
+$model = new ParkingSpace($conn);
+$counts = $model->getVehicleCounts();
+$distribution = $model->getSlotDistribution();
 ?>
 
 <!DOCTYPE html>
@@ -17,7 +24,13 @@ $firstname = $_SESSION['firstname'] ?? 'User';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NU Space - Dashboard</title>
+
+    <!-- CSS -->
     <link rel="stylesheet" href="../views/dashboardstyle.css">
+
+    <!-- JS -->
+    <script src="../views/js/navigation.js"></script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
@@ -79,14 +92,18 @@ $firstname = $_SESSION['firstname'] ?? 'User';
                         <div class="card">
                             <div class="card-icon"><i class="fas fa-car"></i></div>
                             <div class="card-content">
-                                <div class="card-value available">0</div>
+                            <div class="card-value available">
+                                <?php echo $counts['car']; ?>
+                            </div>
                                 <div class="card-label">Available Spaces</div>
                             </div>
                         </div>
                         <div class="card">
                             <div class="card-icon"><i class="fa-solid fa-motorcycle"></i></div>
                             <div class="card-content">
-                                <div class="card-value taken">0</div>
+                            <div class="card-value taken">
+                                <?php echo $counts['motorcycle']; ?>
+                            </div>
                                 <div class="card-label">Available Spaces</div>
                             </div>
                         </div>
@@ -103,38 +120,24 @@ $firstname = $_SESSION['firstname'] ?? 'User';
                     </div>
 
                     <section class="map-section">
-						<h3>NU Laguna Campus Map</h3>
+                        <h3>NU Laguna Campus Map</h3>
                         <div class="map-container">
                             <img src="../assets/nu-map.png" alt="NU Laguna Park Space Map" class="map-image">
                             <div class="parking-slots-list">
-                                <h4>
-                                    <i class="fas fa-car"></i>
-                                    <span>Total Parking Slots</span>
-                                </h4>
-                                <div class="slot-item">
-                                    <span class="slot-count">78</span>
-                                    <span class="slot-name">Football Field Front</span>
-                                </div>
-                                <div class="slot-item">
-                                    <span class="slot-count">65</span>
-                                    <span class="slot-name">Football Field Side</span>
-                                </div>
-                                <div class="slot-item">
-                                    <span class="slot-count">31</span>
-                                    <span class="slot-name">Cafeteria Front</span>
-                                </div>
-                                <div class="slot-item">
-                                    <span class="slot-count">14</span>
-                                    <span class="slot-name">Gravel Parking</span>
-                                </div>
-                                <div class="slot-item">
-                                    <span class="slot-count">14</span>
-                                    <span class="slot-name">Sampalok Lane</span>
-                                </div>
-                                <div class="slot-item">
-                                    <span class="slot-count">14</span>
-                                    <span class="slot-name">Outside Parking</span>
-                                </div>
+                                
+                                <!-- Bottom Right: Display Location with Available Spaces count -->
+                                <h4><i class="fas fa-list"></i> Parking Areas Distribution</h4>
+                                <?php if (!empty($distribution)): ?>
+                                    <?php foreach ($distribution as $slot): ?>
+                                        <div class="slot-item">
+                                            <span class="slot-count"><?php echo $slot['slots']; ?></span>
+                                            <span class="slot-name"><?php echo htmlspecialchars($slot['location']); ?></span>
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <p>No parking areas found.</p>
+                                <?php endif; ?>                          
+
                             </div>
                         </div>
                     </section>
@@ -391,7 +394,6 @@ $firstname = $_SESSION['firstname'] ?? 'User';
             </main>
         </div>
     </div>
-    <script src="../views/dashboard.js"></script>
 
 </body>
 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3307
--- Generation Time: Sep 22, 2025 at 03:09 AM
+-- Generation Time: Sep 28, 2025 at 10:25 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -40,8 +40,36 @@ CREATE TABLE `admin_table` (
 --
 
 INSERT INTO `admin_table` (`admin_id`, `firstname`, `lastname`, `admin_email`, `admin_password`) VALUES
-(1, 'Admin1', 'Admin1', 'admin1@gmail.com', '25f43b1486ad95a1398e3eeb3d83bc4010015fcc9bedb35b432e00298d5021f7'),
-(2, 'Admin2', 'Admin2', 'admin2@gmail.com', '1c142b2d01aa34e9a36bde480645a57fd69e14155dacfab5a3f9257b77fdc8d8');
+(7, 'Admin1', 'Admin1', 'admin1@gmail.com', '25f43b1486ad95a1398e3eeb3d83bc4010015fcc9bedb35b432e00298d5021f7');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `parking_spaces`
+--
+
+CREATE TABLE `parking_spaces` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `max_space` int(11) NOT NULL CHECK (`max_space` > 0),
+  `space_type` enum('general','faculty','executive','guest') NOT NULL,
+  `vehicle_type` enum('Car','Motorcycle') NOT NULL DEFAULT 'Car',
+  `image_path` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `parking_spaces`
+--
+
+INSERT INTO `parking_spaces` (`id`, `name`, `max_space`, `space_type`, `vehicle_type`, `image_path`, `created_at`) VALUES
+(19, 'Gravel Parking', 30, 'general', 'Car', '/../uploads/parking/parking_68d92ac6002fd3.22902506.jpg', '2025-09-28 12:32:06'),
+(20, 'Cafeteria Parking', 40, 'general', 'Car', '/../uploads/parking/parking_68d92af213f6e6.81945858.png', '2025-09-28 12:32:50'),
+(21, 'Sampalok Lane', 20, 'general', 'Car', '/../uploads/parking/parking_68d92b1c8801b5.92295668.png', '2025-09-28 12:33:32'),
+(22, 'Labas ng NU', 10, 'executive', 'Car', '/../uploads/parking/parking_68d92b553a8786.84810314.png', '2025-09-28 12:34:29'),
+(23, '7 Evelyn', 6, 'guest', 'Car', '/../uploads/parking/parking_68d92b7cdb4816.17094128.png', '2025-09-28 12:35:08'),
+(24, 'Bahay ni Neil IRL', 97, 'faculty', 'Motorcycle', '/../uploads/parking/parking_68d92bb1140552.42811621.png', '2025-09-28 12:36:01'),
+(26, 'Bahay ni Mae sa Minecraft', 45, 'guest', 'Motorcycle', '/../uploads/parking/parking_68d9366ed95bf1.35452515.png', '2025-09-28 13:21:50');
 
 -- --------------------------------------------------------
 
@@ -68,8 +96,15 @@ CREATE TABLE `users_table` (
 --
 
 INSERT INTO `users_table` (`user_id`, `firstname`, `lastname`, `phone_number`, `user_type_id`, `vehicle_type_id`, `plate_number`, `email`, `password`, `created_at`, `updated_at`) VALUES
-(17, 'Christian Chad', 'Villamor', '9870980987', 1, 1, 'ABC-1234', 'chad@gmail.com', '$2y$10$qFEtX9fJGmLNr7qLlCDvRuDzzzq3j2R1ACRSeIiGOxu2X5IRkPGTq', '2025-09-21 14:30:01', '2025-09-21 14:30:01'),
-(18, 'test', 'testttttt', '9870980987', 3, 2, 'ABC-123', 'ads@gmail.com', '$2y$10$OhwViyP6WicOM/EjdtHN2O5HZ/Wul3PDnz.XKB3U7XRCuMaELyXTG', '2025-09-21 16:29:00', '2025-09-21 16:29:00');
+(38, 'test1', 'test1', '9876543210', 1, 1, 'ABC-12344', 'test1@gmail.com', '$2y$10$Dlml0iOpTjjxJJGkkUlmAOn4MTC6iNZnIXKxq994hQafyV2zGGKGu', '2025-09-22 14:27:05', '2025-09-22 14:27:05'),
+(39, 'test2', 'test2', '9870980987', 2, 1, 'ABC-12345', 'test2@gmail.com', '$2y$10$Q1Qp8t23kPtkSQ4i3IUYEOSyLpvaLs8yCpKaRY6Kll0516NPphZgO', '2025-09-22 14:27:59', '2025-09-22 14:27:59'),
+(40, 'test3', 'test3', '9870980987', 4, 2, 'abc-123456', 'test3@gmail.com', '$2y$10$msAFPy4ZmAX0sbjQmQBYfu3wudQIZqFnTQoDpcckfDX905iKCsFPG', '2025-09-22 15:08:10', '2025-09-22 15:08:10'),
+(41, 'test4', 'test4', '9870980987', 4, 2, 'test-4444', 'test4@gmail.com', '$2y$10$hac.TQbFs5sGoOJKHpJzfed9o.xkEjL8Aw2bQ277QAJ6WsSa8plF.', '2025-09-22 17:50:43', '2025-09-22 17:50:43'),
+(42, 'chowking', 'masarap', '9870980987', 4, 2, 'chowking-123', 'chowking@gmail.com', '$2y$10$.EaY1AxP3fA5pN0z.m47zuwXbrs3xuVkUKQZsd/g6gMBlaw1bPZE2', '2025-09-23 02:14:23', '2025-09-23 02:14:23'),
+(43, 'MCDO', 'Burger', '0', 1, 1, '', 'mcdo@gmail.com', '$2y$10$KnmpSjsjcKppg9qTYOofWei/ZEOlx8wR2PyttYa3Coeom90ije8Tm', '2025-09-23 03:05:00', '2025-09-23 03:05:00'),
+(46, 'mae', '14', '9080706050', 3, 1, 'mae-123', 'mae@gmail.com', '$2y$10$jKEYLpKQDtHqIDltQzEia.uVo5OCuaK/yZjIkQgSKEQYPFNF7y0Yq', '2025-09-23 03:27:20', '2025-09-23 03:27:20'),
+(49, 'Layi', 'Villamor', '9870980987', 4, 1, 'layi-123', 'layi@gmail.com', '$2y$10$hQD.DvyYycwv9Q7lgeBaOeR1kBpu71bm0M4XmaegSrtdCsLkQ7yx.', '2025-09-27 14:30:50', '2025-09-27 14:30:50'),
+(50, 'Nichole', 'Abella', '9870980987', 1, 1, 'niko-123', 'niko@gmail.com', '$2y$10$Mqj9b/wQNmlSpkZiAuiZjuOMFEbsqrF3vpHr5UuS.SuCRz5baPdbC', '2025-09-28 03:25:34', '2025-09-28 03:25:34');
 
 -- --------------------------------------------------------
 
@@ -123,6 +158,12 @@ ALTER TABLE `admin_table`
   ADD UNIQUE KEY `admin_email` (`admin_email`);
 
 --
+-- Indexes for table `parking_spaces`
+--
+ALTER TABLE `parking_spaces`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `users_table`
 --
 ALTER TABLE `users_table`
@@ -152,13 +193,19 @@ ALTER TABLE `vehicle_type_table`
 -- AUTO_INCREMENT for table `admin_table`
 --
 ALTER TABLE `admin_table`
-  MODIFY `admin_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `admin_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `parking_spaces`
+--
+ALTER TABLE `parking_spaces`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `users_table`
 --
 ALTER TABLE `users_table`
-  MODIFY `user_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `user_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `user_type_table`
