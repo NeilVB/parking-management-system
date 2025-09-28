@@ -19,7 +19,21 @@ $user_type  = $_SESSION['user_type'] ?? 'Administrator';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NU Space - Admin Dashboard</title>
+
+    <!-- CSS -->
     <link rel="stylesheet" href="../views/admindashboardstyle.css">
+
+    <!-- JS -->
+    <script src="../views/js/helpers.js"></script>
+    <script src="../views/js/navigation.js"></script>
+    <script src="../views/js/modals.js"></script>
+    <script src="../views/js/forms.js"></script>
+    <script src="../views/js/imagePreview.js"></script>
+    <script src="../views/js/refresh.js"></script>
+    <script src="../views/js/editMode.js"></script>
+    <script src="../views/js/filter.js"></script>
+    <script src="../views/js/init.js"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
@@ -143,6 +157,16 @@ $user_type  = $_SESSION['user_type'] ?? 'Administrator';
                         </select>
                     </div>
                     
+                    <!-- Vehicle Type Filter -->
+                    <div class="filter-container">
+                        <select id="vehicle-filter" class="filter-select" 
+                                style="padding: 10px 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; cursor: pointer; background: white;">
+                            <option value="all">🚗🏍️ All Vehicles</option>
+                            <option value="car">🚗 Car Only</option>
+                            <option value="motorcycle">🏍️ Motorcycle Only</option>
+                        </select>
+                    </div>
+                    
                     <!-- Count Display -->
                     <div class="count-display">
                         <span id="spaces-count" style="color: #666; font-size: 14px;">Loading...</span>
@@ -166,17 +190,22 @@ $user_type  = $_SESSION['user_type'] ?? 'Administrator';
                     while ($row = $result->fetch_assoc()): 
                         // Fix image path - prepend '../' to make it relative to the current location
                         $imagePath = !empty($row['image_path']) ? '../' . $row['image_path'] : '../assets/img/default_parking.jpg';
+                        
+                        // Get vehicle type icon
+                        $vehicleIcon = strtolower($row['vehicle_type']) === 'motorcycle' ? '🏍️' : '🚗';
                     ?>
                         <div class="parking-card"
                              style="background-image: url('<?php echo $imagePath; ?>');">
                             <div class="overlay">
                                 <h3><?php echo htmlspecialchars($row['name']); ?></h3>
                                 <p>Type: <?php echo ucfirst($row['space_type']); ?></p>
+                                <p>Vehicle: <?php echo $vehicleIcon . ' ' . ucfirst($row['vehicle_type']); ?></p>
                                 <p>Slots: 0/<?php echo $row['max_space']; ?></p>
                                 <button class="btn edit-space-btn edit-btn"
                                         data-id="<?php echo $row['id']; ?>"
                                         data-name="<?php echo htmlspecialchars($row['name']); ?>"
                                         data-type="<?php echo $row['space_type']; ?>"
+                                        data-vehicle="<?php echo $row['vehicle_type']; ?>"
                                         data-max="<?php echo $row['max_space']; ?>"
                                         data-image="<?php echo $imagePath; ?>">
                                     Edit
@@ -249,8 +278,16 @@ $user_type  = $_SESSION['user_type'] ?? 'Administrator';
                 </select>
             </div>
             <div class="form-group">
+                <label><i class="fas fa-car"></i> Vehicle Type</label>
+                <select name="vehicle_type">
+                    <option value="car">🚗 Car</option>
+                    <option value="motorcycle">🏍️ Motorcycle</option>
+                </select>
+            </div>
+            <div class="form-group">
                 <label><i class="fas fa-image"></i> Upload Image</label>
-                <input type="file" name="image" accept="image/*">
+                <input type="file" name="image" id="new-space-image" accept="image/*">
+                <img id="add-space-preview" style="max-width: 200px; margin-top: 10px; display: none;" />
             </div>
             <div class="modal-actions">
                 <button type="submit" class="btn btn-primary">Save</button>
@@ -261,24 +298,28 @@ $user_type  = $_SESSION['user_type'] ?? 'Administrator';
 </div>
 
 <!-- Edit Space Modal -->
-<div id="edit-space-modal" class="modal">
+<div id="edit-space-modal" class="modal" role="dialog" aria-modal="true">
     <div class="modal-content">
         <div class="modal-header">
             <h3>Edit Parking Space</h3>
-            <span class="close-btn">&times;</span>
+            <button type="button" class="close-btn" aria-label="Close">&times;</button>
         </div>
+
         <form id="edit-space-form" enctype="multipart/form-data">
             <input type="hidden" name="id" id="edit-space-id">
+
             <div class="form-group">
-                <label><i class="fas fa-tag"></i> Name</label>
+                <label for="edit-space-name"><i class="fas fa-tag"></i> Name</label>
                 <input type="text" name="name" id="edit-space-name" required>
             </div>
+
             <div class="form-group">
-                <label><i class="fas fa-hashtag"></i> Maximum Slots</label>
+                <label for="edit-space-max"><i class="fas fa-hashtag"></i> Maximum Slots</label>
                 <input type="number" name="max_space" id="edit-space-max" required min="1">
             </div>
+
             <div class="form-group">
-                <label><i class="fas fa-list"></i> Space Type</label>
+                <label for="edit-space-type"><i class="fas fa-list"></i> Space Type</label>
                 <select name="space_type" id="edit-space-type">
                     <option value="general">General</option>
                     <option value="faculty">Faculty</option>
@@ -286,10 +327,21 @@ $user_type  = $_SESSION['user_type'] ?? 'Administrator';
                     <option value="guest">Guest</option>
                 </select>
             </div>
+
             <div class="form-group">
-                <label><i class="fas fa-image"></i> Update Image</label>
-                <input type="file" name="image" id="edit-space-image" accept="image/*">
+                <label for="edit-space-vehicle"><i class="fas fa-car"></i> Vehicle Type</label>
+                <select name="vehicle_type" id="edit-space-vehicle">
+                    <option value="car">🚗 Car</option>
+                    <option value="motorcycle">🏍️ Motorcycle</option>
+                </select>
             </div>
+
+            <div class="form-group">
+                <label for="edit-space-image"><i class="fas fa-image"></i> Update Image</label>
+                <input type="file" name="image" id="edit-space-image" accept="image/*">
+                <img id="edit-space-preview" alt="Image preview" style="max-width: 200px; margin-top: 10px;" />
+            </div>
+
             <div class="modal-actions">
                 <button type="submit" class="btn btn-primary">Save</button>
                 <button type="button" class="btn btn-danger" id="delete-space-btn">Delete</button>
@@ -299,6 +351,6 @@ $user_type  = $_SESSION['user_type'] ?? 'Administrator';
     </div>
 </div>
 
-<script src="../views/admin_dashboard.js"></script>
+<!-- <script src="../views/admin_dashboard.js"></script> -->
 </body>
 </html>

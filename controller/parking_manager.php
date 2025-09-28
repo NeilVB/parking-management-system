@@ -10,7 +10,6 @@ ini_set('error_log', __DIR__ . '/../logs/php_errors.log');
 
 header('Content-Type: application/json; charset=utf-8');
 
-// Register shutdown handler to ensure JSON is returned on fatal error
 register_shutdown_function(function () {
     $err = error_get_last();
     if ($err !== null) {
@@ -22,7 +21,6 @@ register_shutdown_function(function () {
     }
 });
 
-// include db config (this file should create $conn as mysqli object)
 require_once __DIR__ . '/config.php';
 
 if (!isset($conn) || !($conn instanceof mysqli)) {
@@ -33,11 +31,11 @@ if (!isset($conn) || !($conn instanceof mysqli)) {
 
 $action = $_POST['action'] ?? $_GET['action'] ?? '';
 $allowed_types = ['general', 'faculty', 'executive', 'guest'];
+$allowed_vehicles = ['car', 'motorcycle'];
 
-$uploadDirRel = '/../uploads/parking/';                 // relative path saved in DB (web-accessible)
+$uploadDirRel = '/../uploads/parking/';
 $uploadDirAbs = realpath(__DIR__ . '/../') . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'parking' . DIRECTORY_SEPARATOR;
 
-// helper: consistent JSON response + exit
 function respond($success, $message, $data = [], $http_code = 200) {
     http_response_code($http_code);
     $payload = array_merge(['success' => $success, 'message' => $message], $data);
@@ -45,12 +43,10 @@ function respond($success, $message, $data = [], $http_code = 200) {
     exit;
 }
 
-// helper: sanitize filename (very minimal — we use uniqid anyway)
 function sanitize_filename($name) {
     return preg_replace('/[^A-Za-z0-9_\-\.]/', '_', $name);
 }
 
-// handle file upload, returns relative path or null, throws Exception on error
 function handle_upload($fileKey, $uploadDirAbs, $uploadDirRel) {
     if (!isset($_FILES[$fileKey]) || $_FILES[$fileKey]['error'] === UPLOAD_ERR_NO_FILE) {
         return null;
@@ -62,12 +58,10 @@ function handle_upload($fileKey, $uploadDirAbs, $uploadDirRel) {
         throw new Exception('File upload error code: ' . $file['error']);
     }
 
-    // Limit size to 5MB
     if ($file['size'] > 5 * 1024 * 1024) {
         throw new Exception('File too large. Max 5MB.');
     }
 
-    // Detect mime type
     $finfo = new finfo(FILEINFO_MIME_TYPE);
     $mime  = $finfo->file($file['tmp_name']);
     $allowed_mimes = [
@@ -81,7 +75,6 @@ function handle_upload($fileKey, $uploadDirAbs, $uploadDirRel) {
         throw new Exception('Invalid image type. Allowed: jpg, png, gif, webp.');
     }
 
-    // Ensure upload dir exists
     if (!is_dir($uploadDirAbs)) {
         if (!mkdir($uploadDirAbs, 0755, true) && !is_dir($uploadDirAbs)) {
             throw new Exception('Failed to create upload directory.');
@@ -97,7 +90,6 @@ function handle_upload($fileKey, $uploadDirAbs, $uploadDirRel) {
         throw new Exception('Failed to move uploaded file.');
     }
 
-    // Return web-accessible relative path (no leading slash)
     return $uploadDirRel . $filename;
 }
 
@@ -106,6 +98,7 @@ try {
         $name = trim((string)($_POST['name'] ?? ''));
         $max_space = (int)($_POST['max_space'] ?? 0);
         $space_type = (string)($_POST['space_type'] ?? '');
+        $vehicle_type = (string)($_POST['vehicle_type'] ?? '');
 
         if ($name === '' || $max_space <= 0) {
             respond(false, 'Name and maximum slots are required.', [], 400);
@@ -115,28 +108,25 @@ try {
             respond(false, 'Invalid space type.', [], 400);
         }
 
-        // handle optional image upload
+        if (!in_array($vehicle_type, $allowed_vehicles, true)) {
+            respond(false, 'Invalid vehicle type.', [], 400);
+        }
+
         $imagePath = null;
         if (isset($_FILES['image']) && $_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE) {
             $imagePath = handle_upload('image', $uploadDirAbs, $uploadDirRel);
         }
 
-        $sql = "INSERT INTO parking_spaces (name, max_space, space_type, image_path) VALUES (?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-        if (!$stmt) {
-            respond(false, 'DB prepare failed: ' . $conn->error, [], 500);
-        }
-
         if ($imagePath !== null) {
-            $stmt->bind_param('siss', $name, $max_space, $space_type, $imagePath);
-        } else {
-            $stmt->bind_param('sis', $name, $max_space, $space_type);
-            // adjust SQL to not expect image_path column - but easier: set image_path to NULL in query explicitly
-            $stmt->close();
-            $sql = "INSERT INTO parking_spaces (name, max_space, space_type, image_path) VALUES (?, ?, ?, NULL)";
+            $sql = "INSERT INTO parking_spaces (name, max_space, space_type, vehicle_type, image_path) VALUES (?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($sql);
             if (!$stmt) respond(false, 'DB prepare failed: ' . $conn->error, [], 500);
-            $stmt->bind_param('sis', $name, $max_space, $space_type);
+            $stmt->bind_param('sisss', $name, $max_space, $space_type, $vehicle_type, $imagePath);
+        } else {
+            $sql = "INSERT INTO parking_spaces (name, max_space, space_type, vehicle_type, image_path) VALUES (?, ?, ?, ?, NULL)";
+            $stmt = $conn->prepare($sql);
+            if (!$stmt) respond(false, 'DB prepare failed: ' . $conn->error, [], 500);
+            $stmt->bind_param('siss', $name, $max_space, $space_type, $vehicle_type);
         }
 
         if ($stmt->execute()) {
@@ -154,6 +144,7 @@ try {
         $name = trim((string)($_POST['name'] ?? ''));
         $max_space = (int)($_POST['max_space'] ?? 0);
         $space_type = (string)($_POST['space_type'] ?? '');
+        $vehicle_type = (string)($_POST['vehicle_type'] ?? '');
 
         if ($id <= 0 || $name === '' || $max_space <= 0) {
             respond(false, 'Invalid input for edit.', [], 400);
@@ -163,21 +154,25 @@ try {
             respond(false, 'Invalid space type.', [], 400);
         }
 
+        if (!in_array($vehicle_type, $allowed_vehicles, true)) {
+            respond(false, 'Invalid vehicle type.', [], 400);
+        }
+
         $image_path = null;
         if (isset($_FILES['image']) && $_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE) {
             $image_path = handle_upload('image', $uploadDirAbs, $uploadDirRel);
         }
 
         if ($image_path !== null) {
-            $sql = "UPDATE parking_spaces SET name = ?, max_space = ?, space_type = ?, image_path = ? WHERE id = ?";
+            $sql = "UPDATE parking_spaces SET name = ?, max_space = ?, space_type = ?, vehicle_type = ?, image_path = ? WHERE id = ?";
             $stmt = $conn->prepare($sql);
             if (!$stmt) respond(false, 'DB prepare failed: ' . $conn->error, [], 500);
-            $stmt->bind_param('sissi', $name, $max_space, $space_type, $image_path, $id);
+            $stmt->bind_param('sisssi', $name, $max_space, $space_type, $vehicle_type, $image_path, $id);
         } else {
-            $sql = "UPDATE parking_spaces SET name = ?, max_space = ?, space_type = ? WHERE id = ?";
+            $sql = "UPDATE parking_spaces SET name = ?, max_space = ?, space_type = ?, vehicle_type = ? WHERE id = ?";
             $stmt = $conn->prepare($sql);
             if (!$stmt) respond(false, 'DB prepare failed: ' . $conn->error, [], 500);
-            $stmt->bind_param('sisi', $name, $max_space, $space_type, $id);
+            $stmt->bind_param('sissi', $name, $max_space, $space_type, $vehicle_type, $id);
         }
 
         if ($stmt->execute()) {
@@ -193,7 +188,6 @@ try {
         $id = (int)($_POST['id'] ?? 0);
         if ($id <= 0) respond(false, 'Invalid ID for delete.', [], 400);
 
-        // get image_path so we can remove the file
         $sel = $conn->prepare("SELECT image_path FROM parking_spaces WHERE id = ?");
         if (!$sel) respond(false, 'DB prepare failed: ' . $conn->error, [], 500);
         $sel->bind_param('i', $id);
@@ -222,7 +216,7 @@ try {
         }
 
     } elseif ($action === 'list') {
-        $result = $conn->query("SELECT id, name, max_space, space_type, image_path, created_at FROM parking_spaces ORDER BY id DESC");
+        $result = $conn->query("SELECT id, name, max_space, space_type, vehicle_type, image_path, created_at FROM parking_spaces ORDER BY id DESC");
         if (!$result) respond(false, 'DB query failed: ' . $conn->error, [], 500);
         $rows = [];
         while ($r = $result->fetch_assoc()) $rows[] = $r;
