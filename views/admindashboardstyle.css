@@ -486,7 +486,7 @@ body {
     border: 1px solid var(--border-color);
 }
 
-.parking-grid {
+.parking-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, 349px);
     gap: 20px;
@@ -494,7 +494,7 @@ body {
 }
 
 /* --- Add Parking Space Card --- */
-.add-space-card {
+.parking-card.add-card {
     width: 349px;
     height: 288px;
     display: flex;
@@ -506,12 +506,12 @@ body {
     transition: background-color 0.3s, border-color 0.3s;
 }
 
-.add-space-card:hover {
+.parking-card.add-card:hover {
     background-color: #e2e2e2;
     border-color: #495057;
 }
 
-.add-space-content {
+.overlay {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -521,7 +521,7 @@ body {
     font-size: 1rem;
 }
 
-.add-space-content i {
+.overlay i {
     font-size: 2.2rem;
 }
 
@@ -576,55 +576,56 @@ body {
     color: var(--active-blue-border);
 }
 
-/* --- Dropdown --- */
-.dropdown {
-    position: relative;
-    display: inline-block;
+
+/* Chad: Filter Bar Styles */
+.filter-bar {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    margin-bottom: 20px;
 }
 
-.dropdown-checkbox {
-    display: none;
+.search-container input {
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.dropdown-content {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: var(--main-bg);
-    min-width: 160px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    z-index: 1000;
-    overflow: hidden;
+.search-container input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
-.dropdown-content a {
-    color: var(--text-color-dark);
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    font-size: 0.9rem;
-    transition: background-color 0.2s ease;
+.filter-container .filter-select {
+    transition: all 0.3s ease;
+    min-width: 150px;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+    padding-right: 35px;
 }
 
-.dropdown-content a:hover {
-    background-color: var(--active-bg-blue);
-    color: var(--primary-blue);
+.filter-container .filter-select:hover {
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
 }
 
-.dropdown-checkbox:checked+label+.dropdown-content {
-    display: block;
+.filter-container .filter-select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
-.dropdown-checkbox:checked+label .fa-chevron-down {
-    transform: rotate(180deg);
+.count-display {
+    background: white;
+    padding: 10px 15px;
+    border: 1px solid #e9ecef;
+    border-radius: 5px;
+    font-weight: 500;
 }
 
-.fa-chevron-down {
-    transition: transform 0.3s ease;
-}
 
 /* --- Terms & Policy Page Styles --- */
 #terms-container,
