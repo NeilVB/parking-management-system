@@ -57,20 +57,29 @@ class Vehicle {
     }
 
     public function getVehiclesByUser($user_id) {
-        $query = "SELECT * FROM vehicles_table WHERE user_id = ? ORDER BY vehicle_id ASC LIMIT 2";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("i", $user_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
+    $query = "
+        SELECT v.*, vt.vehicle_type 
+        FROM vehicles_table v
+        JOIN vehicle_type_table vt ON v.vehicle_type_id = vt.vehicle_type_id
+        WHERE v.user_id = ?
+        ORDER BY v.vehicle_id ASC
+        LIMIT 2
+    ";
 
-        $vehicles = [];
-        while ($row = $result->fetch_assoc()) {
-            $vehicles[] = $row;
-        }
+    $stmt = $this->conn->prepare($query);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-        $stmt->close();
-        return $vehicles;
+    $vehicles = [];
+    while ($row = $result->fetch_assoc()) {
+        $vehicles[] = $row;
     }
+
+    $stmt->close();
+    return $vehicles;
+}
+
 
 
     /**
