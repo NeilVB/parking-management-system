@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Sep 29, 2025 at 09:41 AM
+-- Generation Time: Sep 29, 2025 at 05:15 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -142,16 +142,16 @@ CREATE TABLE `vehicles_table` (
   `model` varchar(50) NOT NULL,
   `year` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `qr_token` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `vehicles_table`
 --
 
-INSERT INTO `vehicles_table` (`vehicle_id`, `user_id`, `vehicle_type_id`, `plate_number`, `color`, `make`, `model`, `year`, `created_at`, `updated_at`) VALUES
-(1, 51, 1, 'ABC-1234', 'Gray', 'Toyota', 'Veloz', 2025, '2025-09-29 06:56:01', '2025-09-29 06:56:01'),
-(6, 51, 1, 'ABC-1238', 'Gray', 'Toyota', 'Veloz', 2025, '2025-09-29 07:31:14', '2025-09-29 07:31:14');
+INSERT INTO `vehicles_table` (`vehicle_id`, `user_id`, `vehicle_type_id`, `plate_number`, `color`, `make`, `model`, `year`, `created_at`, `updated_at`, `qr_token`) VALUES
+(7, 51, 1, 'ABC-1235', 'Blue', 'Toyota', 'Veloz', 2025, '2025-09-29 14:10:21', '2025-09-29 14:10:21', '2ff6499be357f9e7ee7631589471009a');
 
 -- --------------------------------------------------------
 
@@ -209,6 +209,7 @@ ALTER TABLE `user_type_table`
 ALTER TABLE `vehicles_table`
   ADD PRIMARY KEY (`vehicle_id`),
   ADD UNIQUE KEY `plate_number` (`plate_number`),
+  ADD UNIQUE KEY `qr_token` (`qr_token`),
   ADD KEY `user_id` (`user_id`),
   ADD KEY `vehicle_type_id` (`vehicle_type_id`);
 
@@ -250,7 +251,7 @@ ALTER TABLE `user_type_table`
 -- AUTO_INCREMENT for table `vehicles_table`
 --
 ALTER TABLE `vehicles_table`
-  MODIFY `vehicle_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `vehicle_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `vehicle_type_table`

@@ -38,13 +38,16 @@ class Vehicle {
         }
 
         // Insert vehicle
-        $insert_query = "INSERT INTO vehicles_table (user_id, vehicle_type_id, plate_number, color, make, model, year) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $insert_query = "INSERT INTO vehicles_table (user_id, vehicle_type_id, plate_number, color, make, model, year, qr_token) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $insert_stmt = $this->conn->prepare($insert_query);
         if (!$insert_stmt) {
             return ['success' => false, 'message' => 'Database error: ' . $this->conn->error];
         }
 
-        $insert_stmt->bind_param("iissssi", $user_id, $vehicle_type_id, $plate_number, $color, $make, $model, $year);
+        $qr_token = $vehicleData['qr_token'];
+
+        $insert_stmt->bind_param("iissssis", $user_id, $vehicle_type_id, $plate_number, $color, $make, $model, $year, $qr_token);
+
 
         if ($insert_stmt->execute()) {
             $insert_stmt->close();
@@ -104,5 +107,25 @@ class Vehicle {
 
         return ['success' => true];
     }
+
+    // Temporary Viewing
+
+    public function getVehicleWithUserByToken($token) {
+    $stmt = $this->conn->prepare("
+        SELECT 
+            v.plate_number, v.color, v.make, v.model, v.year,
+            vt.vehicle_type,
+            u.firstname, u.lastname, u.email, u.phone_number,
+            ut.user_type
+        FROM vehicles_table v
+        JOIN vehicle_type_table vt ON v.vehicle_type_id = vt.vehicle_type_id
+        JOIN users_table u ON v.user_id = u.user_id
+        JOIN user_type_table ut ON u.user_type_id = ut.user_type_id
+        WHERE v.qr_token = ?
+    ");
+    $stmt->bind_param("s", $token);
+    $stmt->execute();
+    return $stmt->get_result()->fetch_assoc();
+}
 }
 ?>

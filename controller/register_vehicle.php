@@ -18,6 +18,9 @@ $vehicle = new Vehicle($conn);
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Generate secure QR token
+    $qr_token = bin2hex(random_bytes(16));
+
     // Normalize keys to match Vehicle.php expectations
     $form_data = [
         'user_id'         => $_SESSION['user_id'] ?? null,
@@ -26,7 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'color'           => trim($_POST['color'] ?? ''),
         'make'            => trim($_POST['make'] ?? ''),
         'model'           => trim($_POST['model'] ?? ''),
-        'year'            => $_POST['year'] ?? ''
+        'year'            => $_POST['year'] ?? '',
+        'qr_token'        => $qr_token
     ];
 
     // Check if user is logged in
