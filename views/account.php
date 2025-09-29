@@ -63,7 +63,7 @@ $plateNumber = $_SESSION['plate_number'] ?? 'N/A';
                     </li>
                     <li><i class="fas fa-phone"></i>
                         <div><span class="detail-label">Phone Number</span>
-                        <span class="detail-value"><?php echo htmlspecialchars($phoneNumber ?? ''); ?></span></div>
+                        <span class="detail-value">0<?php echo htmlspecialchars($phoneNumber ?? ''); ?></span></div>
                     </li>
                     <li><i class="fas fa-envelope"></i>
                         <div><span class="detail-label">Email</span>
