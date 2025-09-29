@@ -626,6 +626,86 @@ body {
     transition: transform 0.3s ease;
 }
 
+/* --- Vehicle Registration Page Styles --- */
+
+.formcontainer {
+    height: 85%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    overflow-y: auto;
+    padding: 5% 0;
+}
+
+#vehicle-registration h3,
+#vehicle-registration .section-subtitle {
+    margin-bottom: 1rem;
+}
+
+form {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.name-group {
+    display: flex;
+    justify-content: space-between;
+}
+
+form label {
+    font-size: var(--font-size-small);
+    color: var(--text-color-dark);
+}
+
+input {
+    font-size: var(--font-size-small);
+    padding: 5px;
+    border: 1px solid var(--border-color);
+}
+
+select {
+    padding: 5px;
+    font-size: var(--font-size-small);
+    border: 1px solid var(--border-color);
+}
+
+input[type="checkbox"] {
+    width: 10px;
+    height: 10px;
+}
+
+.label-div {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1%;
+}
+
+.register-button {
+    background-color: var(--primary-blue);
+    color: var(--main-bg);
+    border: none;
+    padding: 10px;
+    font-size: var(--font-size-small-medium);
+    margin-top: 5%;
+}
+
+.formcontainer h2 {
+    font-size: var(--font-size-small-medium);
+    color: var(--main-bg);
+    margin-bottom: 5%;
+    font-weight: normal;
+}
+
 /* --- Terms & Policy Page Styles --- */
 #terms-container,
 #policy-container {

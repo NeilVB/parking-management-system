@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3307
--- Generation Time: Sep 28, 2025 at 10:25 AM
+-- Host: 127.0.0.1:3307
+-- Generation Time: Sep 29, 2025 at 09:41 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -83,8 +83,6 @@ CREATE TABLE `users_table` (
   `lastname` text NOT NULL,
   `phone_number` varchar(20) NOT NULL,
   `user_type_id` int(255) NOT NULL,
-  `vehicle_type_id` int(255) NOT NULL,
-  `plate_number` varchar(20) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -95,16 +93,17 @@ CREATE TABLE `users_table` (
 -- Dumping data for table `users_table`
 --
 
-INSERT INTO `users_table` (`user_id`, `firstname`, `lastname`, `phone_number`, `user_type_id`, `vehicle_type_id`, `plate_number`, `email`, `password`, `created_at`, `updated_at`) VALUES
-(38, 'test1', 'test1', '9876543210', 1, 1, 'ABC-12344', 'test1@gmail.com', '$2y$10$Dlml0iOpTjjxJJGkkUlmAOn4MTC6iNZnIXKxq994hQafyV2zGGKGu', '2025-09-22 14:27:05', '2025-09-22 14:27:05'),
-(39, 'test2', 'test2', '9870980987', 2, 1, 'ABC-12345', 'test2@gmail.com', '$2y$10$Q1Qp8t23kPtkSQ4i3IUYEOSyLpvaLs8yCpKaRY6Kll0516NPphZgO', '2025-09-22 14:27:59', '2025-09-22 14:27:59'),
-(40, 'test3', 'test3', '9870980987', 4, 2, 'abc-123456', 'test3@gmail.com', '$2y$10$msAFPy4ZmAX0sbjQmQBYfu3wudQIZqFnTQoDpcckfDX905iKCsFPG', '2025-09-22 15:08:10', '2025-09-22 15:08:10'),
-(41, 'test4', 'test4', '9870980987', 4, 2, 'test-4444', 'test4@gmail.com', '$2y$10$hac.TQbFs5sGoOJKHpJzfed9o.xkEjL8Aw2bQ277QAJ6WsSa8plF.', '2025-09-22 17:50:43', '2025-09-22 17:50:43'),
-(42, 'chowking', 'masarap', '9870980987', 4, 2, 'chowking-123', 'chowking@gmail.com', '$2y$10$.EaY1AxP3fA5pN0z.m47zuwXbrs3xuVkUKQZsd/g6gMBlaw1bPZE2', '2025-09-23 02:14:23', '2025-09-23 02:14:23'),
-(43, 'MCDO', 'Burger', '0', 1, 1, '', 'mcdo@gmail.com', '$2y$10$KnmpSjsjcKppg9qTYOofWei/ZEOlx8wR2PyttYa3Coeom90ije8Tm', '2025-09-23 03:05:00', '2025-09-23 03:05:00'),
-(46, 'mae', '14', '9080706050', 3, 1, 'mae-123', 'mae@gmail.com', '$2y$10$jKEYLpKQDtHqIDltQzEia.uVo5OCuaK/yZjIkQgSKEQYPFNF7y0Yq', '2025-09-23 03:27:20', '2025-09-23 03:27:20'),
-(49, 'Layi', 'Villamor', '9870980987', 4, 1, 'layi-123', 'layi@gmail.com', '$2y$10$hQD.DvyYycwv9Q7lgeBaOeR1kBpu71bm0M4XmaegSrtdCsLkQ7yx.', '2025-09-27 14:30:50', '2025-09-27 14:30:50'),
-(50, 'Nichole', 'Abella', '9870980987', 1, 1, 'niko-123', 'niko@gmail.com', '$2y$10$Mqj9b/wQNmlSpkZiAuiZjuOMFEbsqrF3vpHr5UuS.SuCRz5baPdbC', '2025-09-28 03:25:34', '2025-09-28 03:25:34');
+INSERT INTO `users_table` (`user_id`, `firstname`, `lastname`, `phone_number`, `user_type_id`, `email`, `password`, `created_at`, `updated_at`) VALUES
+(38, 'test1', 'test1', '9876543210', 1, 'test1@gmail.com', '$2y$10$Dlml0iOpTjjxJJGkkUlmAOn4MTC6iNZnIXKxq994hQafyV2zGGKGu', '2025-09-22 14:27:05', '2025-09-22 14:27:05'),
+(39, 'test2', 'test2', '9870980987', 2, 'test2@gmail.com', '$2y$10$Q1Qp8t23kPtkSQ4i3IUYEOSyLpvaLs8yCpKaRY6Kll0516NPphZgO', '2025-09-22 14:27:59', '2025-09-22 14:27:59'),
+(40, 'test3', 'test3', '9870980987', 4, 'test3@gmail.com', '$2y$10$msAFPy4ZmAX0sbjQmQBYfu3wudQIZqFnTQoDpcckfDX905iKCsFPG', '2025-09-22 15:08:10', '2025-09-22 15:08:10'),
+(41, 'test4', 'test4', '9870980987', 4, 'test4@gmail.com', '$2y$10$hac.TQbFs5sGoOJKHpJzfed9o.xkEjL8Aw2bQ277QAJ6WsSa8plF.', '2025-09-22 17:50:43', '2025-09-22 17:50:43'),
+(42, 'chowking', 'masarap', '9870980987', 4, 'chowking@gmail.com', '$2y$10$.EaY1AxP3fA5pN0z.m47zuwXbrs3xuVkUKQZsd/g6gMBlaw1bPZE2', '2025-09-23 02:14:23', '2025-09-23 02:14:23'),
+(43, 'MCDO', 'Burger', '0', 1, 'mcdo@gmail.com', '$2y$10$KnmpSjsjcKppg9qTYOofWei/ZEOlx8wR2PyttYa3Coeom90ije8Tm', '2025-09-23 03:05:00', '2025-09-23 03:05:00'),
+(46, 'mae', '14', '9080706050', 3, 'mae@gmail.com', '$2y$10$jKEYLpKQDtHqIDltQzEia.uVo5OCuaK/yZjIkQgSKEQYPFNF7y0Yq', '2025-09-23 03:27:20', '2025-09-23 03:27:20'),
+(49, 'Layi', 'Villamor', '9870980987', 4, 'layi@gmail.com', '$2y$10$hQD.DvyYycwv9Q7lgeBaOeR1kBpu71bm0M4XmaegSrtdCsLkQ7yx.', '2025-09-27 14:30:50', '2025-09-27 14:30:50'),
+(50, 'Nichole', 'Abella', '9870980987', 1, 'niko@gmail.com', '$2y$10$Mqj9b/wQNmlSpkZiAuiZjuOMFEbsqrF3vpHr5UuS.SuCRz5baPdbC', '2025-09-28 03:25:34', '2025-09-28 03:25:34'),
+(51, 'John', 'Doe', '917', 1, 'john.doe@example.com', '$2y$10$iRUJn11lraqij25uBQNnCO/tCb.gTWahmEswMR6v8Q2QVyEIzoYR.', '2025-09-29 02:20:09', '2025-09-29 02:20:09');
 
 -- --------------------------------------------------------
 
@@ -126,6 +125,33 @@ INSERT INTO `user_type_table` (`user_type_id`, `user_type`) VALUES
 (2, 'Faculty'),
 (3, 'Executive'),
 (4, 'Guest');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `vehicles_table`
+--
+
+CREATE TABLE `vehicles_table` (
+  `vehicle_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `vehicle_type_id` int(11) NOT NULL,
+  `plate_number` varchar(20) NOT NULL,
+  `color` varchar(30) NOT NULL,
+  `make` varchar(50) NOT NULL,
+  `model` varchar(50) NOT NULL,
+  `year` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `vehicles_table`
+--
+
+INSERT INTO `vehicles_table` (`vehicle_id`, `user_id`, `vehicle_type_id`, `plate_number`, `color`, `make`, `model`, `year`, `created_at`, `updated_at`) VALUES
+(1, 51, 1, 'ABC-1234', 'Gray', 'Toyota', 'Veloz', 2025, '2025-09-29 06:56:01', '2025-09-29 06:56:01'),
+(6, 51, 1, 'ABC-1238', 'Gray', 'Toyota', 'Veloz', 2025, '2025-09-29 07:31:14', '2025-09-29 07:31:14');
 
 -- --------------------------------------------------------
 
@@ -169,15 +195,22 @@ ALTER TABLE `parking_spaces`
 ALTER TABLE `users_table`
   ADD PRIMARY KEY (`user_id`),
   ADD UNIQUE KEY `email` (`email`),
-  ADD UNIQUE KEY `plate_number` (`plate_number`),
-  ADD KEY `user_type_id` (`user_type_id`),
-  ADD KEY `vehicle_type_id` (`vehicle_type_id`);
+  ADD KEY `user_type_id` (`user_type_id`);
 
 --
 -- Indexes for table `user_type_table`
 --
 ALTER TABLE `user_type_table`
   ADD PRIMARY KEY (`user_type_id`);
+
+--
+-- Indexes for table `vehicles_table`
+--
+ALTER TABLE `vehicles_table`
+  ADD PRIMARY KEY (`vehicle_id`),
+  ADD UNIQUE KEY `plate_number` (`plate_number`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `vehicle_type_id` (`vehicle_type_id`);
 
 --
 -- Indexes for table `vehicle_type_table`
@@ -205,13 +238,19 @@ ALTER TABLE `parking_spaces`
 -- AUTO_INCREMENT for table `users_table`
 --
 ALTER TABLE `users_table`
-  MODIFY `user_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `user_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT for table `user_type_table`
 --
 ALTER TABLE `user_type_table`
   MODIFY `user_type_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `vehicles_table`
+--
+ALTER TABLE `vehicles_table`
+  MODIFY `vehicle_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `vehicle_type_table`
@@ -227,8 +266,14 @@ ALTER TABLE `vehicle_type_table`
 -- Constraints for table `users_table`
 --
 ALTER TABLE `users_table`
-  ADD CONSTRAINT `users_table_ibfk_1` FOREIGN KEY (`user_type_id`) REFERENCES `user_type_table` (`user_type_id`),
-  ADD CONSTRAINT `users_table_ibfk_2` FOREIGN KEY (`vehicle_type_id`) REFERENCES `vehicle_type_table` (`vehicle_type_id`);
+  ADD CONSTRAINT `users_table_ibfk_1` FOREIGN KEY (`user_type_id`) REFERENCES `user_type_table` (`user_type_id`);
+
+--
+-- Constraints for table `vehicles_table`
+--
+ALTER TABLE `vehicles_table`
+  ADD CONSTRAINT `vehicles_table_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users_table` (`user_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `vehicles_table_ibfk_2` FOREIGN KEY (`vehicle_type_id`) REFERENCES `vehicle_type_table` (`vehicle_type_id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

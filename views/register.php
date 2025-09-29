@@ -42,69 +42,46 @@
                         <h2>Register</h2>
                     </div>
                     <div class="inputsubcontainer formcontainer">
-                        
                         <?php 
                         // Display error or success messages (passed from controller)
                         if (!empty($error_message)): 
                         ?>
                             <div class="message error"><?php echo htmlspecialchars($error_message); ?></div>
                         <?php endif; ?>
-                        
                         <?php if (!empty($success_message)): ?>
                             <div class="message success"><?php echo htmlspecialchars($success_message); ?></div>
                         <?php endif; ?>
                         
                         <form action="../controller/register.php" method="POST">
                             <div class="input-group">
-                                <div class="name-group">
-                                    <section>
-                                        <label for="FirstName">First Name</label>
-                                        <input type="text" id="FirstName" name="FirstName" required placeholder="John" 
-                                               value="<?php echo htmlspecialchars($form_data['FirstName'] ?? ''); ?>">
-                                    </section>
-                                    <section>
-                                        <label for="LastName">Last Name</label>
-                                        <input type="text" id="LastName" name="LastName" required placeholder="Doe"
-                                               value="<?php echo htmlspecialchars($form_data['LastName'] ?? ''); ?>">
-                                    </section>
-                                </div>
+                                <label for="FirstName">First Name</label>
+                                    <input type="text" id="FirstName" name="FirstName" required placeholder="John" 
+                                            value="<?php echo htmlspecialchars($form_data['FirstName'] ?? ''); ?>">
                             </div>
                             <div class="input-group">
-                                <label for="PlateNumber">Plate Number</label>
-                                <input type="text" id="PlateNumber" name="PlateNumber" required placeholder="ABC-1234"
-                                       value="<?php echo htmlspecialchars($form_data['PlateNumber'] ?? ''); ?>">
+                                <label for="LastName">Last Name</label>
+                                    <input type="text" id="LastName" name="LastName" required placeholder="Doe"
+                                            value="<?php echo htmlspecialchars($form_data['LastName'] ?? ''); ?>">
                             </div>
                             <div class="input-group">
                                 <label for="PhoneNumber">Phone Number</label>
-                                <input type="tel" id="PhoneNumber" name="PhoneNumber" required placeholder="0917-123-4567"
-                                       value="<?php echo htmlspecialchars($form_data['PhoneNumber'] ?? ''); ?>">
+                                <input type="tel" id="PhoneNumber" name="PhoneNumber" required placeholder="09171234567"
+                                            value="<?php echo htmlspecialchars($form_data['PhoneNumber'] ?? ''); ?>">
                             </div>
                             <div class="input-group">
-                                <div class="dropdown-group">
-                                    <section>
-                                        <label for="Type">Type</label>
-                                        <select id="Type" name="Type" required>
-                                            <option value="" disabled <?php echo empty($form_data['Type']) ? 'selected' : ''; ?>>Select Type</option>
-                                            <option value="Student" <?php echo (isset($form_data['Type']) && $form_data['Type'] == 'Student') ? 'selected' : ''; ?>>Student/Visitor</option>
-                                            <option value="Faculty" <?php echo (isset($form_data['Type']) && $form_data['Type'] == 'Faculty') ? 'selected' : ''; ?>>Faculty</option>
-                                            <option value="Executive" <?php echo (isset($form_data['Type']) && $form_data['Type'] == 'Executive') ? 'selected' : ''; ?>>Executive</option>
-                                            <option value="Guest" <?php echo (isset($form_data['Type']) && $form_data['Type'] == 'Guest') ? 'selected' : ''; ?>>Guest</option>
-                                        </select>
-                                    </section>
-                                    <section>
-                                        <label for="VehicleType">Vehicle Type</label>
-                                        <select name="VehicleType" id="VehicleType" required>
-                                            <option value="" disabled <?php echo empty($form_data['VehicleType']) ? 'selected' : ''; ?>>Select Vehicle Type</option>
-                                            <option value="Car" <?php echo (isset($form_data['VehicleType']) && $form_data['VehicleType'] == 'Car') ? 'selected' : ''; ?>>Car</option>
-                                            <option value="Motorcycle" <?php echo (isset($form_data['VehicleType']) && $form_data['VehicleType'] == 'Motorcycle') ? 'selected' : ''; ?>>Motorcycle</option>
-                                        </select>
-                                    </section>
-                                </div>
+                                <label for="Type">Type</label>
+                                <select id="Type" name="Type" required>
+                                    <option value="" disabled <?php echo empty($form_data['Type']) ? 'selected' : ''; ?>>Select Type</option>
+                                    <option value="Student" <?php echo (isset($form_data['Type']) && $form_data['Type'] == 'Student') ? 'selected' : ''; ?>>Student/Visitor</option>
+                                    <option value="Faculty" <?php echo (isset($form_data['Type']) && $form_data['Type'] == 'Faculty') ? 'selected' : ''; ?>>Faculty</option>
+                                    <option value="Executive" <?php echo (isset($form_data['Type']) && $form_data['Type'] == 'Executive') ? 'selected' : ''; ?>>Executive</option>
+                                    <option value="Guest" <?php echo (isset($form_data['Type']) && $form_data['Type'] == 'Guest') ? 'selected' : ''; ?>>Guest</option>
+                                </select>
                             </div>
                             <div class="input-group">
                                 <label for="Email">Email</label>
                                 <input type="email" id="Email" name="Email" required placeholder="john.doe@example.com"
-                                       value="<?php echo htmlspecialchars($form_data['Email'] ?? ''); ?>">
+                                            value="<?php echo htmlspecialchars($form_data['Email'] ?? ''); ?>">
                             </div>
                             <div class="input-group">
                                 <label for="password">Password</label>

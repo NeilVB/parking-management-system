@@ -208,7 +208,57 @@ $distribution = $model->getSlotDistribution();
 
                         <!-- need to modify pmsdb database to handle database -->
                     </div>
-                </div>  
+                </div>
+
+                <div id="vehicle-registration" class="content-section">
+                    <h3>Vehicle Registration</h3>
+                    <p class="section-subtitle">Register your vehicle to get a parking QR code</p>
+                    <div class="inputsubcontainer formcontainer">
+                        <?php if (!empty($error_message)): ?>
+                            <div class="message error"><?php echo htmlspecialchars($error_message); ?></div>
+                        <?php endif; ?>
+                        <?php if (!empty($success_message)): ?>
+                            <div class="message success"><?php echo htmlspecialchars($success_message); ?></div>
+                        <?php endif; ?>
+                        <form action="../controller/register_vehicle.php" method="POST">
+                            <div class="input-group">
+                                <label for="plate_number">Plate Number</label>
+                                <input type="text" id="plate_number" name="plate_number" required placeholder="ABC-1234"
+                                    value="<?php echo htmlspecialchars($form_data['plate_number'] ?? ''); ?>">
+                            </div>
+                            <div class="input-group">
+                                <label for="vehicle_type_id">Vehicle Type</label>
+                                <select id="vehicle_type_id" name="vehicle_type_id" required>
+                                    <option value="" disabled <?php echo empty($form_data['vehicle_type_id']) ? 'selected' : ''; ?>>Select Type</option>
+                                    <option value="1" <?php echo (isset($form_data['vehicle_type_id']) && $form_data['vehicle_type_id'] == 1) ? 'selected' : ''; ?>>Car</option>
+                                    <option value="2" <?php echo (isset($form_data['vehicle_type_id']) && $form_data['vehicle_type_id'] == 2) ? 'selected' : ''; ?>>Motorcycle</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label for="color">Color</label>
+                                <input type="text" id="color" name="color" required placeholder="Red"
+                                    value="<?php echo htmlspecialchars($form_data['color'] ?? ''); ?>">
+                            </div>
+                            <div class="input-group">
+                                <label for="make">Make</label>
+                                <input type="text" id="make" name="make" required placeholder="Toyota"
+                                    value="<?php echo htmlspecialchars($form_data['make'] ?? ''); ?>">
+                            </div>
+                            <div class="input-group">
+                                <label for="model">Model</label>
+                                <input type="text" id="model" name="model" required placeholder="Corolla"
+                                    value="<?php echo htmlspecialchars($form_data['model'] ?? ''); ?>">
+                            </div>
+                            <div class="input-group">
+                                <label for="year">Year</label>
+                                <input type="number" id="year" name="year" required placeholder="2020" min="1900" max="2099"
+                                    value="<?php echo htmlspecialchars($form_data['year'] ?? ''); ?>">
+                            </div>
+                            <button type="submit" class="register-button">Register Vehicle</button>
+                        </form>
+                    </div>
+                </div>
+ 
 
 
                 <!-- Works well in the main dashboard page however doesn't work when inside account.php view, fixed redirectory -->
@@ -394,7 +444,6 @@ $distribution = $model->getSlotDistribution();
             </main>
         </div>
     </div>
-
 </body>
 
 </html>

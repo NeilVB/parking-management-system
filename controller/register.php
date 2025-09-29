@@ -20,10 +20,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $form_data = [
         'FirstName'   => trim($_POST['FirstName'] ?? ''),
         'LastName'    => trim($_POST['LastName'] ?? ''),
-        'PlateNumber' => trim($_POST['PlateNumber'] ?? ''),
+        // 'PlateNumber' => trim($_POST['PlateNumber'] ?? ''),
         'PhoneNumber' => trim($_POST['PhoneNumber'] ?? ''),
         'Type'        => $_POST['Type'] ?? '',
-        'VehicleType' => $_POST['VehicleType'] ?? '',
+        // 'VehicleType' => $_POST['VehicleType'] ?? '',
         'Email'       => trim($_POST['Email'] ?? ''),
         'password'    => $_POST['password'] ?? ''
     ];

@@ -16,9 +16,17 @@ document.addEventListener("DOMContentLoaded", () => {
     navLinks.forEach(link => {
         link.addEventListener("click", e => {
             e.preventDefault();
-            showSection(link.getAttribute("data-target"));
+            const target = link.getAttribute("data-target");
+            showSection(target);
+
+            // Update the URL without reloading the page
+            const url = new URL(window.location);
+            url.searchParams.set("section", target);
+            window.history.replaceState({}, '', url);
         });
     });
 
-    showSection("dashboard");
+    const params = new URLSearchParams(window.location.search);
+    const section = params.get("section") || "dashboard";
+    showSection(section);
 });

@@ -13,10 +13,10 @@ class User {
         // Extract user data
         $firstName    = trim($userData['FirstName']);
         $lastName     = trim($userData['LastName']);
-        $plate_number = trim($userData['PlateNumber']);   // ✅ Fixed
+        // $plate_number = trim($userData['PlateNumber']);
         $phone_number = trim($userData['PhoneNumber']);   // ✅ Fixed
         $userType     = $userData['Type'];
-        $vehicleType  = $userData['VehicleType'];
+        // $vehicleType  = $userData['VehicleType'];
         $email        = trim($userData['Email']);
         $password     = $userData['password'];
         
@@ -40,21 +40,15 @@ class User {
             return ['success' => false, 'message' => 'Invalid user type selected!'];
         }
         
-        // Map vehicle type to vehicle_type_id
-        $vehicle_type_id = $this->getVehicleTypeId($vehicleType);
-        if (!$vehicle_type_id) {
-            return ['success' => false, 'message' => 'Invalid vehicle type selected!'];
-        }
-        
         // Prepare SQL statement to insert new user
-        $insert_query = "INSERT INTO users_table (firstname, lastname, phone_number, user_type_id, vehicle_type_id, plate_number, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $insert_query = "INSERT INTO users_table (firstname, lastname, phone_number, user_type_id, email, password) VALUES (?, ?, ?, ?, ?, ?)";
         
         $insert_stmt = $this->conn->prepare($insert_query);
         if (!$insert_stmt) {
             return ['success' => false, 'message' => 'Database error: ' . $this->conn->error];
         }
         
-        $insert_stmt->bind_param("ssiissss", $firstName, $lastName, $phone_number, $user_type_id, $vehicle_type_id, $plate_number, $email, $hashed_password);
+        $insert_stmt->bind_param("ssiiss", $firstName, $lastName, $phone_number, $user_type_id, $email, $hashed_password);
         
         // Execute the insert statement
         if ($insert_stmt->execute()) {
@@ -84,7 +78,7 @@ class User {
         }
         
         // Prepare SQL statement to find user by email
-        $login_query = "SELECT u.user_id, u.firstname, u.lastname, u.email, u.phone_number, u.plate_number, u.password, ut.user_type 
+        $login_query = "SELECT u.user_id, u.firstname, u.lastname, u.email, u.phone_number, u.password, ut.user_type 
                 FROM users_table u 
                 JOIN user_type_table ut ON u.user_type_id = ut.user_type_id 
                 WHERE u.email = ?";
@@ -175,7 +169,7 @@ class User {
      */
     
     private function validateRegistrationData($data) {
-        $required_fields = ['FirstName', 'LastName', 'PlateNumber', 'PhoneNumber', 'Type', 'VehicleType', 'Email', 'password'];
+        $required_fields = ['FirstName', 'LastName', 'PhoneNumber', 'Type', 'Email', 'password'];
         
         foreach ($required_fields as $field) {
             if (empty($data[$field])) {

@@ -81,6 +81,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
 }
 
 .register-box{
@@ -139,40 +140,12 @@ body {
         .input-group {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 8px;
         }
 
         .name-group {
             display: flex;
             justify-content: space-between;
-        }
-
-        .name-group section {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            width: 48%;
-        }
-
-        .name-group section input {
-            width: 100%;
-        }
-
-        .dropdown-group {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .dropdown-group section {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            width: 48%;
-        }
-
-        .dropdown-group section select {
-            width: 100%;
-            font-size: var(--font-size-small);
         }
 
         form label {
@@ -199,7 +172,7 @@ body {
 
         select {
             padding: 5px;
-            font-size: var(--font-size-small-medium);
+            font-size: var(--font-size-small);
             border: 1px solid var(--border-color);
         }
 
