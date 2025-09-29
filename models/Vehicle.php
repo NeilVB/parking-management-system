@@ -56,6 +56,23 @@ class Vehicle {
         }
     }
 
+    public function getVehiclesByUser($user_id) {
+        $query = "SELECT * FROM vehicles_table WHERE user_id = ? ORDER BY vehicle_id ASC LIMIT 2";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $vehicles = [];
+        while ($row = $result->fetch_assoc()) {
+            $vehicles[] = $row;
+        }
+
+        $stmt->close();
+        return $vehicles;
+    }
+
+
     /**
      * Validate vehicle input
      */

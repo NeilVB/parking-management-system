@@ -69,17 +69,40 @@ $plateNumber = $_SESSION['plate_number'] ?? 'N/A';
                         <div><span class="detail-label">Email</span>
                         <span class="detail-value"><?php echo htmlspecialchars($email ?? ''); ?></span></div>
                     </li>
-                    <li><i class="fas fa-car-side"></i>
-                        <div><span class="detail-label">Plate Number</span>
-                        <span class="detail-value"><?php echo htmlspecialchars($plateNumber ?? ''); ?></span></div>
-                    </li>
                 </ul>
-
-                <div class="qr-section">
-                    <h3>My QR Code</h3>
-                    <img src="assets/sample-qr.png" alt="User QR Code" class="qr-code-img">
-                    <a href="assets/sample-qr.png" class="download-qr-link">Download QR</a>
+                <div class="vehicle-tabs-container">
+                    <?php if (!empty($vehicles)): ?>
+                        <div class="vehicle-tab-buttons">
+                            <?php foreach ($vehicles as $idx => $vehicle): ?>
+                                <button class="vehicle-tab-btn<?php if ($idx === 0) echo ' active'; ?>" data-slot="<?php echo $idx; ?>">
+                                    Vehicle <?php echo $idx + 1; ?>
+                                </button>
+                            <?php endforeach; ?>
+                        </div>
+                        <div class="vehicle-tab-content">
+                            <?php foreach ($vehicles as $idx => $vehicle): ?>
+                                <div class="vehicle-slot<?php if ($idx === 0) echo ' active'; ?>" data-slot="<?php echo $idx; ?>">
+                                    <ul class="vehicle-details">
+                                        <li><strong>Plate Number:</strong> <?php echo htmlspecialchars($vehicle['plate_number']); ?></li>
+                                        <li><strong>Type:</strong> <?php echo htmlspecialchars($vehicle['vehicle_type_id']); ?></li>
+                                        <li><strong>Color:</strong> <?php echo htmlspecialchars($vehicle['color']); ?></li>
+                                        <li><strong>Make:</strong> <?php echo htmlspecialchars($vehicle['make']); ?></li>
+                                        <li><strong>Model:</strong> <?php echo htmlspecialchars($vehicle['model']); ?></li>
+                                        <li><strong>Year:</strong> <?php echo htmlspecialchars($vehicle['year']); ?></li>
+                                    </ul>
+                                    <div class="qr-section">
+                                        <h3>QR Code</h3>
+                                        <img src="assets/qr-<?php echo htmlspecialchars($vehicle['plate_number']); ?>.png" alt="QR for <?php echo htmlspecialchars($vehicle['plate_number']); ?>" class="qr-code-img">
+                                        <a href="assets/qr-<?php echo htmlspecialchars($vehicle['plate_number']); ?>.png" class="download-qr-link">Download QR</a>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
+                        <p class="empty-slot">You have no registered vehicles.</p>
+                    <?php endif; ?>
                 </div>
+            </div>
             </div>
 
             <footer class="account-footer">

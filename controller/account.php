@@ -9,7 +9,7 @@ session_start();
 
 // Include database configuration and User model
 require_once __DIR__ . '/config.php';
-require_once __DIR__ . '/../models/User.php';
+require_once __DIR__ . '/../models/Vehicle.php';
 
 // Initialize variables for the view
 $error_message = '';
@@ -29,6 +29,9 @@ $lastname = $_SESSION['lastname'] ?? '';
 $email = $_SESSION['email'] ?? '';
 $user_type = $_SESSION['user_type'] ?? 'Guest';
 $phone_number = $_SESSION['phone_number'] ?? '';
+
+$vehicleModel = new Vehicle($conn);
+$vehicles = $vehicleModel->getVehiclesByUser($user_id);
 
 // Handle logout request
 if (isset($_GET['logout'])) {
