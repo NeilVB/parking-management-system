@@ -26,7 +26,27 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    window.hideAllSections = () => {
+        sections.forEach(s => s.classList.remove("active"));
+        document.querySelectorAll(".nav-item").forEach(i => i.classList.remove("active"));
+        history.replaceState({}, '', location.pathname);
+    }
+
+    document.addEventListener('click', e => {
+        if (e.target.matches('.btn-back')) {
+            e.preventDefault();
+            hideAllSections();
+        }
+        if (e.target.matches('.content-section')) {
+            hideAllSections();
+        }
+    });
+
+    document.addEventListener('keydown', e => e.key === "Escape" && hideAllSections());
+
     const params = new URLSearchParams(window.location.search);
-    const section = params.get("section") || "dashboard";
-    showSection(section);
+    const section = params.get("section");
+    if (section && document.getElementById(section)) {
+        showSection(section);
+    }
 });
