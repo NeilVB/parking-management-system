@@ -6,6 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>NU Space - Register</title>
 	<link rel="stylesheet" href="../views/registerstyle.css">
+    <link rel="stylesheet" href="../views/mobile_registerstyle.css">
 	<style>
 		/* Style for error and success messages */
 		.message {

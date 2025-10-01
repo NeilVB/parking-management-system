@@ -27,6 +27,8 @@ $distribution = $model->getSlotDistribution();
 
     <!-- CSS -->
     <link rel="stylesheet" href="../views/dashboardstyle.css">
+    <link rel="stylesheet" href="../views/mobile_dashboardstyle.css">
+
 
     <!-- JS -->
     <script src="../views/js/navigation.js"></script>
