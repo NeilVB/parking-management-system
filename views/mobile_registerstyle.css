@@ -1,5 +1,5 @@
 @media screen and (max-width: 425px) {
-     .register-box {
+    .register-box {
         margin-top: 10%;
         width: 80%;
         height: auto;
@@ -16,18 +16,20 @@
         order: 1;
     }
 
-    .text-container h1, .text-container h1 .bluehighlight-color {
+    .text-container h1,
+    .text-container h1 .bluehighlight-color {
         font-size: 2rem !important;
     }
 
-    .text-container p, span {
+    .text-container p,
+    span {
         font-size: 1rem !important;
     }
 
     .input-container {
         width: 100%;
         order: 2;
-        margin-bottom: 10%;
+        margin-bottom: 17%;
     }
 
     .input-container h2 {
@@ -48,12 +50,15 @@
         font-size: 0.6rem;
     }
 
-    .formcontainer #Type:invalid  {
+    .formcontainer #Type:invalid {
         color: #999 !important;
     }
 
-    .label-div label, .label-div label a, .inputsubcontainer h2, .inputsubcontainer h2 a  {
-        font-size: 0.7rem !important; 
+    .label-div label,
+    .label-div label a,
+    .inputsubcontainer h2,
+    .inputsubcontainer h2 a {
+        font-size: 0.7rem !important;
     }
 
     .label-div input[type="checkbox"] {
@@ -66,11 +71,11 @@
     }
 
     .brand-container p {
-        font-size: var(--font-size-small); 
+        font-size: var(--font-size-small);
     }
 
     .logo {
-        width: 20%; 
+        width: 20%;
     }
 
     form {
@@ -89,7 +94,7 @@
 
     .tasknamecontainer h2 {
         font-size: 1rem !important;
-        margin-left: 0; 
+        margin-left: 0;
     }
 
     .formcontainer h2 {
@@ -97,21 +102,46 @@
         text-align: center;
     }
 
-    footer {
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-        padding: 2% 5%;
-    }
-
-    footer section {
-        width: 100%;
-        justify-content: center;
-        gap: 20px;
-    }
-
     .text-container::before {
         background-size: 200%;
         background-position: center;
+    }
+
+    .footer {
+        width: 100%;
+        height: auto;
+        left: 0 !important;
+        right: 0;
+        z-index: 999;
+    }
+
+    .footer-content {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        text-align: center;
+    }
+
+    .copyright p {
+        font-size: 0.65rem;
+        order: 2;
+    }
+
+    .footer-links {
+        flex-direction: row;
+        gap: 20px;
+        order: 1;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .footer-links a {
+        font-size: 0.65rem;
+        white-space: nowrap;
+    }
+
+    .content-section {
+        margin-bottom: 50%;
     }
 }
