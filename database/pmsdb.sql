@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Sep 29, 2025 at 05:15 PM
+-- Generation Time: Oct 01, 2025 at 04:13 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -51,6 +51,7 @@ INSERT INTO `admin_table` (`admin_id`, `firstname`, `lastname`, `admin_email`, `
 CREATE TABLE `parking_spaces` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
+  `parked_count` int(11) NOT NULL DEFAULT 0,
   `max_space` int(11) NOT NULL CHECK (`max_space` > 0),
   `space_type` enum('general','faculty','executive','guest') NOT NULL,
   `vehicle_type` enum('Car','Motorcycle') NOT NULL DEFAULT 'Car',
@@ -62,14 +63,14 @@ CREATE TABLE `parking_spaces` (
 -- Dumping data for table `parking_spaces`
 --
 
-INSERT INTO `parking_spaces` (`id`, `name`, `max_space`, `space_type`, `vehicle_type`, `image_path`, `created_at`) VALUES
-(19, 'Gravel Parking', 30, 'general', 'Car', '/../uploads/parking/parking_68d92ac6002fd3.22902506.jpg', '2025-09-28 12:32:06'),
-(20, 'Cafeteria Parking', 40, 'general', 'Car', '/../uploads/parking/parking_68d92af213f6e6.81945858.png', '2025-09-28 12:32:50'),
-(21, 'Sampalok Lane', 20, 'general', 'Car', '/../uploads/parking/parking_68d92b1c8801b5.92295668.png', '2025-09-28 12:33:32'),
-(22, 'Labas ng NU', 10, 'executive', 'Car', '/../uploads/parking/parking_68d92b553a8786.84810314.png', '2025-09-28 12:34:29'),
-(23, '7 Evelyn', 6, 'guest', 'Car', '/../uploads/parking/parking_68d92b7cdb4816.17094128.png', '2025-09-28 12:35:08'),
-(24, 'Bahay ni Neil IRL', 97, 'faculty', 'Motorcycle', '/../uploads/parking/parking_68d92bb1140552.42811621.png', '2025-09-28 12:36:01'),
-(26, 'Bahay ni Mae sa Minecraft', 45, 'guest', 'Motorcycle', '/../uploads/parking/parking_68d9366ed95bf1.35452515.png', '2025-09-28 13:21:50');
+INSERT INTO `parking_spaces` (`id`, `name`, `parked_count`, `max_space`, `space_type`, `vehicle_type`, `image_path`, `created_at`) VALUES
+(19, 'Gravel Parking', 0, 35, 'general', 'Motorcycle', '/../uploads/parking/parking_68d92ac6002fd3.22902506.jpg', '2025-09-28 12:32:06'),
+(20, 'Cafeteria Parking', 0, 40, 'general', 'Car', '/../uploads/parking/parking_68d92af213f6e6.81945858.png', '2025-09-28 12:32:50'),
+(21, 'Sampalok Lane', 0, 20, 'general', 'Car', '/../uploads/parking/parking_68d92b1c8801b5.92295668.png', '2025-09-28 12:33:32'),
+(22, 'Labas ng NU', 0, 10, 'executive', 'Car', '/../uploads/parking/parking_68d92b553a8786.84810314.png', '2025-09-28 12:34:29'),
+(23, '7 Evelyn', 0, 6, 'guest', 'Car', '/../uploads/parking/parking_68d92b7cdb4816.17094128.png', '2025-09-28 12:35:08'),
+(24, 'Bahay ni Neil IRL', 0, 97, 'faculty', 'Motorcycle', '/../uploads/parking/parking_68d92bb1140552.42811621.png', '2025-09-28 12:36:01'),
+(26, 'Bahay ni Mae sa Minecraft', 0, 45, 'guest', 'Motorcycle', '/../uploads/parking/parking_68d9366ed95bf1.35452515.png', '2025-09-28 13:21:50');
 
 -- --------------------------------------------------------
 
@@ -99,7 +100,6 @@ INSERT INTO `users_table` (`user_id`, `firstname`, `lastname`, `phone_number`, `
 (40, 'test3', 'test3', '9870980987', 4, 'test3@gmail.com', '$2y$10$msAFPy4ZmAX0sbjQmQBYfu3wudQIZqFnTQoDpcckfDX905iKCsFPG', '2025-09-22 15:08:10', '2025-09-22 15:08:10'),
 (41, 'test4', 'test4', '9870980987', 4, 'test4@gmail.com', '$2y$10$hac.TQbFs5sGoOJKHpJzfed9o.xkEjL8Aw2bQ277QAJ6WsSa8plF.', '2025-09-22 17:50:43', '2025-09-22 17:50:43'),
 (42, 'chowking', 'masarap', '9870980987', 4, 'chowking@gmail.com', '$2y$10$.EaY1AxP3fA5pN0z.m47zuwXbrs3xuVkUKQZsd/g6gMBlaw1bPZE2', '2025-09-23 02:14:23', '2025-09-23 02:14:23'),
-(43, 'MCDO', 'Burger', '0', 1, 'mcdo@gmail.com', '$2y$10$KnmpSjsjcKppg9qTYOofWei/ZEOlx8wR2PyttYa3Coeom90ije8Tm', '2025-09-23 03:05:00', '2025-09-23 03:05:00'),
 (46, 'mae', '14', '9080706050', 3, 'mae@gmail.com', '$2y$10$jKEYLpKQDtHqIDltQzEia.uVo5OCuaK/yZjIkQgSKEQYPFNF7y0Yq', '2025-09-23 03:27:20', '2025-09-23 03:27:20'),
 (49, 'Layi', 'Villamor', '9870980987', 4, 'layi@gmail.com', '$2y$10$hQD.DvyYycwv9Q7lgeBaOeR1kBpu71bm0M4XmaegSrtdCsLkQ7yx.', '2025-09-27 14:30:50', '2025-09-27 14:30:50'),
 (50, 'Nichole', 'Abella', '9870980987', 1, 'niko@gmail.com', '$2y$10$Mqj9b/wQNmlSpkZiAuiZjuOMFEbsqrF3vpHr5UuS.SuCRz5baPdbC', '2025-09-28 03:25:34', '2025-09-28 03:25:34'),
@@ -151,7 +151,8 @@ CREATE TABLE `vehicles_table` (
 --
 
 INSERT INTO `vehicles_table` (`vehicle_id`, `user_id`, `vehicle_type_id`, `plate_number`, `color`, `make`, `model`, `year`, `created_at`, `updated_at`, `qr_token`) VALUES
-(7, 51, 1, 'ABC-1235', 'Blue', 'Toyota', 'Veloz', 2025, '2025-09-29 14:10:21', '2025-09-29 14:10:21', '2ff6499be357f9e7ee7631589471009a');
+(7, 51, 1, 'ABC-1235', 'Blue', 'Toyota', 'Veloz', 2025, '2025-09-29 14:10:21', '2025-09-29 14:10:21', '2ff6499be357f9e7ee7631589471009a'),
+(8, 38, 1, 'asd-123', 'red', 'Toyota', 'Car Model', 2023, '2025-10-01 13:17:14', '2025-10-01 13:17:14', 'f227b8f9713b7fef7e4b1c3006ba114d');
 
 -- --------------------------------------------------------
 
@@ -251,7 +252,7 @@ ALTER TABLE `user_type_table`
 -- AUTO_INCREMENT for table `vehicles_table`
 --
 ALTER TABLE `vehicles_table`
-  MODIFY `vehicle_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `vehicle_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `vehicle_type_table`

@@ -1,25 +1,37 @@
 <?php
-// Ensure admin is authenticated
-// session_start();
+// Start session and ensure admin is authenticated
+// session_start(); // Uncomment if not already started elsewhere
 if (!isset($_SESSION['admin_id'])) {
     header("Location: ../controller/admin_login.php");
     exit();
 }
 
-// Admin details from session
+// Load admin session details
 $admin_id   = $_SESSION['admin_id'];
 $firstname  = $_SESSION['firstname'] ?? 'Admin';
 $lastname   = $_SESSION['lastname'] ?? '';
 $email      = $_SESSION['email'] ?? '';
 $user_type  = $_SESSION['user_type'] ?? 'Administrator';
 
+// Load dependencies
 require_once __DIR__ . '/../controller/config.php';
 require_once __DIR__ . '/../models/ParkingSpace.php';
 
+// Initialize model and fetch data
 $model = new ParkingSpace($conn);
 $counts = $model->getVehicleCounts();
 $distribution = $model->getSlotDistribution();
+
+// Note: $row should be defined inside a loop or context before using parked_count/max_space
+// Example usage inside a loop:
+//
+// foreach ($spaces as $row) {
+//     $available = $row['max_space'] - $row['parked_count'];
+//     $status = $available > 0 ? 'Available' : 'Full';
+//     ...
+// }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -203,29 +215,37 @@ $distribution = $model->getSlotDistribution();
 
                     <?php
                     require_once __DIR__ . '/../controller/config.php';
+
                     $query = "SELECT * FROM parking_spaces";
                     $result = $conn->query($query);
-                    while ($row = $result->fetch_assoc()): 
+
+                    while ($row = $result->fetch_assoc()):
                         // Fix image path - prepend '../' to make it relative to the current location
                         $imagePath = !empty($row['image_path']) ? '../' . $row['image_path'] : '../assets/img/default_parking.jpg';
-                        
+
                         // Get vehicle type icon
                         $vehicleIcon = strtolower($row['vehicle_type']) === 'motorcycle' ? '🏍️' : '🚗';
+
+                        // Calculate availability and status
+                        $available = (int)$row['max_space'] - (int)$row['parked_count'];
+                        $status = $available > 0 ? 'Available' : 'Full';
                     ?>
-                        <div class="parking-card"
-                             style="background-image: url('<?php echo $imagePath; ?>');">
+                        <div class="parking-card" style="background-image: url('<?php echo htmlspecialchars($imagePath); ?>');">
                             <div class="overlay">
                                 <h3><?php echo htmlspecialchars($row['name']); ?></h3>
                                 <p>Type: <?php echo ucfirst($row['space_type']); ?></p>
                                 <p>Vehicle: <?php echo $vehicleIcon . ' ' . ucfirst($row['vehicle_type']); ?></p>
-                                <p>Slots: 0/<?php echo $row['max_space']; ?></p>
+                                <p>
+                                    Slots: <?php echo (int)$row['parked_count']; ?> / <?php echo (int)$row['max_space']; ?>
+                                    (<?php echo htmlspecialchars($status); ?>)
+                                </p>
                                 <button class="btn edit-space-btn edit-btn"
-                                        data-id="<?php echo $row['id']; ?>"
+                                        data-id="<?php echo (int)$row['id']; ?>"
                                         data-name="<?php echo htmlspecialchars($row['name']); ?>"
-                                        data-type="<?php echo $row['space_type']; ?>"
-                                        data-vehicle="<?php echo $row['vehicle_type']; ?>"
-                                        data-max="<?php echo $row['max_space']; ?>"
-                                        data-image="<?php echo $imagePath; ?>">
+                                        data-type="<?php echo htmlspecialchars($row['space_type']); ?>"
+                                        data-vehicle="<?php echo htmlspecialchars($row['vehicle_type']); ?>"
+                                        data-max="<?php echo (int)$row['max_space']; ?>"
+                                        data-image="<?php echo htmlspecialchars($imagePath); ?>">
                                     Edit
                                 </button>
                             </div>
