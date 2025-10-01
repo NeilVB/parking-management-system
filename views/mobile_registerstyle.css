@@ -78,14 +78,17 @@
         gap: 10px;
     }
 
+    .register-button {
+        font-size: 0.8rem;
+    }
+
     .name-group {
         flex-direction: column;
         gap: 8px;
     }
 
     .tasknamecontainer h2 {
-        font-size: var(--font-size-small-medium);
-        text-align: center;
+        font-size: 1rem !important;
         margin-left: 0; 
     }
 
