@@ -1,0 +1,123 @@
+@media screen and (max-width: 425px) {
+    .login-box {
+        margin-top: 10%;
+        width: 80%;
+        height: auto;
+        flex-direction: column;
+    }
+
+    .maincontainer {
+        width: 100%;
+        padding: 5%;
+    }
+
+    .text-container {
+        width: 100%;
+        order: 1;
+    }
+
+    .text-container h1, .text-container h1 .yellowhighlight-color {
+        font-size: 2rem !important;
+    }
+
+    .text-container p, span {
+        font-size: 1rem !important;
+    }
+
+    .input-container {
+        width: 100%;
+        order: 2;
+        margin-bottom: 10%;
+    }
+
+    .input-container h2 {
+        font-size: 1.2rem !important;
+        padding-bottom: 2%;
+    }
+
+    .formcontainer label, .login-button {
+        font-size: 0.8rem !important;
+    }
+
+    .formcontainer ::placeholder {
+        font-size: 0.6rem;
+        opacity: 0.6;
+    }
+
+    .label-div label, .label-div label a, .inputsubcontainer h2, .inputsubcontainer h2 a {
+        font-size: 0.7rem !important; 
+    }
+
+    .label-div input[type="checkbox"] {
+        width: 12px;
+        height: 12px;
+    }
+
+    .brand-container h1 {
+        font-size: var(--font-size-medium);
+    }
+
+    .brand-container p {
+        font-size: var(--font-size-small); 
+    }
+
+    .logo {
+        width: 20%; 
+    }
+
+    form {
+        width: 90%;
+        gap: 10px;
+    }
+
+    .tasknamecontainer h2 {
+        font-size: 1rem !important;
+        margin-left: 0; 
+    }
+
+    .formcontainer h2 {
+        font-size: var(--font-size-small);
+        text-align: center;
+    }
+
+    .login-button {
+        padding: 12px;
+        font-size: var(--font-size-small);
+        margin-top: 5%;
+    }
+
+    input {
+        padding: 8px;
+        font-size: var(--font-size-small);
+    }
+
+    .label-div {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .label-div section {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    footer {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        padding: 2% 5%;
+    }
+
+    footer section {
+        width: 100%;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .text-container::before {
+        background-size: 200%;
+        background-position: center;
+    }
+}
