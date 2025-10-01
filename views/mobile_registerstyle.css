@@ -1,0 +1,114 @@
+@media screen and (max-width: 425px) {
+     .register-box {
+        margin-top: 10%;
+        width: 80%;
+        height: auto;
+        flex-direction: column;
+    }
+
+    .maincontainer {
+        width: 100%;
+        padding: 5%;
+    }
+
+    .text-container {
+        width: 100%;
+        order: 1;
+    }
+
+    .text-container h1, .text-container h1 .bluehighlight-color {
+        font-size: 2rem !important;
+    }
+
+    .text-container p, span {
+        font-size: 1rem !important;
+    }
+
+    .input-container {
+        width: 100%;
+        order: 2;
+        margin-bottom: 10%;
+    }
+
+    .input-container h2 {
+        font-size: 1.2rem !important;
+        padding-bottom: 2%;
+    }
+
+    .formcontainer label {
+        font-size: 0.8rem;
+    }
+
+    .formcontainer ::placeholder {
+        font-size: 0.6rem;
+        opacity: 0.6;
+    }
+
+    .formcontainer #Type {
+        font-size: 0.6rem;
+    }
+
+    .formcontainer #Type:invalid  {
+        color: #999 !important;
+    }
+
+    .label-div label, .label-div label a, .inputsubcontainer h2, .inputsubcontainer h2 a  {
+        font-size: 0.7rem !important; 
+    }
+
+    .label-div input[type="checkbox"] {
+        width: 12px;
+        height: 12px;
+    }
+
+    .brand-container h1 {
+        font-size: var(--font-size-medium);
+    }
+
+    .brand-container p {
+        font-size: var(--font-size-small); 
+    }
+
+    .logo {
+        width: 20%; 
+    }
+
+    form {
+        width: 90%;
+        gap: 10px;
+    }
+
+    .name-group {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .tasknamecontainer h2 {
+        font-size: var(--font-size-small-medium);
+        text-align: center;
+        margin-left: 0; 
+    }
+
+    .formcontainer h2 {
+        font-size: var(--font-size-small);
+        text-align: center;
+    }
+
+    footer {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        padding: 2% 5%;
+    }
+
+    footer section {
+        width: 100%;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .text-container::before {
+        background-size: 200%;
+        background-position: center;
+    }
+}
