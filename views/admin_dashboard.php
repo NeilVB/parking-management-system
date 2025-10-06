@@ -22,14 +22,6 @@ $model = new ParkingSpace($conn);
 $counts = $model->getVehicleCounts();
 $distribution = $model->getSlotDistribution();
 
-// Note: $row should be defined inside a loop or context before using parked_count/max_space
-// Example usage inside a loop:
-//
-// foreach ($spaces as $row) {
-//     $available = $row['max_space'] - $row['parked_count'];
-//     $status = $available > 0 ? 'Available' : 'Full';
-//     ...
-// }
 ?>
 
 <!DOCTYPE html>
@@ -41,6 +33,7 @@ $distribution = $model->getSlotDistribution();
 
     <!-- CSS -->
     <link rel="stylesheet" href="../views/admindashboardstyle.css">
+    <link rel="stylesheet" href="../views/css/parking_spaces_style.css">
 
     <!-- JS -->
     <script src="../views/js/helpers.js"></script>
@@ -204,15 +197,6 @@ $distribution = $model->getSlotDistribution();
                 </div>
 
                 <div class="parking-container">
-                    <!-- Quick Add Card -->
-                    <div class="parking-card add-card" id="quick-add-card">
-                        <div class="overlay">
-                            <h3>Quick Add Parking Space</h3>
-                            <p>Click to add new parking area</p>
-                            <button class="btn">+ Add</button>
-                        </div>
-                    </div>
-
                     <?php
                     require_once __DIR__ . '/../controller/config.php';
 

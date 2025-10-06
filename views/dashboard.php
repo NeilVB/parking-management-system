@@ -27,11 +27,19 @@ $distribution = $model->getSlotDistribution();
 
     <!-- CSS -->
     <link rel="stylesheet" href="../views/dashboardstyle.css">
+    <link rel="stylesheet" href="../views/css/parking_spaces_style.css">
     <link rel="stylesheet" href="../views/mobile_dashboardstyle.css">
 
-
     <!-- JS -->
+    <script src="../views/js/helpers.js"></script>
     <script src="../views/js/navigation.js"></script>
+    <script src="../views/js/modals.js"></script>
+    <script src="../views/js/forms.js"></script>
+    <script src="../views/js/imagePreview.js"></script>
+    <script src="../views/js/refresh.js"></script>
+    <script src="../views/js/editMode.js"></script>
+    <script src="../views/js/filter.js"></script>
+    <script src="../views/js/init.js"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -145,70 +153,79 @@ $distribution = $model->getSlotDistribution();
                     </section>
                 </div>
 
-                <!-- Parking Spaces Content --> 
+                <!-- Parking Spaces -->
                 <div id="parking-spaces" class="content-section">
                     <div class="page-header">
-                        <h3>Available Parking Spaces</h3>
-                        <div class="featured-cards">
-                            <div class="card">
-                                <div class="card-icon"><i class="fas fa-car"></i></div>
-                                <div class="card-content">
-                                    <div class="card-value available">0</div>
-                                    <div class="card-label">Available Spaces</div>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-icon"><i class="fa-solid fa-motorcycle"></i></div>
-                                <div class="card-content">
-                                    <div class="card-value taken">0</div>
-                                    <div class="card-label">Available Spaces</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="availability-legend">
-                            <div class="legend-item">
-                                <i class="fa-solid fa-square-full"></i>
-                                <span class="legend-text">Parking Available</span>
-                            </div>
-                            <div class="legend-item">
-                                <i class="fa-solid fa-square-full"></i>
-                                <span class="legend-text">No Spaces Left</span>
-                            </div>
+                        <h3><i class="fas fa-car-alt"></i> Parking Spaces Management</h3>
+                    </div>
+
+                    <!-- Search and Filter Bar -->
+                    <div class="filter-bar">
+                        <!-- Search Input -->
+                        <div class="search-container">
+                            <input type="text" id="space-search" placeholder="Search parking spaces...">
                         </div>
 
-                        <div class="header-actions">
-                            <p>Map</p>
-                            <div class="drops">
-                                <div class="dropdown">
-                                    <input type="checkbox" id="dropdown-toggle-vehicle" class="dropdown-checkbox">
-                                    <label for="dropdown-toggle-vehicle" class="btn btn-secondary">
-                                        Vehicle <i class="fas fa-chevron-down"></i>
-                                    </label>
-                                    <div class="dropdown-content">
-                                        <a href="#" data-filter="cars">Cars</a>
-                                        <a href="#" data-filter="motorcycles">Motorcycles</a>
-                                    </div>
-                                </div>
+                        <!-- Filter Dropdown -->
+                        <div class="filter-container">
+                            <select id="type-filter" class="filter-select">
+                                <option value="all">🔍 All Types</option>
+                                <option value="general">🚗 General</option>
+                                <option value="faculty">👨‍🏫 Faculty</option>
+                                <option value="executive">💼 Executive</option>
+                                <option value="guest">👤 Guest</option>
+                            </select>
+                        </div>
 
-                                <div class="dropdown">
-                                    <input type="checkbox" id="dropdown-toggle-person" class="dropdown-checkbox">
-                                    <label for="dropdown-toggle-person" class="btn btn-secondary">
-                                        Person <i class="fas fa-chevron-down"></i>
-                                    </label>
-                                    <div class="dropdown-content">
-                                        <a href="#" data-filter="student">Student</a>
-                                        <a href="#" data-filter="visitor">Visitor</a>
-                                        <a href="#" data-filter="staff">School Staff</a>
-                                    </div>
-                                </div>
-                            </div>
+                        <!-- Vehicle Type Filter -->
+                        <div class="filter-container">
+                            <select id="vehicle-filter" class="filter-select">
+                                <option value="all">🚗🏍️ All Vehicles</option>
+                                <option value="car">🚗 Car Only</option>
+                                <option value="motorcycle">🏍️ Motorcycle Only</option>
+                            </select>
+                        </div>
+
+                        <!-- Count Display -->
+                        <div class="count-display">
+                            <span id="spaces-count">Loading...</span>
                         </div>
                     </div>
-                    <div class="parking-grid">
-                         <!-- Parking space cards will be dynamically inserted here 
-                        Figuring out how to fix this -->
 
-                        <!-- need to modify pmsdb database to handle database -->
+                    <div class="parking-container">
+                        <?php
+                        require_once __DIR__ . '/../controller/config.php';
+
+                        $query = "SELECT * FROM parking_spaces";
+                        $result = $conn->query($query);
+
+                        while ($row = $result->fetch_assoc()):
+                            $imagePath = !empty($row['image_path']) ? '../' . $row['image_path'] : '../assets/img/default_parking.jpg';
+                            $vehicleIcon = strtolower($row['vehicle_type']) === 'motorcycle' ? '🏍️' : '🚗';
+                            $available = (int)$row['max_space'] - (int)$row['parked_count'];
+                            $status = $available > 0 ? 'Available' : 'Full';
+                        ?>
+                            <div class="parking-card" style="background-image: url('<?php echo htmlspecialchars($imagePath); ?>');">
+                                <div class="overlay">
+                                    <h3><?php echo htmlspecialchars($row['name']); ?></h3>
+                                    <p>Type: <?php echo ucfirst($row['space_type']); ?></p>
+                                    <p>Vehicle: <?php echo $vehicleIcon . ' ' . ucfirst($row['vehicle_type']); ?></p>
+                                    <p>
+                                        Slots: <?php echo (int)$row['parked_count']; ?> / <?php echo (int)$row['max_space']; ?>
+                                        (<?php echo htmlspecialchars($status); ?>)
+                                    </p>
+                                    <button class="btn edit-space-btn edit-btn"
+                                            data-id="<?php echo (int)$row['id']; ?>"
+                                            data-name="<?php echo htmlspecialchars($row['name']); ?>"
+                                            data-type="<?php echo htmlspecialchars($row['space_type']); ?>"
+                                            data-vehicle="<?php echo htmlspecialchars($row['vehicle_type']); ?>"
+                                            data-max="<?php echo (int)$row['max_space']; ?>"
+                                            data-image="<?php echo htmlspecialchars($imagePath); ?>">
+                                        Edit
+                                    </button>
+                                </div>
+                            </div>
+                        <?php endwhile; ?>
                     </div>
                 </div>
 

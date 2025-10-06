@@ -19,27 +19,32 @@ document.addEventListener("DOMContentLoaded", () => {
             const target = link.getAttribute("data-target");
             showSection(target);
 
-            // Update the URL without reloading the page
             const url = new URL(window.location);
             url.searchParams.set("section", target);
             window.history.replaceState({}, '', url);
         });
     });
 
+    // Only used for the "Back" button now
     window.hideAllSections = () => {
         sections.forEach(s => s.classList.remove("active"));
         document.querySelectorAll(".nav-item").forEach(i => i.classList.remove("active"));
         history.replaceState({}, '', location.pathname);
-    }
+    };
 
     document.addEventListener('click', e => {
+        // Only hide sections when clicking the "Back" button
         if (e.target.matches('.btn-back')) {
             e.preventDefault();
             hideAllSections();
+            return;
         }
-        if (e.target.matches('.content-section')) {
-            hideAllSections();
-        }
+
+        // Ignore clicks inside the active section — keep showing it
+        const activeSection = document.querySelector(".content-section.active");
+        if (activeSection && activeSection.contains(e.target)) return;
+
+        // Ignore clicks anywhere else — do nothing
     });
 
     document.addEventListener('keydown', e => e.key === "Escape" && hideAllSections());

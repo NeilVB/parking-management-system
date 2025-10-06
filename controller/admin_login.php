@@ -5,9 +5,9 @@ session_start();
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/../models/Admin.php';
 
-$error_message = '';
-$success_message = '';
-$email = '';
+// $error_message = '';
+// $success_message = '';
+// $email = '';
 
 $admin = new Admin($conn);
 

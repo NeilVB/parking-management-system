@@ -14,27 +14,6 @@
     <link rel="stylesheet" href="../views/loginstyle.css">
     <link rel="stylesheet" href="../views/mobile_loginstyle.css">
 
-    <style>
-        /* Style for error and success messages */
-        .message {
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-        }
-
-        .error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-    </style>
 </head>
 
 <body>
@@ -67,14 +46,7 @@
                     </div>
                     <div class="inputsubcontainer formcontainer">
 
-                        <!-- Display error or success messages (passed from controller) -->
-                        <?php if (!empty($error_message)): ?>
-                            <div class="message error"><?php echo htmlspecialchars($error_message); ?></div>
-                        <?php endif; ?>
-
-                        <?php if (!empty($success_message)): ?>
-                            <div class="message success"><?php echo htmlspecialchars($success_message); ?></div>
-                        <?php endif; ?>
+                        <!-- Insert new error success login message ui here -->
 
                         <form action="admin_login.php" method="POST">
                             <div class="input-group">

@@ -97,117 +97,117 @@ body {
     height: 100%;
 }
 
-    .input-container {
-        width: 60%;
-        background-color: var(--primary-blue);
+.input-container {
+    width: 60%;
+    background-color: var(--primary-blue);
+    display: flex;
+    flex-direction: column;
+}
+
+    .inputsubcontainer {
+        width: 100%;
         display: flex;
+        gap: 5%;
+    }
+
+    .tasknamecontainer {
+        height: 15%;
+        align-items: center;
+    }
+
+    .tasknamecontainer h2 {
+        font-size: var(--font-size-medium);
+        color: var(--main-bg);
+        margin-left: 5%;
+        font-weight: normal;
+    }
+
+    .formcontainer {
+        height: 85%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         flex-direction: column;
     }
 
-        .inputsubcontainer {
-            width: 100%;
-            display: flex;
-            gap: 5%;
-        }
+    form {
+        width: 80%;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
 
-        .tasknamecontainer {
-            height: 15%;
-            align-items: center;
-        }
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
 
-        .tasknamecontainer h2 {
-            font-size: var(--font-size-medium);
-            color: var(--main-bg);
-            margin-left: 5%;
-            font-weight: normal;
-        }
+    .name-group {
+        display: flex;
+        justify-content: space-between;
+    }
 
-        .formcontainer {
-            height: 85%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
+    form label {
+        font-size: var(--font-size-small);
+        color: var(--main-bg);
+    }
 
-        form {
-            width: 80%;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
+    label[for="tnc"], label[for="policy"] {
+        font-size: var(--font-size-small);
+        color: var(--main-bg);
+    }
 
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
+    label[for="tnc"] a, label[for="policy"] a{
+        font-size: var(--font-size-small);
+        color: var(--accent-yellow);
+        text-decoration: none;
+    }
 
-        .name-group {
-            display: flex;
-            justify-content: space-between;
-        }
+    input {
+        font-size: var(--font-size-small);
+        padding: 5px;
+        border: 1px solid var(--border-color);
+    }
 
-        form label {
-            font-size: var(--font-size-small);
-            color: var(--main-bg);
-        }
+    select {
+        padding: 5px;
+        font-size: var(--font-size-small);
+        border: 1px solid var(--border-color);
+    }
 
-        label[for="tnc"], label[for="policy"] {
-            font-size: var(--font-size-small);
-            color: var(--main-bg);
-        }
+    input[type="checkbox"] {
+        width: 10px;
+        height: 10px;
+    }
 
-        label[for="tnc"] a, label[for="policy"] a{
-            font-size: var(--font-size-small);
-            color: var(--accent-yellow);
-            text-decoration: none;
-        }
+    .label-div {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 1%;
+    }
 
-        input {
-            font-size: var(--font-size-small);
-            padding: 5px;
-            border: 1px solid var(--border-color);
-        }
+    .register-button {
+        background-color: var(--accent-yellow);
+        color: var(--text-color-dark);
+        border: none;
+        padding: 10px;
+        font-size: var(--font-size-small-medium);
+        margin-top: 5%;
+    }
 
-        select {
-            padding: 5px;
-            font-size: var(--font-size-small);
-            border: 1px solid var(--border-color);
-        }
+    .formcontainer h2{
+        font-size: var(--font-size-small-medium);
+        color: var(--main-bg);
+        margin-bottom: 5%;
+        font-weight: normal;
+    }
 
-        input[type="checkbox"] {
-            width: 10px;
-            height: 10px;
-        }
-
-        .label-div {
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            gap: 1%;
-        }
-
-        .register-button {
-            background-color: var(--accent-yellow);
-            color: var(--text-color-dark);
-            border: none;
-            padding: 10px;
-            font-size: var(--font-size-small-medium);
-            margin-top: 5%;
-        }
-
-        .formcontainer h2{
-            font-size: var(--font-size-small-medium);
-            color: var(--main-bg);
-            margin-bottom: 5%;
-            font-weight: normal;
-        }
-
-        h2 a{
-            text-decoration: none;
-            color: var(--accent-yellow);
-        }
+    h2 a{
+        text-decoration: none;
+        color: var(--accent-yellow);
+    }
 
     .text-container {
         position: relative;
@@ -222,69 +222,69 @@ body {
         flex-direction: column; 
     }
 
-        .text-container::before {
-            content: "";
-            position: absolute;
-            background-color: var(--accent-yellow);
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url(assets/NUImage.png);
-            background-size: 175%;
-            background-position: 50% 60%;
-            background-repeat: no-repeat;
-            opacity: 0.4;
-            z-index: -1;
-        }
+    .text-container::before {
+        content: "";
+        position: absolute;
+        background-color: var(--accent-yellow);
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url(assets/NUImage.png);
+        background-size: 175%;
+        background-position: 50% 60%;
+        background-repeat: no-repeat;
+        opacity: 0.4;
+        z-index: -1;
+    }
 
-        .textsubcontainer {
-            height: 50%;
-            width: 100%;
-            display: flex;
-        }
+    .textsubcontainer {
+        height: 50%;
+        width: 100%;
+        display: flex;
+    }
 
-        .logo-container {
-            justify-content: center;
-            align-items: flex-end;
-        }
+    .logo-container {
+        justify-content: center;
+        align-items: flex-end;
+    }
 
-        .logo {
-            width: 30%;
-            height: auto;
-        }
+    .logo {
+        width: 30%;
+        height: auto;
+    }
 
-        .brand-container {
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-        }
+    .brand-container {
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+    }
 
-        .brand-container h1 {
-            color: var(--main-bg);
-            font-size: var(--font-size-large);
-            margin-bottom: 10px;
-        }
+    .brand-container h1 {
+        color: var(--main-bg);
+        font-size: var(--font-size-large);
+        margin-bottom: 10px;
+    }
 
-        .brand-container section {
-            margin-bottom: 5%;
-        }
+    .brand-container section {
+        margin-bottom: 5%;
+    }
 
-        .brand-container p {
-            color: var(--main-bg);
-            font-size: var(--font-size-small-medium);
-            text-align: center;
-            font-style: italic;
-        }
+    .brand-container p {
+        color: var(--main-bg);
+        font-size: var(--font-size-small-medium);
+        text-align: center;
+        font-style: italic;
+    }
 
-        .brand-container p span { 
-            font-size: var(--font-size-small-medium);
-            text-align: center;
-        }
+    .brand-container p span { 
+        font-size: var(--font-size-small-medium);
+        text-align: center;
+    }
 
-        .bluehighlight-color {
-            color: var(--primary-blue);
-        }
+    .bluehighlight-color {
+        color: var(--primary-blue);
+    }
 
 .content-section {
     display: none;
