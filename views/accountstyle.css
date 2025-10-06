@@ -181,3 +181,56 @@ body {
     min-width: 120px;
     display: inline-block;
 }
+
+.header-logo a {
+    text-decoration: none;
+    color: #fff;
+}
+
+.footer {
+    left: 0 !important;
+}
+
+@media screen and (max-width: 425px) {
+    .user-profile {
+        display: none;
+    }
+
+    .footer {
+        width: 100%;
+        height: auto;
+        left: 0 !important;
+        right: 0;
+        z-index: 999;
+    }
+
+    .footer-content {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        text-align: center;
+    }
+
+    .copyright p {
+        font-size: 0.65rem;
+        order: 2;
+    }
+
+    .footer-links {
+        flex-direction: row;
+        gap: 20px;
+        order: 1;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .footer-links a {
+        font-size: 0.65rem;
+        white-space: nowrap;
+    }
+
+    .content-section {
+        margin-bottom: 50%;
+    }
+}

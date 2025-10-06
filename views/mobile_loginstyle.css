@@ -103,21 +103,41 @@
         gap: 5px;
     }
 
-    footer {
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-        padding: 2% 5%;
-    }
-
-    footer section {
+    .footer {
         width: 100%;
-        justify-content: center;
-        gap: 20px;
+        height: auto;
+        left: 0 !important;
+        right: 0;
+        z-index: 999;
     }
 
-    .text-container::before {
-        background-size: 200%;
-        background-position: center;
+    .footer-content {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        text-align: center;
+    }
+
+    .copyright p {
+        font-size: 0.65rem;
+        order: 2;
+    }
+
+    .footer-links {
+        flex-direction: row;
+        gap: 20px;
+        order: 1;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .footer-links a {
+        font-size: 0.65rem;
+        white-space: nowrap;
+    }
+
+    .content-section {
+        margin-bottom: 50%;
     }
 }
