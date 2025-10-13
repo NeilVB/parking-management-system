@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     /* ===========================
-       IMAGE PREVIEWS
+    imagePreview.js
     ============================ */
     function bindImagePreview(inputId, previewId) {
         const input = document.getElementById(inputId);

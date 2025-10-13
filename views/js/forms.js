@@ -1,18 +1,111 @@
 document.addEventListener("DOMContentLoaded", () => {
     /* ===========================
-       FORMS
+       views/js/forms.js (Updated)
     ============================ */
-    const endpoint = "../controller/parking_manager.php"; // Ensure this matches your actual path
-    const addModal = document.getElementById("add-space-modal");
-    const editModal = document.getElementById("edit-space-modal");
+    const endpoint = "../controller/parking_manager.php";
+    const addForm = document.getElementById("add-space-form");
+    const editForm = document.getElementById("edit-space-form");
 
     /**
-     * ADD FORM
+     * Collect allocation data from form inputs
      */
-    const addForm = document.getElementById("add-space-form");
+    function collectAllocations(prefix) {
+        const allocations = [];
+        const userTypeMap = { 'general': 1, 'faculty': 2, 'executive': 3, 'guest': 4 };
+        const userTypes = ['general', 'faculty', 'executive', 'guest'];
+
+        // Car allocations
+        const carCheckbox = document.getElementById(`${prefix}-supports-car`);
+        if (carCheckbox && carCheckbox.checked) {
+            userTypes.forEach(type => {
+                const input = document.getElementById(`${prefix}-car-${type}`);
+                if (input) {
+                    allocations.push({
+                        vehicle_type_id: 1,
+                        user_type_id: userTypeMap[type],
+                        allocated_slots: parseInt(input.value) || 0
+                    });
+                }
+            });
+        }
+
+        // Motorcycle allocations
+        const motoCheckbox = document.getElementById(`${prefix}-supports-motorcycle`);
+        if (motoCheckbox && motoCheckbox.checked) {
+            userTypes.forEach(type => {
+                const input = document.getElementById(`${prefix}-motorcycle-${type}`);
+                if (input) {
+                    allocations.push({
+                        vehicle_type_id: 2,
+                        user_type_id: userTypeMap[type],
+                        allocated_slots: parseInt(input.value) || 0
+                    });
+                }
+            });
+        }
+
+        return allocations;
+    }
+
+    /**
+     * Validate that each selected vehicle type has at least one slot > 0
+     */
+    function validateAllocations(prefix) {
+        const errors = [];
+        const carCheckbox = document.getElementById(`${prefix}-supports-car`);
+        const motoCheckbox = document.getElementById(`${prefix}-supports-motorcycle`);
+
+        if (carCheckbox && carCheckbox.checked) {
+            let carTotal = 0;
+            document.querySelectorAll(`#${prefix}-car-allocations .allocation-input`).forEach(input => {
+                carTotal += parseInt(input.value) || 0;
+            });
+            if (carTotal === 0) errors.push("Car");
+        }
+
+        if (motoCheckbox && motoCheckbox.checked) {
+            let motoTotal = 0;
+            document.querySelectorAll(`#${prefix}-motorcycle-allocations .allocation-input`).forEach(input => {
+                motoTotal += parseInt(input.value) || 0;
+            });
+            if (motoTotal === 0) errors.push("Motorcycle");
+        }
+
+        if (errors.length > 0) {
+            alert(`Please specify at least one slot for: ${errors.join(", ")}`);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Update totals dynamically
+     */
+    function updateTotals(prefix) {
+        let carTotal = 0;
+        document.querySelectorAll(`#${prefix}-car-allocations .allocation-input`).forEach(input => {
+            carTotal += parseInt(input.value) || 0;
+        });
+        const carTotalEl = document.getElementById(`${prefix}-car-total`);
+        if (carTotalEl) carTotalEl.textContent = carTotal;
+
+        let motoTotal = 0;
+        document.querySelectorAll(`#${prefix}-motorcycle-allocations .allocation-input`).forEach(input => {
+            motoTotal += parseInt(input.value) || 0;
+        });
+        const motoTotalEl = document.getElementById(`${prefix}-motorcycle-total`);
+        if (motoTotalEl) motoTotalEl.textContent = motoTotal;
+    }
+
+    /**
+     * Handle Add Form Submission
+     */
     if (addForm) {
         addForm.addEventListener("submit", async e => {
             e.preventDefault();
+
+            if (!validateAllocations("add")) return; // Stop if invalid
 
             const submitBtn = addForm.querySelector('button[type="submit"]');
             const originalText = submitBtn?.textContent || "";
@@ -23,21 +116,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 const formData = new FormData(addForm);
                 formData.append("action", "add");
+                formData.append("allocations", JSON.stringify(collectAllocations("add")));
 
-                const json = await fetchJson(endpoint, {
-                    method: "POST",
-                    body: formData
-                });
+                const response = await fetch(endpoint, { method: "POST", body: formData });
+                const json = await response.json();
 
                 alert(json.message || "Parking space added successfully!");
 
                 if (json.success) {
-                    if (addModal) addModal.style.display = "none";
                     addForm.reset();
-
                     const preview = document.getElementById("add-space-preview");
-                    if (preview) preview.src = "";
-
+                    if (preview) {
+                        preview.src = "";
+                        preview.style.display = "none";
+                    }
                     location.reload();
                 }
             } catch (err) {
@@ -48,15 +140,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 submitBtn.textContent = originalText;
             }
         });
+
+        // Update totals on input change
+        document.querySelectorAll('#add-car-allocations .allocation-input, #add-motorcycle-allocations .allocation-input')
+            .forEach(input => input.addEventListener('input', () => updateTotals('add')));
     }
 
     /**
-     * EDIT FORM
+     * Handle Edit Form Submission
      */
-    const editForm = document.getElementById("edit-space-form");
     if (editForm) {
         editForm.addEventListener("submit", async e => {
             e.preventDefault();
+
+            if (!validateAllocations("edit")) return; // Stop if invalid
 
             const submitBtn = editForm.querySelector('button[type="submit"]');
             const originalText = submitBtn?.textContent || "";
@@ -67,16 +164,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 const formData = new FormData(editForm);
                 formData.append("action", "edit");
+                formData.append("allocations", JSON.stringify(collectAllocations("edit")));
 
-                const json = await fetchJson(endpoint, {
-                    method: "POST",
-                    body: formData
-                });
+                const response = await fetch(endpoint, { method: "POST", body: formData });
+                const json = await response.json();
 
                 alert(json.message || "Parking space updated successfully!");
 
                 if (json.success) {
-                    if (editModal) editModal.style.display = "none";
+                    editForm.reset();
                     location.reload();
                 }
             } catch (err) {
@@ -87,57 +183,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 submitBtn.textContent = originalText;
             }
         });
-    }
 
-    /**
-     * DELETE BUTTON
-     */
-    const deleteSpaceBtn = document.getElementById("delete-space-btn");
-    if (deleteSpaceBtn) {
-        deleteSpaceBtn.addEventListener("click", async () => {
-            const idField = document.getElementById("edit-space-id");
-            const nameField = document.getElementById("edit-space-name");
-
-            const id = idField?.value;
-            const name = nameField?.value || "this parking space";
-
-            if (!id) {
-                alert("No parking space selected for deletion.");
-                return;
-            }
-
-            if (!confirm(`Are you sure you want to delete "${name}"? This action cannot be undone.`)) {
-                return;
-            }
-
-            const originalText = deleteSpaceBtn.textContent;
-
-            try {
-                deleteSpaceBtn.disabled = true;
-                deleteSpaceBtn.textContent = "Deleting...";
-
-                const formData = new FormData();
-                formData.append("action", "delete");
-                formData.append("id", id);
-
-                const json = await fetchJson(endpoint, {
-                    method: "POST",
-                    body: formData
-                });
-
-                alert(json.message || "Parking space deleted successfully!");
-
-                if (json.success) {
-                    if (editModal) editModal.style.display = "none";
-                    location.reload();
-                }
-            } catch (err) {
-                console.error("Delete error:", err);
-                alert(`Error deleting parking space: ${err.message}`);
-            } finally {
-                deleteSpaceBtn.disabled = false;
-                deleteSpaceBtn.textContent = originalText;
-            }
-        });
+        // Update totals on input change
+        document.querySelectorAll('#edit-car-allocations .allocation-input, #edit-motorcycle-allocations .allocation-input')
+            .forEach(input => input.addEventListener('input', () => updateTotals('edit')));
     }
 });

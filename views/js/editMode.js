@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     /* ===========================
-       EDIT MODE TOGGLE
+    editMode.js
     ============================ */
 
     const editModeBtn = document.getElementById("edit-mode-btn");

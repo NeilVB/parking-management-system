@@ -169,20 +169,20 @@ $distribution = $model->getSlotDistribution();
                         <!-- Filter Dropdown -->
                         <div class="filter-container">
                             <select id="type-filter" class="filter-select">
-                                <option value="all">🔍 All Types</option>
-                                <option value="general">🚗 General</option>
-                                <option value="faculty">👨‍🏫 Faculty</option>
-                                <option value="executive">💼 Executive</option>
-                                <option value="guest">👤 Guest</option>
+                                <option value="all">All Types</option>
+                                <option value="general">General</option>
+                                <option value="faculty">Faculty</option>
+                                <option value="executive">Executive</option>
+                                <option value="guest">Guest</option>
                             </select>
                         </div>
 
                         <!-- Vehicle Type Filter -->
                         <div class="filter-container">
                             <select id="vehicle-filter" class="filter-select">
-                                <option value="all">🚗🏍️ All Vehicles</option>
-                                <option value="car">🚗 Car Only</option>
-                                <option value="motorcycle">🏍️ Motorcycle Only</option>
+                                <option value="all">All Vehicles</option>
+                                <option value="car">Car Only</option>
+                                <option value="motorcycle">Motorcycle Only</option>
                             </select>
                         </div>
 

@@ -1,110 +1,254 @@
 document.addEventListener("DOMContentLoaded", () => {
     /* ===========================
-       MODALS
+    views/js/modals.js
     ============================ */
+    window.openFeedbackModal = function (title, message, type = "success", context = "register") {
+        const modal = document.getElementById("feedback-modal");
+        const modalContent = modal?.querySelector(".modal-content");
+        const titleEl = document.getElementById("feedback-title");
+        const messageEl = document.getElementById("feedback-message");
+        const buttonEl = document.getElementById("feedback-btn");
 
-    const addModal = document.getElementById("add-space-modal");
-    const editModal = document.getElementById("edit-space-modal");
-    const addBtn = document.getElementById("add-space-btn");
-    const quickAddCard = document.getElementById("quick-add-card");
-    const deleteSpaceBtn = document.getElementById("delete-space-btn");
-
-    /**
-     * Show or hide the delete button in the edit modal
-     * based on global editMode state.
-     */
-    function updateModalDeleteButton() {
-        if (!deleteSpaceBtn) return;
-
-        if (window.editMode) {
-            deleteSpaceBtn.style.display = "inline-block";
-        } else {
-            deleteSpaceBtn.style.display = "none";
+        if (!modal || !modalContent || !titleEl || !messageEl || !buttonEl) {
+            console.error("Feedback modal elements missing");
+            return;
         }
-    }
 
-    /**
-     * Open the add modal from button or quick-add card
-     */
-    if (addBtn) {
-        addBtn.addEventListener("click", () => {
-            if (addModal) addModal.style.display = "flex";
+        titleEl.textContent = title;
+        messageEl.textContent = message;
+
+        modalContent.classList.remove("success", "error");
+        modalContent.classList.add(type);
+        modal.style.display = "flex";
+
+        if (type === "error") {
+            buttonEl.textContent = "Ok";
+            buttonEl.onclick = () => {
+                modal.style.display = "none";
+                document.getElementById("Email")?.focus();
+            };
+        } else if (type === "success") {
+            if (context === "register") {
+                buttonEl.textContent = "Login Now";
+                buttonEl.onclick = () => (window.location.href = "login.php");
+            } else if (context === "login") {
+                buttonEl.textContent = "Go to Dashboard";
+                buttonEl.onclick = () => (window.location.href = "dashboard.php");
+            } else {
+                buttonEl.textContent = "Close";
+                buttonEl.onclick = () => (modal.style.display = "none");
+            }
+        } else {
+            buttonEl.textContent = "Close";
+            buttonEl.onclick = () => (modal.style.display = "none");
+        }
+    };
+
+    /* ===========================
+       ADD SPACE MODAL
+    ============================ */
+    const addSpaceBtn = document.getElementById("add-space-btn");
+    const addModal = document.getElementById("add-space-modal");
+    const addCloseBtns = addModal ? addModal.querySelectorAll(".close-btn, .close-modal") : [];
+
+    const addSupportsCar = document.getElementById("add-supports-car");
+    const addSupportsMotorcycle = document.getElementById("add-supports-motorcycle");
+    const addAllocationsContainer = document.getElementById("add-allocations-container");
+    const addCarAllocations = document.getElementById("add-car-allocations");
+    const addMotorcycleAllocations = document.getElementById("add-motorcycle-allocations");
+
+    const addPreview = document.getElementById("add-space-preview");
+    const addImageInput = document.getElementById("add-space-image");
+    const addForm = document.getElementById("add-space-form");
+
+    if (addSpaceBtn && addModal) {
+        addSpaceBtn.addEventListener("click", () => {
+            addModal.style.display = "flex";
+            addForm.reset();
+
+            addAllocationsContainer.style.display = "none";
+            addCarAllocations.style.display = "none";
+            addMotorcycleAllocations.style.display = "none";
+
+            addPreview.style.display = "none";
+            addPreview.src = "";
+
+            // Reset allocation inputs to 0
+            document.querySelectorAll('#add-car-allocations .allocation-input, #add-motorcycle-allocations .allocation-input')
+                .forEach(input => input.value = 0);
+
+            updateTotals("add");
         });
-    }
 
-    if (quickAddCard) {
-        quickAddCard.addEventListener("click", () => {
-            if (addModal) addModal.style.display = "flex";
+        addCloseBtns.forEach(btn => btn.addEventListener("click", () => {
+            addModal.style.display = "none";
+        }));
+
+        // Image preview
+        addImageInput?.addEventListener("change", e => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    addPreview.src = e.target.result;
+                    addPreview.style.display = "block";
+                };
+                reader.readAsDataURL(file);
+            }
         });
+
+        // Toggle allocations
+        const toggleAddAllocations = () => {
+            const carChecked = addSupportsCar.checked;
+            const motoChecked = addSupportsMotorcycle.checked;
+
+            addAllocationsContainer.style.display = (carChecked || motoChecked) ? "block" : "none";
+            addCarAllocations.style.display = carChecked ? "block" : "none";
+            addMotorcycleAllocations.style.display = motoChecked ? "block" : "none";
+
+            // Required validation for inputs
+            document.querySelectorAll('#add-car-allocations .allocation-input').forEach(input => {
+                input.required = carChecked;
+                if (!carChecked) input.value = 0;
+            });
+            document.querySelectorAll('#add-motorcycle-allocations .allocation-input').forEach(input => {
+                input.required = motoChecked;
+                if (!motoChecked) input.value = 0;
+            });
+
+            updateTotals("add");
+        };
+
+        [addSupportsCar, addSupportsMotorcycle].forEach(cb => cb.addEventListener("change", toggleAddAllocations));
+
+        // Update totals on input change
+        document.querySelectorAll('#add-car-allocations .allocation-input, #add-motorcycle-allocations .allocation-input')
+            .forEach(input => input.addEventListener("input", () => updateTotals("add")));
     }
 
-    /**
-     * Bind all edit buttons to open the edit modal
-     * and pre-fill form fields with dataset values
-     */
-    function bindEditButtons() {
-        document.querySelectorAll(".edit-btn").forEach(btn => {
-            btn.addEventListener("click", e => {
-                e.preventDefault();
-                e.stopPropagation();
+    /* ===========================
+       EDIT SPACE MODAL
+    ============================ */
+    const editModal = document.getElementById("edit-space-modal");
+    const editCloseBtns = editModal ? editModal.querySelectorAll(".close-btn, .close-modal") : [];
+    const editSupportsCar = document.getElementById("edit-supports-car");
+    const editSupportsMotorcycle = document.getElementById("edit-supports-motorcycle");
+    const editAllocationsContainer = document.getElementById("edit-allocations-container");
+    const editCarAllocations = document.getElementById("edit-car-allocations");
+    const editMotorcycleAllocations = document.getElementById("edit-motorcycle-allocations");
 
-                const {
-                    id = "",
-                    name = "",
-                    max = "",
-                    type = "",
-                    vehicle = "",
-                    image = ""
-                } = btn.dataset;
+    const editPreview = document.getElementById("edit-space-preview");
+    const editImageInput = document.getElementById("edit-space-image");
 
-                // Fill form fields
-                const editIdField = document.getElementById("edit-space-id");
-                const editNameField = document.getElementById("edit-space-name");
-                const editMaxField = document.getElementById("edit-space-max");
-                const editTypeField = document.getElementById("edit-space-type");
-                const editVehicleField = document.getElementById("edit-space-vehicle");
+    const editButtons = document.querySelectorAll(".edit-space-btn");
 
-                if (editIdField) editIdField.value = id;
-                if (editNameField) editNameField.value = name;
-                if (editMaxField) editMaxField.value = max;
-                if (editTypeField) editTypeField.value = type;
-                if (editVehicleField) editVehicleField.value = vehicle;
+    const deleteBtn = document.getElementById("delete-space-btn");
 
-                // Preview image
-                const imgPreview = document.getElementById("edit-space-preview");
-                if (imgPreview) {
-                    imgPreview.src = image || "../assets/img/default_parking.jpg";
+    if (editModal) {
+        editCloseBtns.forEach(btn => btn.addEventListener("click", () => {
+            editModal.style.display = "none";
+        }));
+
+        const toggleEditAllocations = () => {
+            const carChecked = editSupportsCar.checked;
+            const motoChecked = editSupportsMotorcycle.checked;
+
+            editAllocationsContainer.style.display = (carChecked || motoChecked) ? "block" : "none";
+            editCarAllocations.style.display = carChecked ? "block" : "none";
+            editMotorcycleAllocations.style.display = motoChecked ? "block" : "none";
+
+            // Required validation for inputs
+            document.querySelectorAll('#edit-car-allocations .allocation-input').forEach(input => {
+                input.required = carChecked;
+                if (!carChecked) input.value = 0;
+            });
+            document.querySelectorAll('#edit-motorcycle-allocations .allocation-input').forEach(input => {
+                input.required = motoChecked;
+                if (!motoChecked) input.value = 0;
+            });
+
+            updateTotals("edit");
+        };
+
+        [editSupportsCar, editSupportsMotorcycle].forEach(cb => cb.addEventListener("change", toggleEditAllocations));
+
+        // Image preview
+        editImageInput.addEventListener("change", e => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    editPreview.src = e.target.result;
+                    editPreview.style.display = "block";
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Populate edit modal
+        editButtons.forEach(button => {
+            button.addEventListener("click", async () => {
+                const id = button.dataset.id;
+                editModal.style.display = "flex";
+
+                document.getElementById("edit-space-id").value = id;
+                document.getElementById("edit-space-name").value = button.dataset.name;
+
+                editSupportsCar.checked = button.dataset.supportsCar === "1";
+                editSupportsMotorcycle.checked = button.dataset.supportsMotorcycle === "1";
+
+                const imagePath = button.dataset.image;
+                document.getElementById("edit-current-image").value = imagePath || "";
+                if (imagePath) {
+                    editPreview.src = imagePath;
+                    editPreview.style.display = "block";
+                } else {
+                    editPreview.style.display = "none";
                 }
 
-                updateModalDeleteButton();
-                if (editModal) editModal.style.display = "flex";
+                // Fetch allocations
+                try {
+                    const response = await fetch(`../controller/get_allocations.php?parking_space_id=${id}`);
+                    const data = await response.json();
+
+                    // Reset inputs
+                    document.querySelectorAll('#edit-car-allocations .allocation-input, #edit-motorcycle-allocations .allocation-input')
+                        .forEach(input => input.value = 0);
+
+                    if (data.success && data.allocations) {
+                        const userTypeMap = {1:'general',2:'faculty',3:'executive',4:'guest'};
+                        data.allocations.forEach(a => {
+                            const type = a.vehicle_type_id === 1 ? 'car' : 'motorcycle';
+                            const user = userTypeMap[a.user_type_id];
+                            const input = document.getElementById(`edit-${type}-${user}`);
+                            if (input) input.value = a.allocated_slots;
+                        });
+                    }
+                } catch (err) {
+                    console.error("Error fetching allocations:", err);
+                }
+
+                toggleEditAllocations();
             });
         });
     }
 
-    // Initial binding of edit buttons
-    bindEditButtons();
-
-    /**
-     * Close modals via close buttons
-     */
-    document.querySelectorAll(".close-btn, .close-modal").forEach(el => {
-        el.addEventListener("click", () => {
-            document.querySelectorAll(".modal").forEach(m => {
-                m.style.display = "none";
-            });
+    /* ===========================
+       Totals helper (shared)
+    ============================ */
+    function updateTotals(prefix) {
+        let carTotal = 0;
+        document.querySelectorAll(`#${prefix}-car-allocations .allocation-input`).forEach(input => {
+            carTotal += parseInt(input.value) || 0;
         });
-    });
+        const carTotalEl = document.getElementById(`${prefix}-car-total`);
+        if (carTotalEl) carTotalEl.textContent = carTotal;
 
-    /**
-     * Close modal when clicking outside of it
-     */
-    window.addEventListener("click", e => {
-        if (e.target.classList.contains("modal")) {
-            e.target.style.display = "none";
-        }
-    });
-
-    // Expose delete button updater globally for editMode.js
-    window.updateModalDeleteButton = updateModalDeleteButton;
+        let motoTotal = 0;
+        document.querySelectorAll(`#${prefix}-motorcycle-allocations .allocation-input`).forEach(input => {
+            motoTotal += parseInt(input.value) || 0;
+        });
+        const motoTotalEl = document.getElementById(`${prefix}-motorcycle-total`);
+        if (motoTotalEl) motoTotalEl.textContent = motoTotal;
+    }
 });

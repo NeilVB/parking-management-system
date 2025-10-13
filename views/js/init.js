@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     /* ===========================
-       INITIALIZATION
+    init.js
     ============================ */
     console.log("Admin Dashboard initialized successfully");
 

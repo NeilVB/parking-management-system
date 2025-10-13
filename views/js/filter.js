@@ -1,8 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-    /* ===========================
-       SEARCH AND FILTER
-    ============================ */
-
     const searchInput = document.getElementById("space-search");
     const typeFilter = document.getElementById("type-filter");
     const vehicleFilter = document.getElementById("vehicle-filter");
@@ -11,49 +7,39 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentTypeFilter = "all";
     let currentVehicleFilter = "all";
 
-    // Normalize text by removing emojis, symbols, and extra spaces
     function normalize(text) {
-        return text
-            .toLowerCase()
-            .replace(/[^a-z]/gi, "") // keep only letters
-            .trim();
+        return (text || "").toLowerCase().trim();
     }
 
     function filterParkingSpaces() {
-        const parkingCards = document.querySelectorAll(".parking-card:not(.add-card)");
+        const parkingCards = document.querySelectorAll(".parking-container .parking-card:not(.add-card)");
         let visibleCount = 0;
 
         parkingCards.forEach(card => {
-            const name = card.querySelector("h3")?.textContent.toLowerCase() || "";
-            const paragraphs = card.querySelectorAll("p");
-            let cardType = "";
-            let cardVehicle = "";
-
-            // Extract type and vehicle info
-            paragraphs.forEach(p => {
-                const text = p.textContent.toLowerCase();
-
-                const typeMatch = text.match(/type:\s*(.+)/i);
-                const vehicleMatch = text.match(/vehicle:\s*(.+)/i);
-
-                if (typeMatch) cardType = normalize(typeMatch[1]);
-                if (vehicleMatch) cardVehicle = normalize(vehicleMatch[1]);
-            });
+            const name = normalize(card.dataset.name);
+            const userTypes = (card.dataset.userTypes || "")
+                .split(",")
+                .map(normalize)
+                .filter(v => v !== "");
+            const vehicles = (card.dataset.vehicles || "")
+                .split(",")
+                .map(normalize)
+                .filter(v => v !== "");
 
             const matchesSearch =
                 currentSearchTerm === "" ||
-                name.includes(currentSearchTerm) ||
-                cardType.includes(currentSearchTerm) ||
-                cardVehicle.includes(currentSearchTerm);
+                name.includes(currentSearchTerm);
 
             const matchesType =
-                currentTypeFilter === "all" || cardType === normalize(currentTypeFilter);
+                currentTypeFilter === "all" ||
+                userTypes.includes(normalize(currentTypeFilter));
 
             const matchesVehicle =
-                currentVehicleFilter === "all" || cardVehicle === normalize(currentVehicleFilter);
+                currentVehicleFilter === "all" ||
+                vehicles.includes(normalize(currentVehicleFilter));
 
             if (matchesSearch && matchesType && matchesVehicle) {
-                card.style.display = "block";
+                card.style.display = "";
                 visibleCount++;
             } else {
                 card.style.display = "none";
@@ -63,42 +49,35 @@ document.addEventListener("DOMContentLoaded", () => {
         updateVisibleCount(visibleCount, parkingCards.length);
     }
 
-    function updateVisibleCount(visible = null, total = null) {
-        if (visible === null || total === null) {
-            const visibleCards = document.querySelectorAll(".parking-card:not(.add-card):not([style*='display: none'])");
-            const totalCards = document.querySelectorAll(".parking-card:not(.add-card)");
-            visible = visibleCards.length;
-            total = totalCards.length;
-        }
-
+    function updateVisibleCount(visible, total) {
         const countElement = document.getElementById("spaces-count");
         if (countElement) {
             countElement.textContent = `${visible} of ${total} spaces`;
         }
     }
 
-    // Event bindings
+    // 🧠 Event bindings
     if (searchInput) {
         searchInput.addEventListener("input", e => {
-            currentSearchTerm = e.target.value.toLowerCase();
+            currentSearchTerm = normalize(e.target.value);
             filterParkingSpaces();
         });
     }
 
     if (typeFilter) {
         typeFilter.addEventListener("change", e => {
-            currentTypeFilter = e.target.value;
+            currentTypeFilter = normalize(e.target.value);
             filterParkingSpaces();
         });
     }
 
     if (vehicleFilter) {
         vehicleFilter.addEventListener("change", e => {
-            currentVehicleFilter = e.target.value;
+            currentVehicleFilter = normalize(e.target.value);
             filterParkingSpaces();
         });
     }
 
-    // Initial filter count
-    filterParkingSpaces();
+    // Run once after everything is rendered
+    setTimeout(filterParkingSpaces, 300);
 });

@@ -1,0 +1,233 @@
+/* 
+    Feedback Modals
+*/
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    width: 350px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    animation: popIn 0.3s ease;
+}
+
+.modal-content h2 {
+    margin-bottom: 10px;
+}
+
+.modal-content.success h2 {
+    color: #28a745;
+}
+
+.modal-content.error h2 {
+    color: #dc3545;
+}
+
+.close-modal {
+    margin-top: 15px;
+    padding: 8px 16px;
+    border: none;
+    background-color: #0056b3;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.close-modal:hover {
+    background-color: #004095;
+}
+
+@keyframes popIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* ===============================
+   Modal Base
+================================ */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.modal-content.add-space-modal {
+    background: #f2f2f2;
+    padding: 2rem;
+    border-radius: 10px;
+    width: 600px;
+    font-family: "Poppins", sans-serif;
+    color: #333;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-weight: 600;
+    color: #222;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.6rem;
+    color: #333;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+    color: #ff3b3b;
+}
+
+/* ===============================
+   Form Layout
+================================ */
+.form-section {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-section input[type="text"],
+.form-section input[type="file"] {
+    margin-top: 0.5rem;
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fff;
+    font-size: 0.95rem;
+}
+
+/* ===============================
+   Vehicle Selection
+================================ */
+.vehicle-selection {
+    margin-top: 1.5rem;
+}
+
+.vehicle-checkboxes {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 0.5rem;
+}
+
+.vehicle-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* ===============================
+   Slot Configuration
+================================ */
+.slot-config {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1.5rem;
+}
+
+.slot-section {
+    flex: 1;
+    background: #e3e3e3;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.slot-section h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #444;
+}
+
+.slot-inputs label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0.4rem 0;
+    font-size: 0.9rem;
+}
+
+.slot-inputs input {
+    width: 70px;
+    text-align: center;
+    border: 1px solid #bbb;
+    border-radius: 5px;
+    padding: 0.3rem;
+    font-size: 0.9rem;
+}
+
+.slot-total {
+    font-weight: bold;
+    text-align: right;
+    margin-top: 0.5rem;
+    color: #111;
+}
+
+/* ===============================
+   Upload Section
+================================ */
+.upload-section {
+    margin-top: 1.5rem;
+}
+
+/* ===============================
+   Buttons
+================================ */
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn {
+    padding: 0.6rem 1.4rem;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: #3a3a90;
+    color: #fff;
+}
+
+.btn-secondary {
+    background: #f0f0f0;
+    color: #333;
+}
+
+.btn-primary:hover {
+    background: #2c2c70;
+}
+
+.btn-secondary:hover {
+    background: #d8d8d8;
+}

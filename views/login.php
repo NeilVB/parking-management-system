@@ -6,30 +6,15 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>NU Space - Log In</title>
 
-    <!-- JS -->
-    <script src="../views/js/navigation.js"></script>
-
+    <!-- CSS -->
 	<link rel="stylesheet" href="../views/loginstyle.css">
+    <link rel="stylesheet" href="../views/css/modals_styles.css">
     <link rel="stylesheet" href="../views/mobile_loginstyle.css">
 
-	<style>
-		/* Style for error and success messages */
-		.message {
-			padding: 10px;
-			margin: 10px 0;
-			border-radius: 5px;
-		}
-		.error {
-			background-color: #f8d7da;
-			color: #721c24;
-			border: 1px solid #f5c6cb;
-		}
-		.success {
-			background-color: #d4edda;
-			color: #155724;
-			border: 1px solid #c3e6cb;
-		}
-	</style>
+    <!-- JS -->
+    <script src="../views/js/navigation.js"></script>
+    <script src="../views/js/modals.js"></script>
+
 </head>
 <body>
 	<div class="login-container">
@@ -61,17 +46,31 @@
                     </div>
                     <div class="inputsubcontainer formcontainer">
                         
-                        <!-- Display error or success messages (passed from controller) -->
-                        <?php 
-                        if (!empty($error_message)): 
-                        ?>
-                            <div class="message error"><?php echo htmlspecialchars($error_message); ?></div>
+                        <!-- Login: Success and Error Modals -->
+                        <?php if (!empty($error_message)): ?>
+                            <script>
+                                document.addEventListener("DOMContentLoaded", () => {
+                                    openFeedbackModal(
+                                        "Login Failed",
+                                        "<?php echo addslashes($error_message); ?>",
+                                        "error",
+                                        "login"
+                                    );
+                                });
+                            </script>
+                        <?php elseif (!empty($success_message)): ?>
+                            <script>
+                                document.addEventListener("DOMContentLoaded", () => {
+                                    openFeedbackModal(
+                                        "Login Successful",
+                                        "<?php echo addslashes($success_message); ?>",
+                                        "success",
+                                        "login"
+                                    );
+                                });
+                            </script>
                         <?php endif; ?>
-                        
-                        <?php if (!empty($success_message)): ?>
-                            <div class="message success"><?php echo htmlspecialchars($success_message); ?></div>
-                        <?php endif; ?>
-                        
+   
                         <form action="login.php" method="POST">
                             <div class="input-group">
                                 <label for="Email">Email</label>
@@ -274,5 +273,15 @@
             </div>
         </footer>
 	</div>
+
+    <!-- Global Feedback Modal -->
+    <div id="feedback-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="feedback-title"></h2>
+            <p id="feedback-message"></p>
+            <button id="feedback-btn" class="close-modal">Close</button>
+        </div>
+    </div>
+
 </body>
 </html>

@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // navigation.js
     const navLinks = document.querySelectorAll("[data-target]");
     const sections = document.querySelectorAll(".content-section");
 

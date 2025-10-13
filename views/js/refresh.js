@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     /* ===========================
-       DYNAMIC CONTENT REFRESH
+    refresh.js
     ============================ */
     // Function to refresh parking spaces without full page reload
     async function refreshParkingSpaces() {

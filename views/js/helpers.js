@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     /* ===========================
-       HELPERS
+    views/js/helpers.js
     ============================ */
 
     /**

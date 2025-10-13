@@ -7,31 +7,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NU Space - Register</title>
 
+    <!-- CSS -->
+    <link rel="stylesheet" href="../views/registerstyle.css">
+    <link rel="stylesheet" href="../views/css/modals_styles.css">
+    <link rel="stylesheet" href="../views/mobile_registerstyle.css">
+
     <!-- JS -->
     <script src="../views/js/navigation.js"></script>
+    <script src="../views/js/modals.js"></script>
 
-    <link rel="stylesheet" href="../views/registerstyle.css">
-    <link rel="stylesheet" href="../views/mobile_registerstyle.css">
-    <style>
-        /* Style for error and success messages */
-        .message {
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-        }
-
-        .error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-    </style>
 </head>
 
 <body>
@@ -44,6 +28,7 @@
                 <i class="fas fa-bell"></i>
             </div>
         </header>
+
         <div class="bottom">
             <div class="register-box">
                 <div class="maincontainer input-container">
@@ -51,15 +36,31 @@
                         <h2>Register</h2>
                     </div>
                     <div class="inputsubcontainer formcontainer">
-                        <?php
-                        // Display error or success messages (passed from controller)
-                        if (!empty($error_message)):
-                            ?>
-                            <div class="message error"><?php echo htmlspecialchars($error_message); ?></div>
-                        <?php endif; ?>
-                        <?php if (!empty($success_message)): ?>
-                            <div class="message success"><?php echo htmlspecialchars($success_message); ?></div>
-                        <?php endif; ?>
+
+                    <!-- Register: Success and Error Modals -->
+                    <?php if (!empty($error_message)): ?>
+                        <script>
+                            document.addEventListener("DOMContentLoaded", () => {
+                                openFeedbackModal(
+                                    "Registration Failed",
+                                    "<?php echo addslashes($error_message); ?>",
+                                    "error",
+                                    "register"
+                                );
+                            });
+                        </script>
+                    <?php elseif (!empty($success_message)): ?>
+                        <script>
+                            document.addEventListener("DOMContentLoaded", () => {
+                                openFeedbackModal(
+                                    "Registration Successful",
+                                    "<?php echo addslashes($success_message); ?>",
+                                    "success",
+                                    "register"
+                                );
+                            });
+                        </script>
+                    <?php endif; ?>
 
                         <form action="../controller/register.php" method="POST">
                             <div class="input-group">
@@ -301,6 +302,15 @@
             </div>
         </footer>
     </div>
-</body>
 
+    <!-- Global Feedback Modal -->
+    <div id="feedback-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="feedback-title"></h2>
+            <p id="feedback-message"></p>
+            <button id="feedback-btn" class="close-modal">Close</button>
+        </div>
+    </div>
+
+</body>
 </html>

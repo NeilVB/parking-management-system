@@ -1,4 +1,5 @@
 <?php
+// views/admin_dashboard.php
 // Start session and ensure admin is authenticated
 // session_start(); // Uncomment if not already started elsewhere
 if (!isset($_SESSION['admin_id'])) {
@@ -33,6 +34,7 @@ $distribution = $model->getSlotDistribution();
 
     <!-- CSS -->
     <link rel="stylesheet" href="../views/admindashboardstyle.css">
+    <!-- <link rel="stylesheet" href="../views/css/modals_styles.css"> -->
     <link rel="stylesheet" href="../views/css/parking_spaces_style.css">
 
     <!-- JS -->
@@ -43,8 +45,9 @@ $distribution = $model->getSlotDistribution();
     <script src="../views/js/imagePreview.js"></script>
     <script src="../views/js/refresh.js"></script>
     <script src="../views/js/editMode.js"></script>
-    <script src="../views/js/filter.js"></script>
+    <script src="../views/js/deleteMode.js"></script>
     <script src="../views/js/init.js"></script>
+    <script src="../views/js/filter.js"></script>
 
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -156,6 +159,7 @@ $distribution = $model->getSlotDistribution();
                     <h3><i class="fas fa-car-alt"></i> Parking Spaces Management</h3>
                     <div class="header-actions">
                         <button class="btn btn-primary" id="edit-mode-btn"><i class="fas fa-edit"></i> Edit Mode</button>
+                        <button id="delete-mode-btn" class="mode-toggle-btn" style="background-color: #dc3545;">Delete Mode</button>
                         <button class="btn btn-success" id="add-space-btn"><i class="fas fa-plus"></i> Add New Space</button>
                     </div>
                 </div>
@@ -165,18 +169,18 @@ $distribution = $model->getSlotDistribution();
                     <!-- Search Input -->
                     <div class="search-container" style="flex: 1; min-width: 250px;">
                         <input type="text" id="space-search" placeholder="Search parking spaces..." 
-                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;">
+                            style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;">
                     </div>
                     
                     <!-- Filter Dropdown -->
                     <div class="filter-container">
                         <select id="type-filter" class="filter-select" 
                                 style="padding: 10px 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; cursor: pointer; background: white;">
-                            <option value="all">🔍 All Types</option>
-                            <option value="general">🚗 General</option>
-                            <option value="faculty">👨‍🏫 Faculty</option>
-                            <option value="executive">💼 Executive</option>
-                            <option value="guest">👤 Guest</option>
+                            <option value="all">All Types</option>
+                            <option value="general">General</option>
+                            <option value="faculty">Faculty</option>
+                            <option value="executive">Executive</option>
+                            <option value="guest">Guest</option>
                         </select>
                     </div>
                     
@@ -184,9 +188,9 @@ $distribution = $model->getSlotDistribution();
                     <div class="filter-container">
                         <select id="vehicle-filter" class="filter-select" 
                                 style="padding: 10px 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; cursor: pointer; background: white;">
-                            <option value="all">🚗🏍️ All Vehicles</option>
-                            <option value="car">🚗 Car Only</option>
-                            <option value="motorcycle">🏍️ Motorcycle Only</option>
+                            <option value="all">All Vehicles</option>
+                            <option value="car">Car Only</option>
+                            <option value="motorcycle">Motorcycle Only</option>
                         </select>
                     </div>
                     
@@ -199,44 +203,119 @@ $distribution = $model->getSlotDistribution();
                 <div class="parking-container">
                     <?php
                     require_once __DIR__ . '/../controller/config.php';
+                    require_once __DIR__ . '/../models/ParkingSpace.php';
 
-                    $query = "SELECT * FROM parking_spaces";
+                    $parkingModel = new ParkingSpace($conn);
+                    $query = "SELECT * FROM parking_spaces ORDER BY id DESC";
                     $result = $conn->query($query);
 
                     while ($row = $result->fetch_assoc()):
-                        // Fix image path - prepend '../' to make it relative to the current location
-                        $imagePath = !empty($row['image_path']) ? '../' . $row['image_path'] : '../assets/img/default_parking.jpg';
+                        // Fix image path
+                        $imagePath = !empty($row['image_path']) ? '../' . ltrim($row['image_path'], '/.') : '../assets/img/default_parking.jpg';
 
-                        // Get vehicle type icon
-                        $vehicleIcon = strtolower($row['vehicle_type']) === 'motorcycle' ? '🏍️' : '🚗';
+                        // Get allocations for this parking space
+                        $allocations = $parkingModel->getAllocations($row['id']);
 
-                        // Calculate availability and status
-                        $available = (int)$row['max_space'] - (int)$row['parked_count'];
+                        // Compute slots and user types
+                        $carSlots = 0;
+                        $motorcycleSlots = 0;
+                        $userTypesSet = []; // use associative to avoid duplicates
+                        $allocationDetails = [];
+
+                        foreach ($allocations as $alloc) {
+                            if ($alloc['vehicle_type_id'] == 1) {
+                                $carSlots += (int)$alloc['allocated_slots'];
+                            } else {
+                                $motorcycleSlots += (int)$alloc['allocated_slots'];
+                            }
+
+                            if ((int)$alloc['allocated_slots'] > 0) {
+                                // record user type (use the user_type field from join)
+                                $ut = strtolower(trim($alloc['user_type']));
+                                // normalize to simple keys: student/visitor -> general
+                                if (strpos($ut, 'student') !== false || strpos($ut, 'visitor') !== false) {
+                                    $userTypesSet['general'] = true;
+                                } elseif (strpos($ut, 'faculty') !== false) {
+                                    $userTypesSet['faculty'] = true;
+                                } elseif (strpos($ut, 'executive') !== false) {
+                                    $userTypesSet['executive'] = true;
+                                } elseif (strpos($ut, 'guest') !== false) {
+                                    $userTypesSet['guest'] = true;
+                                }
+                                $allocationDetails[] = $alloc['user_type'] . ': ' . (int)$alloc['allocated_slots'];
+                            }
+                        }
+
+                        // Prepare data attributes
+                        $userTypes = !empty($userTypesSet) ? implode(',', array_keys($userTypesSet)) : '';
+                        $vehicles = [];
+                        if ($row['supports_car']) $vehicles[] = 'car';
+                        if ($row['supports_motorcycle']) $vehicles[] = 'motorcycle';
+                        $vehiclesAttr = implode(',', $vehicles);
+
+                        // Calculate totals
+                        $totalSlots = $carSlots + $motorcycleSlots;
+                        $parkedCount = (int)$row['parked_car_count'] + (int)$row['parked_motorcycle_count'];
+                        $available = $totalSlots - $parkedCount;
                         $status = $available > 0 ? 'Available' : 'Full';
+
+                        // image path safe output
+                        $imgSafe = htmlspecialchars($imagePath, ENT_QUOTES, 'UTF-8');
+                        $nameSafe = htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8');
                     ?>
-                        <div class="parking-card" style="background-image: url('<?php echo htmlspecialchars($imagePath); ?>');">
+                        <div class="parking-card"
+                            data-id="<?php echo (int)$row['id']; ?>"
+                            data-name="<?php echo $nameSafe; ?>"
+                            data-user-types="<?php echo htmlspecialchars($userTypes, ENT_QUOTES, 'UTF-8'); ?>"
+                            data-vehicles="<?php echo htmlspecialchars($vehiclesAttr, ENT_QUOTES, 'UTF-8'); ?>"
+                            style="background-image: url('<?php echo $imgSafe; ?>');">
                             <div class="overlay">
-                                <h3><?php echo htmlspecialchars($row['name']); ?></h3>
-                                <p>Type: <?php echo ucfirst($row['space_type']); ?></p>
-                                <p>Vehicle: <?php echo $vehicleIcon . ' ' . ucfirst($row['vehicle_type']); ?></p>
-                                <p>
-                                    Slots: <?php echo (int)$row['parked_count']; ?> / <?php echo (int)$row['max_space']; ?>
-                                    (<?php echo htmlspecialchars($status); ?>)
+                                <h3><?php echo $nameSafe; ?></h3>
+
+                                <p><strong>Vehicle Types:</strong>
+                                    <?php
+                                    $types = [];
+                                    if ($row['supports_car']) $types[] = '🚗 Car (' . $carSlots . ' slots)';
+                                    if ($row['supports_motorcycle']) $types[] = '🏍️ Motorcycle (' . $motorcycleSlots . ' slots)';
+                                    echo implode(', ', $types);
+                                    ?>
                                 </p>
+
+                                <p><strong>User Type Allocations:</strong><br>
+                                    <?php
+                                    if (!empty($allocationDetails)) {
+                                        echo '<small>' . implode('<br>', array_slice($allocationDetails, 0, 4)) . '</small>';
+                                        if (count($allocationDetails) > 4) {
+                                            echo '<br><small>+' . (count($allocationDetails) - 4) . ' more...</small>';
+                                        }
+                                    } else {
+                                        echo '<small>No allocations</small>';
+                                    }
+                                    ?>
+                                </p>
+
+                                <p><strong>Occupancy:</strong>
+                                    <?php echo $parkedCount; ?> / <?php echo $totalSlots; ?>
+                                    <span class="status-badge <?php echo strtolower($status); ?>">
+                                        <?php echo htmlspecialchars($status); ?>
+                                    </span>
+                                </p>
+
                                 <button class="btn edit-space-btn edit-btn"
-                                        data-id="<?php echo (int)$row['id']; ?>"
-                                        data-name="<?php echo htmlspecialchars($row['name']); ?>"
-                                        data-type="<?php echo htmlspecialchars($row['space_type']); ?>"
-                                        data-vehicle="<?php echo htmlspecialchars($row['vehicle_type']); ?>"
-                                        data-max="<?php echo (int)$row['max_space']; ?>"
-                                        data-image="<?php echo htmlspecialchars($imagePath); ?>">
-                                    Edit
+                                    data-id="<?php echo (int)$row['id']; ?>"
+                                    data-name="<?php echo $nameSafe; ?>"
+                                    data-supports-car="<?php echo (int)$row['supports_car']; ?>"
+                                    data-supports-motorcycle="<?php echo (int)$row['supports_motorcycle']; ?>"
+                                    data-image="<?php echo $imgSafe; ?>">
+                                    <i class="fas fa-edit"></i> Edit
                                 </button>
                             </div>
                         </div>
-                    <?php endwhile; ?>
+                    <?php
+                    endwhile;
+                    ?>
+
                 </div>
-            </div>
 
             <!-- Users Management -->
             <div id="users-management" class="content-section">
@@ -268,99 +347,143 @@ $distribution = $model->getSlotDistribution();
     </div>
 </div>
 
-<!-- Add Space Modal -->
-<div id="add-space-modal" class="modal">
-    <div class="modal-content">
+<!-- =============================
+     ADD PARKING SPACE MODAL
+============================= -->
+<div id="add-space-modal" class="modal" role="dialog" aria-modal="true">
+    <div class="modal-content add-space-modal">
         <div class="modal-header">
-            <h3>Add Parking Space</h3>
-            <span class="close-btn">&times;</span>
+            <h2>Add Parking Space</h2>
+            <button type="button" class="close-btn" aria-label="Close">&times;</button>
         </div>
+
         <form id="add-space-form" enctype="multipart/form-data">
-            <div class="form-group">
-                <label><i class="fas fa-tag"></i> Name</label>
-                <input type="text" name="name" required placeholder="e.g., Main Building Front">
+            <!-- Space Name -->
+            <div class="form-section">
+                <label for="add-space-name">Parking Space Name</label>
+                <input type="text" id="add-space-name" name="name" placeholder="Enter parking space name" required>
             </div>
-            <div class="form-group">
-                <label><i class="fas fa-hashtag"></i> Maximum Slots</label>
-                <input type="number" name="max_space" required min="1">
+
+            <!-- Vehicle Types -->
+            <div class="form-section">
+                <label>Select Vehicle Types</label>
+                <div class="vehicle-checkboxes">
+                    <label><input type="checkbox" id="add-supports-car" name="supports_car" value="1"> Car</label>
+                    <label><input type="checkbox" id="add-supports-motorcycle" name="supports_motorcycle" value="1"> Motorcycle</label>
+                </div>
             </div>
-            <div class="form-group">
-                <label><i class="fas fa-list"></i> Space Type</label>
-                <select name="space_type">
-                    <option value="general">General</option>
-                    <option value="faculty">Faculty</option>
-                    <option value="executive">Executive</option>
-                    <option value="guest">Guest</option>
-                </select>
+
+            <!-- Allocations -->
+            <div id="add-allocations-container" class="slot-config" style="display:none;">
+                <!-- Car Allocations -->
+                <div id="add-car-allocations" class="slot-section" style="display:none;">
+                    <h3>Car Parking Slots</h3>
+                    <div class="slot-inputs">
+                        <label>General <input type="number" id="add-car-general" class="allocation-input" value="0" min="0"></label>
+                        <label>Faculty <input type="number" id="add-car-faculty" class="allocation-input" value="0" min="0"></label>
+                        <label>Executive <input type="number" id="add-car-executive" class="allocation-input" value="0" min="0"></label>
+                        <label>Guest <input type="number" id="add-car-guest" class="allocation-input" value="0" min="0"></label>
+                    </div>
+                    <div class="slot-total">Total Car Slots: <span id="add-car-total">0</span></div>
+                </div>
+
+                <!-- Motorcycle Allocations -->
+                <div id="add-motorcycle-allocations" class="slot-section" style="display:none;">
+                    <h3>Motorcycle Parking Slots</h3>
+                    <div class="slot-inputs">
+                        <label>General <input type="number" id="add-motorcycle-general" class="allocation-input" value="0" min="0"></label>
+                        <label>Faculty <input type="number" id="add-motorcycle-faculty" class="allocation-input" value="0" min="0"></label>
+                        <label>Executive <input type="number" id="add-motorcycle-executive" class="allocation-input" value="0" min="0"></label>
+                        <label>Guest <input type="number" id="add-motorcycle-guest" class="allocation-input" value="0" min="0"></label>
+                    </div>
+                    <div class="slot-total">Total Motorcycle Slots: <span id="add-motorcycle-total">0</span></div>
+                </div>
             </div>
-            <div class="form-group">
-                <label><i class="fas fa-car"></i> Vehicle Type</label>
-                <select name="vehicle_type">
-                    <option value="car">🚗 Car</option>
-                    <option value="motorcycle">🏍️ Motorcycle</option>
-                </select>
+
+            <!-- Upload Image -->
+            <div class="form-section upload-section">
+                <label for="add-space-image">Upload Parking Image</label>
+                <input type="file" id="add-space-image" name="image" accept="image/*">
+                <img id="add-space-preview" alt="Image preview" style="max-width:200px; display:none; margin-top:10px;">
             </div>
-            <div class="form-group">
-                <label><i class="fas fa-image"></i> Upload Image</label>
-                <input type="file" name="image" id="new-space-image" accept="image/*">
-                <img id="add-space-preview" style="max-width: 200px; margin-top: 10px; display: none;" />
-            </div>
+
+            <!-- Buttons -->
             <div class="modal-actions">
-                <button type="submit" class="btn btn-primary">Save</button>
                 <button type="button" class="btn btn-secondary close-modal">Cancel</button>
+                <button type="submit" class="btn btn-primary">Add Parking Space</button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- Edit Space Modal -->
+
+<!-- =============================
+     EDIT PARKING SPACE MODAL
+============================= -->
 <div id="edit-space-modal" class="modal" role="dialog" aria-modal="true">
-    <div class="modal-content">
+    <div class="modal-content edit-space-modal">
         <div class="modal-header">
-            <h3>Edit Parking Space</h3>
+            <h2>Edit Parking Space</h2>
             <button type="button" class="close-btn" aria-label="Close">&times;</button>
         </div>
 
         <form id="edit-space-form" enctype="multipart/form-data">
-            <input type="hidden" name="id" id="edit-space-id">
+            <input type="hidden" id="edit-space-id" name="id">
+            <input type="hidden" id="edit-current-image" name="current_image">
 
-            <div class="form-group">
-                <label for="edit-space-name"><i class="fas fa-tag"></i> Name</label>
-                <input type="text" name="name" id="edit-space-name" required>
+            <!-- Space Name -->
+            <div class="form-section">
+                <label for="edit-space-name">Parking Space Name</label>
+                <input type="text" id="edit-space-name" name="name" required>
             </div>
 
-            <div class="form-group">
-                <label for="edit-space-max"><i class="fas fa-hashtag"></i> Maximum Slots</label>
-                <input type="number" name="max_space" id="edit-space-max" required min="1">
+            <!-- Vehicle Types -->
+            <div class="form-section">
+                <label>Supported Vehicle Types</label>
+                <div class="vehicle-checkboxes">
+                    <label><input type="checkbox" id="edit-supports-car" name="supports_car" value="1"> Car</label>
+                    <label><input type="checkbox" id="edit-supports-motorcycle" name="supports_motorcycle" value="1"> Motorcycle</label>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="edit-space-type"><i class="fas fa-list"></i> Space Type</label>
-                <select name="space_type" id="edit-space-type">
-                    <option value="general">General</option>
-                    <option value="faculty">Faculty</option>
-                    <option value="executive">Executive</option>
-                    <option value="guest">Guest</option>
-                </select>
+            <!-- Allocations -->
+            <div id="edit-allocations-container" class="slot-config" style="display:none;">
+                <!-- Car Allocations -->
+                <div id="edit-car-allocations" class="slot-section" style="display:none;">
+                    <h3>Car Parking Slots</h3>
+                    <div class="slot-inputs">
+                        <label>General <input type="number" id="edit-car-general" class="allocation-input" value="0" min="0"></label>
+                        <label>Faculty <input type="number" id="edit-car-faculty" class="allocation-input" value="0" min="0"></label>
+                        <label>Executive <input type="number" id="edit-car-executive" class="allocation-input" value="0" min="0"></label>
+                        <label>Guest <input type="number" id="edit-car-guest" class="allocation-input" value="0" min="0"></label>
+                    </div>
+                    <div class="slot-total">Total Car Slots: <span id="edit-car-total">0</span></div>
+                </div>
+
+                <!-- Motorcycle Allocations -->
+                <div id="edit-motorcycle-allocations" class="slot-section" style="display:none;">
+                    <h3>Motorcycle Parking Slots</h3>
+                    <div class="slot-inputs">
+                        <label>General <input type="number" id="edit-motorcycle-general" class="allocation-input" value="0" min="0"></label>
+                        <label>Faculty <input type="number" id="edit-motorcycle-faculty" class="allocation-input" value="0" min="0"></label>
+                        <label>Executive <input type="number" id="edit-motorcycle-executive" class="allocation-input" value="0" min="0"></label>
+                        <label>Guest <input type="number" id="edit-motorcycle-guest" class="allocation-input" value="0" min="0"></label>
+                    </div>
+                    <div class="slot-total">Total Motorcycle Slots: <span id="edit-motorcycle-total">0</span></div>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="edit-space-vehicle"><i class="fas fa-car"></i> Vehicle Type</label>
-                <select name="vehicle_type" id="edit-space-vehicle">
-                    <option value="car">🚗 Car</option>
-                    <option value="motorcycle">🏍️ Motorcycle</option>
-                </select>
+            <!-- Upload Image -->
+            <div class="form-section upload-section">
+                <label for="edit-space-image">Update Image (Optional)</label>
+                <input type="file" id="edit-space-image" name="image" accept="image/*">
+                <img id="edit-space-preview" alt="Image preview" style="max-width:200px; margin-top:10px; display:none;">
             </div>
 
-            <div class="form-group">
-                <label for="edit-space-image"><i class="fas fa-image"></i> Update Image</label>
-                <input type="file" name="image" id="edit-space-image" accept="image/*">
-                <img id="edit-space-preview" alt="Image preview" style="max-width: 200px; margin-top: 10px;" />
-            </div>
-
+            <!-- Buttons -->
             <div class="modal-actions">
-                <button type="submit" class="btn btn-primary">Save</button>
-                <button type="button" class="btn btn-danger" id="delete-space-btn">Delete</button>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <button type="button" id="delete-space-btn" class="btn btn-danger">Delete</button>
                 <button type="button" class="btn btn-secondary close-modal">Cancel</button>
             </div>
         </form>
