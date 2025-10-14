@@ -34,10 +34,14 @@ $distribution = $model->getSlotDistribution();
 
     <!-- CSS -->
     <link rel="stylesheet" href="../views/admindashboardstyle.css">
-    <!-- <link rel="stylesheet" href="../views/css/modals_styles.css"> -->
+    <link rel="stylesheet" href="../views/css/modals_styles.css">
     <link rel="stylesheet" href="../views/css/parking_spaces_style.css">
 
+    <!-- JS Libraries -->
+    <script src="https://unpkg.com/html5-qrcode"></script>
+
     <!-- JS -->
+    <script src="../views/js/qr_scanner.js"></script>
     <script src="../views/js/helpers.js"></script>
     <script src="../views/js/navigation.js"></script>
     <script src="../views/js/modals.js"></script>
@@ -93,6 +97,13 @@ $distribution = $model->getSlotDistribution();
                 <li class="nav-item">
                     <a href="#" data-target="settings"><i class="fas fa-cog"></i><span>System Settings</span></a>
                 </li>
+                <!-- qr scanner button -->
+                <li class="nav-item">
+                    <button id="open-scan-modal-btn" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-qrcode"></i> Scan Vehicle
+                    </button>
+                </li>
+
             </ul>
             <div class="log-out">
                 <a href="?logout=1" onclick="return confirm('Logout from admin panel?')">
@@ -343,6 +354,34 @@ $distribution = $model->getSlotDistribution();
                 <h3><i class="fas fa-cog"></i> System Settings</h3>
                 <p class="placeholder-text">System configuration interface.</p>
             </div>
+
+            <!-- QR Code Scanner Section -->
+            <div id="qr-scanner" class="content-section" style="display:none;">
+                <div class="page-header">
+                    <h3><i class="fas fa-qrcode"></i> QR Code Scanner</h3>
+                </div>
+
+                <div class="scanner-container">
+                    <video id="qr-video" style="width: 100%; max-width: 500px; border-radius: 10px; border: 2px solid #ccc;"></video>
+
+                    <div id="scan-result" class="result-box" style="margin-top: 15px;"></div>
+
+                    <button id="start-scan" class="btn btn-success mt-3"><i class="fas fa-play"></i> Start Scan</button>
+                    <button id="stop-scan" class="btn btn-danger mt-3" style="display:none;"><i class="fas fa-stop"></i> Stop Scan</button>
+                </div>
+
+                <div id="vehicle-info" style="margin-top: 25px; display:none;">
+                    <h4>Vehicle Information</h4>
+                    <div id="vehicle-details" class="info-box"></div>
+
+                    <div class="action-buttons mt-3">
+                        <button class="btn btn-primary" id="btn-entered">Mark Entered</button>
+                        <button class="btn btn-warning" id="btn-exiting">Mark Exiting</button>
+                        <button class="btn btn-secondary" id="btn-outside">Mark Outside</button>
+                    </div>
+                </div>
+            </div>
+
         </main>
     </div>
 </div>
@@ -489,6 +528,28 @@ $distribution = $model->getSlotDistribution();
         </form>
     </div>
 </div>
+
+<!-- QR Scanner Modal -->
+<div id="scan-vehicle-modal" class="modal-overlay">
+    <div class="modal-content qr-modal">
+        <span class="close-btn" onclick="closeScanModal()">&times;</span>
+        <h2>Scan Vehicle QR Code</h2>
+
+        <div id="qr-video-container" style="display: flex; justify-content: center; align-items: center;">
+
+        </div>
+
+        <div class="scan-controls" style="margin-top: 10px;">
+            <button id="start-scan-btn" class="btn btn-primary">Start Scan</button>
+            <button id="stop-scan-btn" class="btn btn-secondary" style="display:none;">Stop Scan</button>
+        </div>
+
+        <div id="scan-result" style="display:none; margin-top: 15px;">
+            <p id="result-text">Processing...</p>
+        </div>
+    </div>
+</div>
+
 
 </body>
 </html>

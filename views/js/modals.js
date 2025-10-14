@@ -251,4 +251,86 @@ document.addEventListener("DOMContentLoaded", () => {
         const motoTotalEl = document.getElementById(`${prefix}-motorcycle-total`);
         if (motoTotalEl) motoTotalEl.textContent = motoTotal;
     }
+
+/* ===========================
+    QR SCANNER MODAL
+    =========================== */
+    const scanModal = document.getElementById("scan-vehicle-modal");
+    const startScanBtn = document.getElementById("start-scan-btn");
+    const stopScanBtn = document.getElementById("stop-scan-btn");
+    const closeScanBtns = scanModal ? scanModal.querySelectorAll(".close-btn") : [];
+
+    if (scanModal && startScanBtn && stopScanBtn) {
+        // Open modal when needed (you can trigger this from a button elsewhere)
+        window.openScanModal = function () {
+            scanModal.style.display = "flex";
+            document.getElementById("scan-result").style.display = "none";
+            document.getElementById("result-text").textContent = "Processing...";
+
+            stopScanBtn.style.display = "none";
+            startScanBtn.style.display = "inline-block";
+
+            requestAnimationFrame(() => {
+                const video = document.getElementById("qr-video");
+                if (video) {
+                    video.style.width = "100%";
+                    video.style.height = "100%";
+                    video.style.objectFit = "cover";
+                }
+            });
+        };
+
+
+        // Close modal
+        closeScanBtns.forEach(btn => btn.addEventListener("click", () => {
+            stopScanBtn.style.display = "none";
+            startScanBtn.style.display = "inline-block";
+            if (window.stopQrScanner) window.stopQrScanner();
+        }));
+
+        // Start/Stop scanning buttons
+        startScanBtn.addEventListener("click", () => {
+            startScanBtn.style.display = "none";
+            stopScanBtn.style.display = "inline-block";
+
+            const placeholder = document.getElementById("placeholder-canvas");
+            if (placeholder) placeholder.style.display = "none";
+
+            if (window.startQrScanner) window.startQrScanner();
+            
+        });
+
+        stopScanBtn.addEventListener("click", () => {
+            stopScanBtn.style.display = "none";
+            startScanBtn.style.display = "inline-block";
+            if (window.stopQrScanner) window.stopQrScanner();
+        });
+    }
+
+/* ===========================
+    SCAN BUTTON - attach once
+    =========================== */
+    const openScanBtn = document.getElementById("open-scan-modal-btn");
+    const scanModalEl = document.getElementById("scan-vehicle-modal");
+
+    if (openScanBtn) {
+        openScanBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            console.log("[QR] open-scan-modal-btn clicked");
+
+            if (typeof window.openScanModal === "function") {
+                window.openScanModal();
+                console.log("[QR] Modal opened");
+            } else if (scanModalEl) {
+                scanModalEl.style.display = "flex";
+                document.getElementById("scan-result").style.display = "none";
+                document.getElementById("result-text").textContent = "Processing...";
+                console.log("[QR] Modal opened (fallback)");
+            }
+
+        });
+    } else {
+        console.warn("[QR] open-scan-modal-btn not found in DOM.");
+    }
+
 });

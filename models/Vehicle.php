@@ -1,5 +1,6 @@
 <?php
 class Vehicle {
+    // models/Vehicle.php
     private $conn;
 
     public function __construct($db) {
@@ -82,8 +83,6 @@ class Vehicle {
     $stmt->close();
     return $vehicles;
 }
-
-
 
     /**
      * Validate vehicle input

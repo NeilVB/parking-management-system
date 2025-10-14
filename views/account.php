@@ -31,13 +31,13 @@ $vehicles = $vehicleModel->getVehiclesByUser($user_id);
 function generateQrIfMissing($vehicle)
 {
     $qrPath = __DIR__ . "/../assets/QR/qr-" . $vehicle['plate_number'] . ".png";
-    $url = "localhost/parking-management-system/views/qrviewingtest.php?token=" . urlencode($vehicle['qr_token']);
+    $token = $vehicle['qr_token']; // ✅ Just the token
 
     $builder = new Builder(
         writer: new PngWriter(),
         writerOptions: [],
         validateResult: false,
-        data: $url,
+        data: $token, // ✅ Use token directly
         encoding: new Encoding('UTF-8'),
         errorCorrectionLevel: ErrorCorrectionLevel::High,
         size: 300,
@@ -47,6 +47,7 @@ function generateQrIfMissing($vehicle)
 
     $builder->build()->saveToFile($qrPath);
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

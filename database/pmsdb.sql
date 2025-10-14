@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Oct 13, 2025 at 09:58 AM
+-- Generation Time: Oct 14, 2025 at 09:08 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -45,6 +45,52 @@ INSERT INTO `admin_table` (`admin_id`, `firstname`, `lastname`, `admin_email`, `
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `parking_slot_allocations`
+--
+
+CREATE TABLE `parking_slot_allocations` (
+  `allocation_id` int(11) NOT NULL,
+  `parking_space_id` int(11) NOT NULL,
+  `vehicle_type_id` int(11) NOT NULL,
+  `user_type_id` int(11) NOT NULL,
+  `allocated_slots` int(11) NOT NULL DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `parking_slot_allocations`
+--
+
+INSERT INTO `parking_slot_allocations` (`allocation_id`, `parking_space_id`, `vehicle_type_id`, `user_type_id`, `allocated_slots`, `created_at`, `updated_at`) VALUES
+(25, 37, 1, 1, 1, '2025-10-13 16:16:44', '2025-10-13 16:16:44'),
+(26, 37, 1, 2, 2, '2025-10-13 16:16:44', '2025-10-13 16:16:44'),
+(27, 37, 1, 3, 0, '2025-10-13 16:16:44', '2025-10-13 16:16:44'),
+(28, 37, 1, 4, 0, '2025-10-13 16:16:44', '2025-10-13 16:16:44'),
+(29, 37, 2, 1, 0, '2025-10-13 16:16:44', '2025-10-13 16:16:44'),
+(30, 37, 2, 2, 0, '2025-10-13 16:16:44', '2025-10-13 16:16:44'),
+(31, 37, 2, 3, 5, '2025-10-13 16:16:44', '2025-10-13 16:16:44'),
+(32, 37, 2, 4, 4, '2025-10-13 16:16:44', '2025-10-13 16:16:44'),
+(33, 38, 1, 1, 1, '2025-10-13 17:03:01', '2025-10-13 17:03:01'),
+(34, 38, 1, 2, 2, '2025-10-13 17:03:01', '2025-10-13 17:03:01'),
+(35, 38, 1, 3, 3, '2025-10-13 17:03:01', '2025-10-13 17:03:01'),
+(36, 38, 1, 4, 2, '2025-10-13 17:03:01', '2025-10-13 17:03:01'),
+(37, 38, 2, 1, 1, '2025-10-13 17:03:01', '2025-10-13 17:03:01'),
+(38, 38, 2, 2, 1, '2025-10-13 17:03:01', '2025-10-13 17:03:01'),
+(39, 38, 2, 3, 1, '2025-10-13 17:03:01', '2025-10-13 17:03:01'),
+(40, 38, 2, 4, 1, '2025-10-13 17:03:01', '2025-10-13 17:03:01'),
+(45, 39, 1, 1, 0, '2025-10-13 17:04:35', '2025-10-13 17:04:35'),
+(46, 39, 1, 2, 5, '2025-10-13 17:04:35', '2025-10-13 17:04:35'),
+(47, 39, 1, 3, 0, '2025-10-13 17:04:35', '2025-10-13 17:04:35'),
+(48, 39, 1, 4, 5, '2025-10-13 17:04:35', '2025-10-13 17:04:35'),
+(49, 40, 2, 1, 0, '2025-10-13 17:05:13', '2025-10-13 17:05:13'),
+(50, 40, 2, 2, 30, '2025-10-13 17:05:13', '2025-10-13 17:05:13'),
+(51, 40, 2, 3, 0, '2025-10-13 17:05:13', '2025-10-13 17:05:13'),
+(52, 40, 2, 4, 0, '2025-10-13 17:05:13', '2025-10-13 17:05:13');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `parking_spaces`
 --
 
@@ -64,6 +110,16 @@ CREATE TABLE `parking_spaces` (
   `parked_car_count` int(11) DEFAULT 0,
   `parked_motorcycle_count` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `parking_spaces`
+--
+
+INSERT INTO `parking_spaces` (`id`, `name`, `supports_car`, `supports_motorcycle`, `is_general`, `is_faculty`, `is_executive`, `is_guest`, `image_path`, `created_at`, `max_car_slots`, `max_motorcycle_slots`, `parked_car_count`, `parked_motorcycle_count`) VALUES
+(37, 'Gravel Parking', 1, 1, 1, 1, 1, 1, '/../uploads/parking/parking_68ed25ec1128d.png', '2025-10-13 16:16:44', 3, 9, 0, 0),
+(38, 'Sampalok Lane', 1, 1, 1, 1, 1, 1, '/../uploads/parking/parking_68ed30c5b3173.jpg', '2025-10-13 17:03:01', 8, 4, 0, 0),
+(39, 'Cafeteria', 1, 0, 0, 1, 0, 1, '/../uploads/parking/parking_68ed3123c008a.png', '2025-10-13 17:03:31', 10, 0, 0, 0),
+(40, 'MOtor', 0, 1, 0, 1, 0, 0, '/../uploads/parking/parking_68ed314936692.png', '2025-10-13 17:05:13', 0, 30, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -197,6 +253,16 @@ ALTER TABLE `admin_table`
   ADD UNIQUE KEY `admin_email` (`admin_email`);
 
 --
+-- Indexes for table `parking_slot_allocations`
+--
+ALTER TABLE `parking_slot_allocations`
+  ADD PRIMARY KEY (`allocation_id`),
+  ADD UNIQUE KEY `unique_allocation` (`parking_space_id`,`vehicle_type_id`,`user_type_id`),
+  ADD KEY `parking_space_id` (`parking_space_id`),
+  ADD KEY `vehicle_type_id` (`vehicle_type_id`),
+  ADD KEY `user_type_id` (`user_type_id`);
+
+--
 -- Indexes for table `parking_spaces`
 --
 ALTER TABLE `parking_spaces`
@@ -243,10 +309,16 @@ ALTER TABLE `admin_table`
   MODIFY `admin_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
+-- AUTO_INCREMENT for table `parking_slot_allocations`
+--
+ALTER TABLE `parking_slot_allocations`
+  MODIFY `allocation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+
+--
 -- AUTO_INCREMENT for table `parking_spaces`
 --
 ALTER TABLE `parking_spaces`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `users_table`
@@ -275,6 +347,14 @@ ALTER TABLE `vehicle_type_table`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `parking_slot_allocations`
+--
+ALTER TABLE `parking_slot_allocations`
+  ADD CONSTRAINT `parking_slot_allocations_ibfk_1` FOREIGN KEY (`parking_space_id`) REFERENCES `parking_spaces` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `parking_slot_allocations_ibfk_2` FOREIGN KEY (`vehicle_type_id`) REFERENCES `vehicle_type_table` (`vehicle_type_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `parking_slot_allocations_ibfk_3` FOREIGN KEY (`user_type_id`) REFERENCES `user_type_table` (`user_type_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `users_table`
