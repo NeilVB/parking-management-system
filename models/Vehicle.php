@@ -26,12 +26,16 @@ class Vehicle {
         }
 
         // Check if user already has 2 vehicles
-        $check_query = "SELECT COUNT(*) FROM vehicles_table WHERE user_id = ?";
+        $check_query = "SELECT COUNT(*) AS total FROM vehicles_table WHERE user_id = ?";
         $check_stmt = $this->conn->prepare($check_query);
         $check_stmt->bind_param("i", $user_id);
         $check_stmt->execute();
-        $check_stmt->bind_result($count);
-        $check_stmt->fetch();
+        $result = $check_stmt->get_result();
+
+        $count = 0; // ✅ Initialize first
+        if ($row = $result->fetch_assoc()) {
+            $count = (int)$row['total'];
+        }
         $check_stmt->close();
 
         if ($count >= 2) {
@@ -110,21 +114,34 @@ class Vehicle {
     // Temporary Viewing
 
     public function getVehicleWithUserByToken($token) {
-    $stmt = $this->conn->prepare("
-        SELECT 
-            v.plate_number, v.color, v.make, v.model, v.year,
-            vt.vehicle_type,
-            u.firstname, u.lastname, u.email, u.phone_number,
-            ut.user_type
-        FROM vehicles_table v
-        JOIN vehicle_type_table vt ON v.vehicle_type_id = vt.vehicle_type_id
-        JOIN users_table u ON v.user_id = u.user_id
-        JOIN user_type_table ut ON u.user_type_id = ut.user_type_id
-        WHERE v.qr_token = ?
-    ");
-    $stmt->bind_param("s", $token);
-    $stmt->execute();
-    return $stmt->get_result()->fetch_assoc();
-}
+        $query = "
+            SELECT 
+                v.vehicle_id,
+                v.plate_number,
+                v.color,
+                v.make,
+                v.model,
+                v.year,
+                vt.vehicle_type AS vehicle_type_name,
+                u.firstname,
+                u.lastname,
+                CONCAT(u.firstname, ' ', u.lastname) AS user_fullname,
+                u.email,
+                u.phone_number,
+                ut.user_type
+            FROM vehicles_table v
+            JOIN vehicle_type_table vt ON v.vehicle_type_id = vt.vehicle_type_id
+            JOIN users_table u ON v.user_id = u.user_id
+            JOIN user_type_table ut ON u.user_type_id = ut.user_type_id
+            WHERE v.qr_token = ?
+            LIMIT 1
+        ";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("s", $token);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_assoc();
+    }
+
 }
 ?>

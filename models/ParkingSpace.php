@@ -220,5 +220,84 @@ class ParkingSpace
 
         return $canPark;
     }
+
+        /**
+     * Get available parking spaces filtered by vehicle type.
+     * This is used after scanning a QR code to show where the driver can park.
+     */
+    public function getAvailableSpaces($vehicle_type)
+    {
+        $spaces = [];
+
+        $query = "
+            SELECT 
+                ps.id AS space_id,
+                ps.name AS space_name,
+                ps.location,
+                ps.capacity,
+                ps.is_occupied,
+                vt.vehicle_type
+            FROM parking_spaces ps
+            LEFT JOIN vehicle_type_table vt ON ps.vehicle_type_id = vt.vehicle_type_id
+            WHERE ps.is_occupied = 0
+              AND (vt.vehicle_type = ? OR vt.vehicle_type = 'both')
+            ORDER BY ps.name ASC
+        ";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("s", $vehicle_type);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        while ($row = $result->fetch_assoc()) {
+            $spaces[] = $row;
+        }
+
+        $stmt->close();
+        return $spaces;
+    }
+
+    /**
+     * Assign a vehicle to a specific parking space and mark it as occupied.
+     */
+    public function assignVehicleToSpace($vehicle_id, $space_id)
+    {
+        try {
+            // Start transaction
+            $this->conn->begin_transaction();
+
+            // Mark the space as occupied
+            $update = $this->conn->prepare("
+                UPDATE parking_spaces
+                SET is_occupied = 1
+                WHERE id = ?
+            ");
+            $update->bind_param("i", $space_id);
+            $update->execute();
+
+            // Log the parking record (optional table: parking_records)
+            $insert = $this->conn->prepare("
+                INSERT INTO parking_records (vehicle_id, space_id, time_in, status)
+                VALUES (?, ?, NOW(), 'parked')
+            ");
+            $insert->bind_param("ii", $vehicle_id, $space_id);
+            $insert->execute();
+
+            // Commit the changes
+            $this->conn->commit();
+
+            return [
+                'success' => true,
+                'message' => 'Vehicle successfully parked.'
+            ];
+        } catch (Exception $e) {
+            $this->conn->rollback();
+            return [
+                'success' => false,
+                'message' => 'Database error: ' . $e->getMessage()
+            ];
+        }
+    }
+
 }
 ?>
