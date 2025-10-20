@@ -1,104 +1,105 @@
 <?php
 // ajax/scan_vehicle.php
-
-// 🚫 Disable all visual error output (they break JSON)
-ini_set('display_errors', 0);
-error_reporting(0);
-
 header('Content-Type: application/json');
+session_start();
 
-// ✅ Safe require with error handling
-try {
-    require_once '../models/Database.php';
-    require_once '../controller/scan_controller.php';
-} catch (Throwable $e) {
-    echo json_encode([
-        'success' => false,
-        'message' => 'Server initialization error: ' . $e->getMessage()
-    ]);
-    exit;
+require_once __DIR__ . '/../controller/config.php';
+
+// Get the scanned data from multiple possible sources
+$scanned_data = '';
+
+// Try JSON input first
+$input = json_decode(file_get_contents('php://input'), true);
+if (isset($input['qr_data'])) {
+    $scanned_data = trim($input['qr_data']);
+} elseif (isset($input['qr_token'])) {
+    $scanned_data = trim($input['qr_token']);
+} elseif (isset($input['token'])) {
+    $scanned_data = trim($input['token']);
 }
 
-// ✅ Initialize database
-try {
-    $database = new Database();
-    $db = $database->getConnection();
-    $controller = new ScanController($db);
-} catch (Throwable $e) {
-    echo json_encode([
-        'success' => false,
-        'message' => 'Database connection failed.'
-    ]);
-    exit;
+// Try POST data
+if (empty($scanned_data)) {
+    $scanned_data = isset($_POST['qr_data']) ? trim($_POST['qr_data']) : 
+                    (isset($_POST['qr_token']) ? trim($_POST['qr_token']) : 
+                    (isset($_POST['token']) ? trim($_POST['token']) : ''));
 }
 
-$action = $_POST['action'] ?? '';
+// Try GET data
+if (empty($scanned_data)) {
+    $scanned_data = isset($_GET['qr_data']) ? trim($_GET['qr_data']) : 
+                    (isset($_GET['qr_token']) ? trim($_GET['qr_token']) : 
+                    (isset($_GET['token']) ? trim($_GET['token']) : ''));
+}
+
+// Log for debugging
+error_log("Received QR data: " . $scanned_data);
+error_log("POST data: " . print_r($_POST, true));
+error_log("JSON input: " . file_get_contents('php://input'));
+
+if (empty($scanned_data)) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'No QR data provided'
+    ]);
+    exit();
+}
 
 try {
-    if ($action === 'scan') {
-        $qr_token = $_POST['qr_token'] ?? '';
-        if (empty($qr_token)) {
-            echo json_encode(['success' => false, 'message' => 'Missing QR token.']);
-            exit;
-        }
-
-        // TODO: Replace 1 with logged-in guard user_id
-        $result = $controller->scanQRCode($qr_token, 1);
-        echo json_encode($result);
-        exit;
+    // Query to get vehicle info with user type
+    $stmt = $conn->prepare("
+        SELECT 
+            v.vehicle_id,
+            v.plate_number,
+            v.status,
+            vt.vehicle_type,
+            CONCAT(u.firstname, ' ', u.lastname) AS driver_name,
+            ut.user_type,
+            u.user_type_id
+        FROM vehicles_table v
+        JOIN vehicle_type_table vt ON v.vehicle_type_id = vt.vehicle_type_id
+        JOIN users_table u ON v.user_id = u.user_id
+        JOIN user_type_table ut ON u.user_type_id = ut.user_type_id
+        WHERE v.plate_number = ? OR v.qr_token = ?
+    ");
+    
+    $stmt->bind_param("ss", $scanned_data, $scanned_data);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows === 0) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Vehicle not found in the system'
+        ]);
+        exit();
     }
-
-    if ($action === 'update') {
-        $status = $_POST['status'] ?? '';
-        $plate_no = $_POST['plate_no'] ?? '';
-
-        if (empty($status) || empty($plate_no)) {
-            echo json_encode(['success' => false, 'message' => 'Missing status or plate number.']);
-            exit;
-        }
-
-        // ✅ Fetch vehicle ID by plate number
-        $query = $db->prepare("SELECT vehicle_id FROM vehicles_table WHERE plate_number = ?");
-        $query->bind_param("s", $plate_no);
-        $query->execute();
-        $vehicle = $query->get_result()->fetch_assoc();
-        $query->close();
-
-        if (!$vehicle) {
-            echo json_encode(['success' => false, 'message' => 'Vehicle not found.']);
-            exit;
-        }
-
-        $vehicle_id = $vehicle['vehicle_id'];
-        $user_id = 1; // TODO: Replace with session user_id of guard
-
-        switch ($status) {
-            case 'entered':
-                $result = $controller->markEntered($vehicle_id, $user_id);
-                break;
-            case 'parked':
-                $result = $controller->parkVehicle($vehicle_id, null, $user_id);
-                break;
-            case 'exiting':
-                $result = $controller->markExiting($vehicle_id, $user_id);
-                break;
-            case 'outside':
-                $result = $controller->markOutside($vehicle_id, $user_id);
-                break;
-            default:
-                $result = ['success' => false, 'message' => 'Invalid status.'];
-        }
-
-        echo json_encode($result);
-        exit;
-    }
-
-    echo json_encode(['success' => false, 'message' => 'Invalid request.']);
-    exit;
-} catch (Throwable $e) {
+    
+    $vehicle = $result->fetch_assoc();
+    
+    // Format status for display
+    $status_display = ucfirst($vehicle['status']);
+    
+    // Return vehicle information in the format expected by qr_scanner.js
+    echo json_encode([
+        'success' => true,
+        'vehicle' => [
+            'vehicle_id' => (int)$vehicle['vehicle_id'],
+            'plate_number' => $vehicle['plate_number'],
+            'vehicle_type' => $vehicle['vehicle_type'],
+            'driver_name' => $vehicle['driver_name'],
+            'user_type' => $vehicle['user_type'],
+            'user_type_id' => (int)$vehicle['user_type_id'],
+            'status' => $status_display
+        ]
+    ]);
+    
+} catch (Exception $e) {
     echo json_encode([
         'success' => false,
-        'message' => 'Server error: ' . $e->getMessage()
+        'message' => 'Error: ' . $e->getMessage()
     ]);
-    exit;
 }
+
+$conn->close();
+?>

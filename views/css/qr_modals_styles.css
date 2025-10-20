@@ -1,0 +1,384 @@
+/* =======================================
+   QR Scanner Modal Styles
+======================================= */
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    max-width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    position: relative;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.qr-modal {
+    width: 500px;
+    max-width: 95%;
+}
+
+.qr-modal h2 {
+    margin: 0 0 20px 0;
+    font-size: 24px;
+    color: #333;
+    text-align: center;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 32px;
+    font-weight: bold;
+    color: #999;
+    cursor: pointer;
+    transition: color 0.2s;
+    line-height: 1;
+    background: none;
+    border: none;
+}
+
+.close-btn:hover {
+    color: #333;
+}
+
+/* QR Video Container */
+#qr-video-container {
+    width: 100%;
+    min-height: 300px;
+    background: #000;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+}
+
+#qr-video {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Scan Controls */
+.scan-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #0056b3;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #545b62;
+}
+
+.btn-success {
+    background: #28a745;
+    color: white;
+}
+
+.btn-success:hover {
+    background: #218838;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Scan Result */
+#scan-result {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 6px;
+    text-align: center;
+}
+
+#result-text {
+    margin: 0;
+    font-size: 14px;
+    color: #333;
+}
+
+/* =======================================
+   Vehicle Info & Parking Selection Modal
+======================================= */
+
+.vehicle-info-section {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.vehicle-info-section h6 {
+    margin-bottom: 15px;
+    color: #495057;
+    font-weight: 600;
+}
+
+.vehicle-info-section table {
+    margin-bottom: 0;
+}
+
+.vehicle-info-section th {
+    background: #e9ecef;
+    font-weight: 600;
+    color: #495057;
+}
+
+.parking-selection-section h6 {
+    margin-bottom: 15px;
+    color: #495057;
+    font-weight: 600;
+}
+
+/* Filter Bar */
+.filter-bar {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.search-container input {
+    transition: border-color 0.3s;
+}
+
+.search-container input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.filter-select {
+    transition: all 0.3s;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.count-display {
+    background: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+/* Parking Container */
+.parking-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 10px;
+}
+
+/* Parking Card */
+.parking-card {
+    position: relative;
+    height: 320px;
+    border-radius: 12px;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.parking-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+}
+
+.parking-card .overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 70%, transparent 100%);
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.parking-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+}
+
+.parking-card p {
+    margin: 5px 0;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.parking-card strong {
+    color: #ffc107;
+}
+
+.parking-card small {
+    display: block;
+    opacity: 0.9;
+}
+
+/* Status Badge */
+.status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-left: 8px;
+    text-transform: uppercase;
+}
+
+.status-badge.available {
+    background: #28a745;
+    color: white;
+}
+
+.status-badge.full {
+    background: #dc3545;
+    color: white;
+}
+
+/* Select Button */
+.select-parking-btn {
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.select-parking-btn i {
+    margin-right: 5px;
+}
+
+/* Scrollbar Styling */
+.parking-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.parking-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.parking-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+.parking-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .qr-modal {
+        width: 95%;
+        padding: 20px;
+    }
+
+    .filter-bar {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .search-container,
+    .filter-container {
+        width: 100%;
+        min-width: 100%;
+    }
+
+    .parking-container {
+        grid-template-columns: 1fr;
+        max-height: 400px;
+    }
+
+    .parking-card {
+        height: 280px;
+    }
+
+    .modal-content {
+        padding: 20px;
+        max-height: 95vh;
+    }
+}
+
+@media (max-width: 480px) {
+    .qr-modal h2 {
+        font-size: 20px;
+    }
+
+    .vehicle-info-section table {
+        font-size: 12px;
+    }
+
+    .parking-card h3 {
+        font-size: 18px;
+    }
+
+    .parking-card p {
+        font-size: 12px;
+    }
+}

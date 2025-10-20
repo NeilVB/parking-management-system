@@ -234,6 +234,146 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* ===========================
+    DELETE CONFIRMATION MODAL
+    ============================ */
+    const deleteModal = document.getElementById('delete-space-modal');
+    const deleteSpaceIdInput = document.getElementById('delete-space-id');
+    const deleteSpaceNameSpan = document.getElementById('delete-space-name');
+    const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+
+    // Open delete modal from edit modal
+    if (deleteBtn) {
+        deleteBtn.addEventListener('click', function(e) {
+            e.preventDefault(); // CRITICAL: Prevent form submission
+            e.stopPropagation(); // Stop event bubbling
+            
+            const spaceId = document.getElementById('edit-space-id').value;
+            const spaceName = document.getElementById('edit-space-name').value;
+            
+            console.log('🗑️ Delete button clicked!');
+            console.log('Space ID:', spaceId);
+            console.log('Space Name:', spaceName);
+            console.log('Delete modal element:', deleteModal);
+            
+            // Close edit modal
+            if (editModal) {
+                editModal.style.display = 'none';
+            }
+            
+            // Open delete confirmation modal
+            if (deleteModal && deleteSpaceIdInput && deleteSpaceNameSpan) {
+                deleteSpaceIdInput.value = spaceId;
+                deleteSpaceNameSpan.textContent = spaceName;
+                deleteModal.style.display = 'flex';
+                console.log('✅ Delete modal should now be visible');
+            } else {
+                console.error('❌ Missing elements:', {
+                    deleteModal: !!deleteModal,
+                    deleteSpaceIdInput: !!deleteSpaceIdInput,
+                    deleteSpaceNameSpan: !!deleteSpaceNameSpan
+                });
+            }
+        });
+    } else {
+        console.error('❌ Delete button (#delete-space-btn) not found in DOM!');
+    }
+
+    // Confirm delete action
+    if (confirmDeleteBtn) {
+        confirmDeleteBtn.addEventListener('click', async function() {
+            const spaceId = deleteSpaceIdInput.value;
+            
+            console.log('🔴 Yes Delete button clicked!', spaceId);
+            
+            if (!spaceId) {
+                alert('Error: No parking space selected');
+                return;
+            }
+
+            // Disable button during processing
+            confirmDeleteBtn.disabled = true;
+            confirmDeleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
+
+            try {
+                const formData = new FormData();
+                formData.append('action', 'delete');
+                formData.append('id', spaceId);
+
+                console.log('Sending delete request for ID:', spaceId);
+
+                // Try parking_manager.php first (used by delete mode)
+                let response = await fetch('../controller/parking_manager.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                console.log('Response status:', response.status);
+
+                const data = await response.json();
+                console.log('Response data:', data);
+
+                if (data.success) {
+                    // Success message
+                    alert('✅ Parking space deleted successfully!');
+                    
+                    // Close modal
+                    deleteModal.style.display = 'none';
+                    
+                    // Remove the card from UI if it exists
+                    const card = document.querySelector(`.parking-card[data-id="${spaceId}"]`);
+                    if (card) {
+                        card.remove();
+                        console.log('Card removed from UI');
+                    }
+                    
+                    // Refresh page after a short delay
+                    setTimeout(() => location.reload(), 500);
+                } else {
+                    alert('❌ Error: ' + (data.message || 'Failed to delete parking space'));
+                    confirmDeleteBtn.disabled = false;
+                    confirmDeleteBtn.innerHTML = '<i class="fas fa-trash"></i> Yes, Delete';
+                }
+            } catch (error) {
+                console.error('Delete error:', error);
+                alert('❌ Error deleting parking space. Please try again.');
+                confirmDeleteBtn.disabled = false;
+                confirmDeleteBtn.innerHTML = '<i class="fas fa-trash"></i> Yes, Delete';
+            }
+        });
+    } else {
+        console.error('❌ Confirm delete button not found!');
+    }
+
+    // Close modal handlers
+    if (deleteModal) {
+        // Close button
+        const closeBtn = deleteModal.querySelector('.close-btn');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                deleteModal.style.display = 'none';
+                console.log('Delete modal closed via close button');
+            });
+        }
+
+        // Cancel button
+        const cancelBtn = deleteModal.querySelector('.close-modal');
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => {
+                deleteModal.style.display = 'none';
+                console.log('Delete modal closed via cancel button');
+            });
+        }
+
+        // Click outside modal
+        deleteModal.addEventListener('click', (e) => {
+            if (e.target === deleteModal) {
+                deleteModal.style.display = 'none';
+                console.log('Delete modal closed by clicking outside');
+            }
+        });
+    }
+
+    /* ===========================
        Totals helper (shared)
     ============================ */
     function updateTotals(prefix) {
@@ -251,86 +391,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const motoTotalEl = document.getElementById(`${prefix}-motorcycle-total`);
         if (motoTotalEl) motoTotalEl.textContent = motoTotal;
     }
+    
 
-/* ===========================
-    QR SCANNER MODAL
-    =========================== */
-    const scanModal = document.getElementById("scan-vehicle-modal");
-    const startScanBtn = document.getElementById("start-scan-btn");
-    const stopScanBtn = document.getElementById("stop-scan-btn");
-    const closeScanBtns = scanModal ? scanModal.querySelectorAll(".close-btn") : [];
-
-    if (scanModal && startScanBtn && stopScanBtn) {
-        // Open modal when needed (you can trigger this from a button elsewhere)
-        window.openScanModal = function () {
-            scanModal.style.display = "flex";
-            document.getElementById("scan-result").style.display = "none";
-            document.getElementById("result-text").textContent = "Processing...";
-
-            stopScanBtn.style.display = "none";
-            startScanBtn.style.display = "inline-block";
-
-            requestAnimationFrame(() => {
-                const video = document.getElementById("qr-video");
-                if (video) {
-                    video.style.width = "100%";
-                    video.style.height = "100%";
-                    video.style.objectFit = "cover";
-                }
-            });
-        };
-
-
-        // Close modal
-        closeScanBtns.forEach(btn => btn.addEventListener("click", () => {
-            stopScanBtn.style.display = "none";
-            startScanBtn.style.display = "inline-block";
-            if (window.stopQrScanner) window.stopQrScanner();
-        }));
-
-        // Start/Stop scanning buttons
-        startScanBtn.addEventListener("click", () => {
-            startScanBtn.style.display = "none";
-            stopScanBtn.style.display = "inline-block";
-
-            const placeholder = document.getElementById("placeholder-canvas");
-            if (placeholder) placeholder.style.display = "none";
-
-            if (window.startQrScanner) window.startQrScanner();
-            
-        });
-
-        stopScanBtn.addEventListener("click", () => {
-            stopScanBtn.style.display = "none";
-            startScanBtn.style.display = "inline-block";
-            if (window.stopQrScanner) window.stopQrScanner();
-        });
-    }
-
-/* ===========================
-    SCAN BUTTON - attach once
-    =========================== */
-    const openScanBtn = document.getElementById("open-scan-modal-btn");
-    const scanModalEl = document.getElementById("scan-vehicle-modal");
-
-    if (openScanBtn) {
-        openScanBtn.addEventListener("click", (e) => {
-            e.preventDefault();
-            console.log("[QR] open-scan-modal-btn clicked");
-
-            if (typeof window.openScanModal === "function") {
-                window.openScanModal();
-                console.log("[QR] Modal opened");
-            } else if (scanModalEl) {
-                scanModalEl.style.display = "flex";
-                document.getElementById("scan-result").style.display = "none";
-                document.getElementById("result-text").textContent = "Processing...";
-                console.log("[QR] Modal opened (fallback)");
-            }
-
-        });
-    } else {
-        console.warn("[QR] open-scan-modal-btn not found in DOM.");
-    }
-
+    
 });

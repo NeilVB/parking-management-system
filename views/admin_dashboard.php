@@ -1,7 +1,4 @@
 <?php
-// views/admin_dashboard.php
-// Start session and ensure admin is authenticated
-// session_start(); // Uncomment if not already started elsewhere
 if (!isset($_SESSION['admin_id'])) {
     header("Location: ../controller/admin_login.php");
     exit();
@@ -32,26 +29,14 @@ $distribution = $model->getSlotDistribution();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NU Space - Admin Dashboard</title>
 
+    <!-- Include QR Modals -->
+    <?php include 'qr_modals.php'; ?>
+
     <!-- CSS -->
     <link rel="stylesheet" href="../views/admindashboardstyle.css">
     <link rel="stylesheet" href="../views/css/modals_styles.css">
+    <link rel="stylesheet" href="../views/css/qr_modals_styles.css">
     <link rel="stylesheet" href="../views/css/parking_spaces_style.css">
-
-    <!-- JS Libraries -->
-    <script src="https://unpkg.com/html5-qrcode"></script>
-
-    <!-- JS -->
-    <script src="../views/js/qr_scanner.js"></script>
-    <script src="../views/js/helpers.js"></script>
-    <script src="../views/js/navigation.js"></script>
-    <script src="../views/js/modals.js"></script>
-    <script src="../views/js/forms.js"></script>
-    <script src="../views/js/imagePreview.js"></script>
-    <script src="../views/js/refresh.js"></script>
-    <script src="../views/js/editMode.js"></script>
-    <script src="../views/js/deleteMode.js"></script>
-    <script src="../views/js/init.js"></script>
-    <script src="../views/js/filter.js"></script>
 
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -97,6 +82,7 @@ $distribution = $model->getSlotDistribution();
                 <li class="nav-item">
                     <a href="#" data-target="settings"><i class="fas fa-cog"></i><span>System Settings</span></a>
                 </li>
+
                 <!-- qr scanner button -->
                 <li class="nav-item">
                     <button id="open-scan-modal-btn" class="btn btn-primary" style="width: 100%;">
@@ -355,33 +341,6 @@ $distribution = $model->getSlotDistribution();
                 <p class="placeholder-text">System configuration interface.</p>
             </div>
 
-            <!-- QR Code Scanner Section -->
-            <div id="qr-scanner" class="content-section" style="display:none;">
-                <div class="page-header">
-                    <h3><i class="fas fa-qrcode"></i> QR Code Scanner</h3>
-                </div>
-
-                <div class="scanner-container">
-                    <video id="qr-video" style="width: 100%; max-width: 500px; border-radius: 10px; border: 2px solid #ccc;"></video>
-
-                    <div id="scan-result" class="result-box" style="margin-top: 15px;"></div>
-
-                    <button id="start-scan" class="btn btn-success mt-3"><i class="fas fa-play"></i> Start Scan</button>
-                    <button id="stop-scan" class="btn btn-danger mt-3" style="display:none;"><i class="fas fa-stop"></i> Stop Scan</button>
-                </div>
-
-                <div id="vehicle-info" style="margin-top: 25px; display:none;">
-                    <h4>Vehicle Information</h4>
-                    <div id="vehicle-details" class="info-box"></div>
-
-                    <div class="action-buttons mt-3">
-                        <button class="btn btn-primary" id="btn-entered">Mark Entered</button>
-                        <button class="btn btn-warning" id="btn-exiting">Mark Exiting</button>
-                        <button class="btn btn-secondary" id="btn-outside">Mark Outside</button>
-                    </div>
-                </div>
-            </div>
-
         </main>
     </div>
 </div>
@@ -529,71 +488,64 @@ $distribution = $model->getSlotDistribution();
     </div>
 </div>
 
-<!-- QR Scanner Modal -->
-<div id="scan-vehicle-modal" class="modal-overlay">
-    <div class="modal-content qr-modal">
-        <span class="close-btn" onclick="closeScanModal()">&times;</span>
-        <h2>Scan Vehicle QR Code</h2>
-
-        <div id="qr-video-container" style="display: flex; justify-content: center; align-items: center;">
-
+<!-- =============================
+     DELETE CONFIRMATION MODAL
+============================= -->
+<div id="delete-space-modal" class="modal" role="dialog" aria-modal="true">
+    <div class="modal-content delete-modal">
+        <div class="modal-header delete-header">
+            <h2><i class="fas fa-exclamation-triangle"></i> Confirm Delete</h2>
+            <button type="button" class="close-btn" aria-label="Close">&times;</button>
         </div>
 
-        <div class="scan-controls" style="margin-top: 10px;">
-            <button id="start-scan-btn" class="btn btn-primary">Start Scan</button>
-            <button id="stop-scan-btn" class="btn btn-secondary" style="display:none;">Stop Scan</button>
+        <div class="modal-body">
+            <div class="warning-icon">
+                <i class="fas fa-trash-alt"></i>
+            </div>
+            
+            <p class="warning-text">Are you sure you want to delete this parking space?</p>
+            
+            <div class="parking-info">
+                <strong>Parking Space:</strong> <span id="delete-space-name"></span>
+            </div>
+            
+            <div class="warning-message">
+                <i class="fas fa-info-circle"></i>
+                <span>This action cannot be undone. All associated data will be permanently deleted.</span>
+            </div>
         </div>
 
-        <div id="scan-result" style="display:none; margin-top: 15px;">
-            <p id="result-text">Processing...</p>
+        <div class="modal-actions">
+            <button type="button" class="btn btn-secondary close-modal">Cancel</button>
+            <button type="button" id="confirm-delete-btn" class="btn btn-danger">
+                <i class="fas fa-trash"></i> Yes, Delete
+            </button>
         </div>
+
+        <input type="hidden" id="delete-space-id" value="">
     </div>
 </div>
 
 
-<!-- =======================================
-     Vehicle Info Modal (after QR scan)
-======================================= -->
-<div class="modal fade" id="vehicleInfoModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-md" >
-        <div class="modal-content">
-            <div class="modal-header bg-info text-white">
-                <h5 class="modal-title"><i class="fas fa-car"></i> Vehicle Information</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <table class="table table-bordered mb-0">
-                    <tbody>
-                        <tr>
-                            <th>Plate Number</th>
-                            <td id="v-plate"></td>
-                        </tr>
-                        <tr>
-                            <th>Owner</th>
-                            <td id="v-owner"></td>
-                        </tr>
-                        <tr>
-                            <th>Vehicle Type</th>
-                            <td id="v-type"></td>
-                        </tr>
-                        <tr>
-                            <th>Status</th>
-                            <td id="v-status"></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button id="proceed-to-parking-btn" class="btn btn-primary">
-                    Proceed to Parking
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+<!-- JS Libraries -->
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+<!-- JS -->
+<script src="../views/js/qr_scanner.js"></script>
+<script src="../views/js/helpers.js"></script>
+<script src="../views/js/navigation.js"></script>
+<script src="../views/js/modals.js"></script>
+<script src="../views/js/qr_modals.js"></script>
+<script src="../views/js/forms.js"></script>
+<script src="../views/js/imagePreview.js"></script>
+<script src="../views/js/refresh.js"></script>
+<script src="../views/js/editMode.js"></script>
+<script src="../views/js/deleteMode.js"></script>
+<script src="../views/js/init.js"></script>
+<script src="../views/js/filter.js"></script>
 
 </body>
 </html>
