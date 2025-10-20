@@ -151,7 +151,8 @@ $distribution = $model->getSlotDistribution();
             </div>
 
             <!-- Parking Spaces -->
-            <div id="parking-spaces" class="content-section">
+            <div id="parking-spaces" class="content-section"> 
+                
                 <div class="page-header">
                     <h3><i class="fas fa-car-alt"></i> Parking Spaces Management</h3>
                     <div class="header-actions">
@@ -311,8 +312,8 @@ $distribution = $model->getSlotDistribution();
                     <?php
                     endwhile;
                     ?>
-
                 </div>
+            </div>
 
             <!-- Users Management -->
             <div id="users-management" class="content-section">
@@ -332,7 +333,81 @@ $distribution = $model->getSlotDistribution();
             <!-- Monitoring -->
             <div id="monitoring" class="content-section">
                 <h3><i class="fas fa-desktop"></i> Monitoring & Reports</h3>
-                <p class="placeholder-text">Monitoring tools will be added here.</p>
+
+                <?php
+                $logs = null;
+                $error = null;
+                
+                try {
+                    if (!class_exists('ParkingLog')) {
+                        require_once __DIR__ . '/../models/ParkingLog.php';
+                    }
+                    
+                    $parkingLog = new ParkingLog($conn);
+                    $logs = $parkingLog->getAllLogs();
+                    
+                    if (!$logs) {
+                        throw new Exception("Failed to retrieve logs from database");
+                    }
+                    
+                } catch (Exception $e) {
+                    $error = "Error loading logs: " . $e->getMessage();
+                    error_log("Monitoring Section Error: " . $e->getMessage());
+                }
+                ?>
+
+                <div style="max-height: 70vh; overflow-y: auto; overflow-x: auto; background: #fff; padding: 10px; border-radius: 6px;">
+                    <?php if ($error): ?>
+                        <div style="color: #dc3545; padding: 10px; background: #f8d7da; border-radius: 4px; margin-bottom: 15px;">
+                            <strong>Error:</strong> <?php echo htmlspecialchars($error); ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if ($logs && $logs->num_rows > 0): ?>
+                        <table border="1" cellpadding="8" cellspacing="0" style="width:100%; border-collapse: collapse; font-size: 14px;">
+                            <thead style="background:#f4f4f4; position: sticky; top: 0;">
+                                <tr>
+                                    <th style="padding: 10px; border: 1px solid #ddd;">Log ID</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd;">Plate Number</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd;">Owner</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd;">User Type</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd;">Vehicle Type</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd;">Parking Space</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd;">Status</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd;">Time In</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd;">Time Out</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd;">Last Updated</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php while ($row = $logs->fetch_assoc()): ?>
+                                    <tr>
+                                        <td style="padding: 8px; border: 1px solid #ddd;"><?= htmlspecialchars($row['log_id']) ?></td>
+                                        <td style="padding: 8px; border: 1px solid #ddd;"><?= htmlspecialchars($row['plate_number']) ?></td>
+                                        <td style="padding: 8px; border: 1px solid #ddd;"><?= htmlspecialchars($row['owner_name']) ?></td>
+                                        <td style="padding: 8px; border: 1px solid #ddd;"><?= htmlspecialchars($row['user_type']) ?></td>
+                                        <td style="padding: 8px; border: 1px solid #ddd;"><?= htmlspecialchars($row['vehicle_type']) ?></td>
+                                        <td style="padding: 8px; border: 1px solid #ddd;"><?= htmlspecialchars($row['parking_space_name']) ?></td>
+                                        <td style="padding: 8px; border: 1px solid #ddd;">
+                                            <span class="status-badge <?= strtolower($row['status']) ?>">
+                                                <?= htmlspecialchars($row['status']) ?>
+                                            </span>
+                                        </td>
+                                        <td style="padding: 8px; border: 1px solid #ddd;"><?= htmlspecialchars($row['time_in'] ?? '—') ?></td>
+                                        <td style="padding: 8px; border: 1px solid #ddd;"><?= htmlspecialchars($row['time_out'] ?? '—') ?></td>
+                                        <td style="padding: 8px; border: 1px solid #ddd;"><?= htmlspecialchars($row['updated_at']) ?></td>
+                                    </tr>
+                                <?php endwhile; ?>
+                            </tbody>
+                        </table>
+                        
+                        <div style="margin-top: 10px; color: #666; font-size: 12px;">
+                            Total Records: <?= $logs->num_rows ?>
+                        </div>
+                    <?php else: ?>
+                        <p style="text-align: center; padding: 20px; color: #666;">No parking logs found in the system.</p>
+                    <?php endif; ?>
+                </div>
             </div>
 
             <!-- Settings -->
@@ -525,8 +600,6 @@ $distribution = $model->getSlotDistribution();
         <input type="hidden" id="delete-space-id" value="">
     </div>
 </div>
-
-
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 

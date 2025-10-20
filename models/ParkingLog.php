@@ -87,5 +87,33 @@ class ParkingLog {
         $stmt->bind_param("i", $vehicle_id);
         return $stmt->execute();
     }
+
+    /**
+     * Get all parking logs with vehicle and owner details - IMPROVED VERSION
+     */
+    public function getAllLogs() {
+        $query = "SELECT 
+                    pl.log_id,
+                    pl.status,
+                    pl.time_in,
+                    pl.time_out,
+                    pl.remarks,
+                    pl.created_at,
+                    pl.updated_at,
+                    COALESCE(vt.plate_number, 'N/A') as plate_number,
+                    COALESCE(CONCAT(ut.firstname, ' ', ut.lastname), 'Unknown Owner') as owner_name,
+                    COALESCE(utt.user_type, 'Unknown') as user_type,
+                    COALESCE(vtt.vehicle_type, 'Unknown') as vehicle_type,
+                    COALESCE(ps.name, 'Not Assigned') as parking_space_name
+                FROM parking_logs pl
+                LEFT JOIN vehicles_table vt ON pl.vehicle_id = vt.vehicle_id
+                LEFT JOIN users_table ut ON vt.user_id = ut.user_id
+                LEFT JOIN user_type_table utt ON ut.user_type_id = utt.user_type_id
+                LEFT JOIN vehicle_type_table vtt ON vt.vehicle_type_id = vtt.vehicle_type_id
+                LEFT JOIN parking_spaces ps ON pl.parking_space_id = ps.id
+                ORDER BY pl.log_id DESC";
+        
+        return $this->conn->query($query);
+    }
 }
 ?>
