@@ -1,7 +1,5 @@
 /**
  * qr_modals.js - Modal UI Management Only
- * Handles opening/closing of modals and basic UI interactions
- * Business logic is handled in qr_scanner.js
  */
 
 /* ===========================

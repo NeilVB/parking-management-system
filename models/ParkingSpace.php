@@ -5,8 +5,7 @@ class ParkingSpace
 {
     private $conn;
 
-    public function __construct($db)
-    {
+    public function __construct($db){
         $this->conn = $db;
     }
 
@@ -14,10 +13,10 @@ class ParkingSpace
      * Get total available slots grouped by vehicle type.
      * Returns: ['car' => int, 'motorcycle' => int]
      */
-    public function getVehicleCounts()
-    {
+    public function getVehicleCounts(){
         $counts = ['car' => 0, 'motorcycle' => 0];
 
+        // Get total allocated slots
         $query = "
             SELECT 
                 vehicle_type_id,
@@ -27,28 +26,58 @@ class ParkingSpace
         ";
 
         $result = $this->conn->query($query);
+        $total = ['car' => 0, 'motorcycle' => 0];
 
         if ($result) {
             while ($row = $result->fetch_assoc()) {
                 if ($row['vehicle_type_id'] == 1) {
-                    $counts['car'] = (int) $row['total_slots'];
+                    $total['car'] = (int) $row['total_slots'];
                 } else if ($row['vehicle_type_id'] == 2) {
-                    $counts['motorcycle'] = (int) $row['total_slots'];
+                    $total['motorcycle'] = (int) $row['total_slots'];
                 }
             }
         }
+
+        // Get currently parked vehicles (status = 'Parked' in parking_logs)
+        $occupiedQuery = "
+            SELECT 
+                v.vehicle_type_id,
+                COUNT(*) AS occupied_count
+            FROM parking_logs pl
+            JOIN vehicles_table v ON pl.vehicle_id = v.vehicle_id
+            WHERE pl.status = 'Parked'
+            GROUP BY v.vehicle_type_id
+        ";
+
+        $occupiedResult = $this->conn->query($occupiedQuery);
+        $occupied = ['car' => 0, 'motorcycle' => 0];
+
+        if ($occupiedResult) {
+            while ($row = $occupiedResult->fetch_assoc()) {
+                if ($row['vehicle_type_id'] == 1) {
+                    $occupied['car'] = (int) $row['occupied_count'];
+                } else if ($row['vehicle_type_id'] == 2) {
+                    $occupied['motorcycle'] = (int) $row['occupied_count'];
+                }
+            }
+        }
+
+        // Calculate available = total - occupied
+        $counts['car'] = max(0, $total['car'] - $occupied['car']);
+        $counts['motorcycle'] = max(0, $total['motorcycle'] - $occupied['motorcycle']);
 
         return $counts;
     }
 
     /**
-     * Get distribution of parking slots by location.
+     * Get distribution of parking slots by location with optional filters.
      * Returns: array of ['location' => string, 'slots' => int]
      */
-    public function getSlotDistribution()
+    public function getSlotDistribution($userTypeFilter = 'all', $vehicleTypeFilter = 'all')
     {
         $distribution = [];
 
+        // Base query
         $query = "
             SELECT 
                 ps.name,
@@ -56,7 +85,38 @@ class ParkingSpace
             FROM parking_spaces ps
             LEFT JOIN parking_slot_allocations psa 
                 ON ps.id = psa.parking_space_id
+            WHERE 1=1
+        ";
+
+        // Apply user type filter
+        if ($userTypeFilter !== 'all') {
+            $userTypeMap = [
+                'general' => 1,
+                'faculty' => 2,
+                'executive' => 3,
+                'guest' => 4
+            ];
+            
+            if (isset($userTypeMap[$userTypeFilter])) {
+                $query .= " AND psa.user_type_id = " . $userTypeMap[$userTypeFilter];
+            }
+        }
+
+        // Apply vehicle type filter
+        if ($vehicleTypeFilter !== 'all') {
+            $vehicleTypeMap = [
+                'car' => 1,
+                'motorcycle' => 2
+            ];
+            
+            if (isset($vehicleTypeMap[$vehicleTypeFilter])) {
+                $query .= " AND psa.vehicle_type_id = " . $vehicleTypeMap[$vehicleTypeFilter];
+            }
+        }
+
+        $query .= "
             GROUP BY ps.id, ps.name
+            HAVING total_slots > 0
             ORDER BY ps.name
         ";
 

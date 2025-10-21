@@ -1,7 +1,5 @@
 /**
  * qr_scanner.js - QR Scanner & Business Logic
- * Handles QR code scanning, vehicle processing, and parking assignments
- * UI modal controls are handled in qr_modals.js
  */
 
 document.addEventListener("DOMContentLoaded", () => {

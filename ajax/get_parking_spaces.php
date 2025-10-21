@@ -1,9 +1,4 @@
 <?php
-// Disable error display, log only
-error_reporting(E_ALL);
-ini_set('display_errors', 0);
-ini_set('log_errors', 1);
-
 session_start();
 
 // Set JSON header first
@@ -16,12 +11,6 @@ if (!file_exists('../models/Database.php')) {
 }
 
 require_once '../models/Database.php';
-
-// Check if user is logged in
-// if (!isset($_SESSION['user_id'])) {
-//     echo json_encode(['success' => false, 'message' => 'Unauthorized - Please login']);
-//     exit;
-// }
 
 try {
     // Check if Database class exists
