@@ -369,15 +369,17 @@
             </button>
         </div>
 
+        <!-- Hidden Fields -->
         <input type="hidden" id="exit-vehicle-id" value="">
         <input type="hidden" id="exit-parking-transaction-id" value="">
+        <input type="hidden" id="exit-parking-space-id" value="">
     </div>
 </div>
 
 <!-- =============================
      EXIT SUCCESS MODAL
 ============================= -->
-<div id="exit-success-modal" class="modal" role="dialog" aria-modal="true">
+<div id="exit-success-modal" class="modal" role="dialog" aria-modal="true" style="display: none;">
     <div class="modal-content success-modal">
         <div class="modal-header success-header">
             <h2><i class="fas fa-check-circle"></i> Exit Successful</h2>
@@ -395,15 +397,15 @@
             <div class="exit-summary-card">
                 <div class="info-row">
                     <strong>Plate Number:</strong>
-                    <span id="success-plate-number"></span>
+                    <span id="success-plate-number">-</span>
                 </div>
                 <div class="info-row">
                     <strong>Exit Time:</strong>
-                    <span id="success-exit-time"></span>
+                    <span id="success-exit-time">-</span>
                 </div>
                 <div class="info-row highlight">
                     <strong>Total Duration:</strong>
-                    <span id="success-total-duration"></span>
+                    <span id="success-total-duration">-</span>
                 </div>
             </div>
             

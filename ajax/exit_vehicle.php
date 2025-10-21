@@ -5,6 +5,10 @@ session_start();
 
 require_once __DIR__ . '/../controller/config.php';
 
+// Set timezone
+date_default_timezone_set('Asia/Manila');
+$conn->query("SET time_zone = '+08:00'");
+
 // Check if admin is authenticated
 if (!isset($_SESSION['admin_id'])) {
     echo json_encode(['success' => false, 'message' => 'Unauthorized access']);
@@ -15,20 +19,22 @@ if (!isset($_SESSION['admin_id'])) {
 $action = isset($_POST['action']) ? trim($_POST['action']) : '';
 
 /**
- * Simple duration calculation: just subtract timestamps
+ * Calculate duration between two times
  */
 function calculateDuration($time_in, $time_out = null) {
-    // If no time_out provided, use current time
     if ($time_out === null) {
         $time_out = date('Y-m-d H:i:s');
     }
     
-    // Simple subtraction of timestamps
     $start = strtotime($time_in);
     $end = strtotime($time_out);
     $diff_seconds = $end - $start;
     
-    // Convert seconds to days, hours, minutes
+    // Handle negative duration
+    if ($diff_seconds < 0) {
+        return 'Invalid duration';
+    }
+    
     $days = floor($diff_seconds / 86400);
     $hours = floor(($diff_seconds % 86400) / 3600);
     $minutes = floor(($diff_seconds % 3600) / 60);
@@ -53,7 +59,6 @@ try {
             exit();
         }
 
-        // Get the latest active parking log for this vehicle
         $stmt = $conn->prepare("
             SELECT 
                 pl.log_id,
@@ -90,8 +95,6 @@ try {
         }
         
         $log = $result->fetch_assoc();
-        
-        // Simple: subtract time_in from NOW
         $duration_text = calculateDuration($log['time_in']);
         
         echo json_encode([
@@ -125,27 +128,23 @@ try {
             exit();
         }
 
-        // Start transaction
         $conn->begin_transaction();
 
         try {
-            $exit_time = date('Y-m-d H:i:s');
-            
-            // Step 1: Update parking log - set time_out and status to 'outside'
+            // Use MySQL NOW() to ensure timezone consistency
             $stmt = $conn->prepare("
                 UPDATE parking_logs 
-                SET time_out = ?, 
+                SET time_out = NOW(), 
                     status = 'outside',
                     updated_at = CURRENT_TIMESTAMP
                 WHERE log_id = ?
             ");
-            $stmt->bind_param("si", $exit_time, $log_id);
+            $stmt->bind_param("i", $log_id);
             
             if (!$stmt->execute()) {
                 throw new Exception('Failed to update parking log: ' . $stmt->error);
             }
 
-            // Step 2: Update vehicle status to 'outside' and clear assigned_space
             $stmt = $conn->prepare("
                 UPDATE vehicles_table 
                 SET status = 'outside',
@@ -159,9 +158,7 @@ try {
                 throw new Exception('Failed to update vehicle status: ' . $stmt->error);
             }
 
-            // Step 3: Decrement parking space count if space was assigned
             if ($parking_space_id) {
-                // Get vehicle type to know which counter to decrement
                 $stmt = $conn->prepare("
                     SELECT vt.vehicle_type_id, vt.vehicle_type
                     FROM vehicles_table v
@@ -174,16 +171,13 @@ try {
                 $vehicle_info = $result->fetch_assoc();
                 
                 if ($vehicle_info) {
-                    // Decrement the appropriate counter based on vehicle type
                     if ($vehicle_info['vehicle_type_id'] == 1) {
-                        // Car - decrement car count
                         $stmt = $conn->prepare("
                             UPDATE parking_spaces 
                             SET parked_car_count = GREATEST(0, parked_car_count - 1)
                             WHERE id = ?
                         ");
                     } else {
-                        // Motorcycle - decrement motorcycle count
                         $stmt = $conn->prepare("
                             UPDATE parking_spaces 
                             SET parked_motorcycle_count = GREATEST(0, parked_motorcycle_count - 1)
@@ -199,10 +193,9 @@ try {
                 }
             }
 
-            // Commit transaction
             $conn->commit();
 
-            // Get exit details for success modal
+            // Get exit details
             $stmt = $conn->prepare("
                 SELECT 
                     v.plate_number,
@@ -217,7 +210,6 @@ try {
             $result = $stmt->get_result();
             $exit_data = $result->fetch_assoc();
 
-            // Simple: subtract time_out from time_in
             $duration_text = calculateDuration($exit_data['time_in'], $exit_data['time_out']);
 
             echo json_encode([
@@ -231,7 +223,6 @@ try {
             ]);
 
         } catch (Exception $e) {
-            // Rollback on error
             $conn->rollback();
             throw $e;
         }
@@ -239,7 +230,6 @@ try {
         exit();
     }
 
-    // Invalid action
     echo json_encode([
         'success' => false,
         'message' => 'Invalid action specified'

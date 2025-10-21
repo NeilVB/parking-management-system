@@ -457,18 +457,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function showExitSuccessModal(data) {
-        // Populate success modal
-        document.getElementById('success-plate-number').textContent = data.plate_number || 'N/A';
-        document.getElementById('success-exit-time').textContent = data.exit_time || new Date().toLocaleString();
-        document.getElementById('success-total-duration').textContent = data.duration || 'N/A';
+        // Populate success modal - FIX: access exit_summary object
+        document.getElementById('success-plate-number').textContent = data.exit_summary?.plate_number || 'N/A';
+        document.getElementById('success-exit-time').textContent = data.exit_summary?.exit_time || new Date().toLocaleString();
+        document.getElementById('success-total-duration').textContent = data.exit_summary?.total_duration || 'N/A';
 
         // Show success modal
         if (elements.exitSuccessModal) {
             elements.exitSuccessModal.style.display = 'flex';
         }
-
-        // Refresh page after a delay (optional)
-        // setTimeout(() => location.reload(), 3000);
     }
 
     // ============================

@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Get data from hidden fields
                 const vehicleId = document.getElementById('exit-vehicle-id').value;
                 const logId = document.getElementById('exit-parking-transaction-id').value;
-                const parkingSpaceId = confirmExitBtn.getAttribute('data-parking-space-id') || '';
+                const parkingSpaceId = document.getElementById('exit-parking-space-id')?.value || '';
 
                 console.log('[EXIT] Exit data:', { vehicleId, logId, parkingSpaceId });
 
@@ -100,10 +100,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Close confirmation modal
                     exitConfirmModal.style.display = 'none';
 
-                    // Populate success modal
-                    document.getElementById('success-plate-number').textContent = data.exit_summary.plate_number;
-                    document.getElementById('success-exit-time').textContent = data.exit_summary.exit_time;
-                    document.getElementById('success-total-duration').textContent = data.exit_summary.total_duration;
+                    // Populate success modal with actual data
+                    document.getElementById('success-plate-number').textContent = data.exit_summary.plate_number || 'N/A';
+                    document.getElementById('success-exit-time').textContent = data.exit_summary.exit_time || 'N/A';
+                    document.getElementById('success-total-duration').textContent = data.exit_summary.total_duration || 'N/A';
+
+                    console.log('[EXIT] Success modal populated with:', {
+                        plate: data.exit_summary.plate_number,
+                        exitTime: data.exit_summary.exit_time,
+                        duration: data.exit_summary.total_duration
+                    });
 
                     // Show success modal
                     exitSuccessModal.style.display = 'flex';
@@ -160,12 +166,7 @@ window.showExitModal = function(exitInfo) {
     // Store IDs in hidden fields
     document.getElementById('exit-vehicle-id').value = exitInfo.vehicle_id || '';
     document.getElementById('exit-parking-transaction-id').value = exitInfo.log_id || '';
-
-    // Store parking_space_id as data attribute
-    const confirmBtn = document.getElementById('confirm-exit-btn');
-    if (confirmBtn) {
-        confirmBtn.setAttribute('data-parking-space-id', exitInfo.parking_space_id || '');
-    }
+    document.getElementById('exit-parking-space-id').value = exitInfo.parking_space_id || '';
 
     // Show modal
     const exitModal = document.getElementById('exit-vehicle-modal');
