@@ -12,10 +12,39 @@ if (!isset($_SESSION['admin_id'])) {
 }
 
 // Get action type
-$action = isset($_POST['action']) ? $_POST['action'] : '';
+$action = isset($_POST['action']) ? trim($_POST['action']) : '';
+
+/**
+ * Simple duration calculation: just subtract timestamps
+ */
+function calculateDuration($time_in, $time_out = null) {
+    // If no time_out provided, use current time
+    if ($time_out === null) {
+        $time_out = date('Y-m-d H:i:s');
+    }
+    
+    // Simple subtraction of timestamps
+    $start = strtotime($time_in);
+    $end = strtotime($time_out);
+    $diff_seconds = $end - $start;
+    
+    // Convert seconds to days, hours, minutes
+    $days = floor($diff_seconds / 86400);
+    $hours = floor(($diff_seconds % 86400) / 3600);
+    $minutes = floor(($diff_seconds % 3600) / 60);
+    
+    $parts = [];
+    if ($days > 0) $parts[] = $days . ' day' . ($days > 1 ? 's' : '');
+    if ($hours > 0) $parts[] = $hours . ' hour' . ($hours > 1 ? 's' : '');
+    if ($minutes > 0) $parts[] = $minutes . ' minute' . ($minutes > 1 ? 's' : '');
+    
+    return !empty($parts) ? implode(' ', $parts) : 'Less than a minute';
+}
 
 try {
+    // =====================================================
     // ACTION: Get exit information for confirmation modal
+    // =====================================================
     if ($action === 'get_exit_info') {
         $vehicle_id = isset($_POST['vehicle_id']) ? intval($_POST['vehicle_id']) : 0;
         
@@ -62,24 +91,8 @@ try {
         
         $log = $result->fetch_assoc();
         
-        // Calculate duration
-        $time_in = new DateTime($log['time_in']);
-        $now = new DateTime();
-        $duration = $time_in->diff($now);
-        
-        $duration_text = '';
-        if ($duration->d > 0) {
-            $duration_text .= $duration->d . ' day' . ($duration->d > 1 ? 's' : '') . ' ';
-        }
-        if ($duration->h > 0) {
-            $duration_text .= $duration->h . ' hour' . ($duration->h > 1 ? 's' : '') . ' ';
-        }
-        if ($duration->i > 0) {
-            $duration_text .= $duration->i . ' minute' . ($duration->i > 1 ? 's' : '');
-        }
-        if (empty($duration_text)) {
-            $duration_text = 'Less than a minute';
-        }
+        // Simple: subtract time_in from NOW
+        $duration_text = calculateDuration($log['time_in']);
         
         echo json_encode([
             'success' => true,
@@ -92,14 +105,16 @@ try {
                 'vehicle_type' => $log['vehicle_type'],
                 'parking_space' => $log['parking_space_name'] ?? 'Not assigned',
                 'entry_time' => date('M d, Y h:i A', strtotime($log['time_in'])),
-                'duration' => trim($duration_text),
+                'duration' => $duration_text,
                 'status' => $log['status']
             ]
         ]);
         exit();
     }
     
+    // =====================================================
     // ACTION: Confirm exit and update database
+    // =====================================================
     if ($action === 'confirm_exit') {
         $log_id = isset($_POST['log_id']) ? intval($_POST['log_id']) : 0;
         $vehicle_id = isset($_POST['vehicle_id']) ? intval($_POST['vehicle_id']) : 0;
@@ -116,7 +131,7 @@ try {
         try {
             $exit_time = date('Y-m-d H:i:s');
             
-            // 1. Update parking log - set time_out and status to 'outside'
+            // Step 1: Update parking log - set time_out and status to 'outside'
             $stmt = $conn->prepare("
                 UPDATE parking_logs 
                 SET time_out = ?, 
@@ -127,10 +142,10 @@ try {
             $stmt->bind_param("si", $exit_time, $log_id);
             
             if (!$stmt->execute()) {
-                throw new Exception('Failed to update parking log');
+                throw new Exception('Failed to update parking log: ' . $stmt->error);
             }
 
-            // 2. Update vehicle status to 'outside' and clear assigned_space
+            // Step 2: Update vehicle status to 'outside' and clear assigned_space
             $stmt = $conn->prepare("
                 UPDATE vehicles_table 
                 SET status = 'outside',
@@ -141,10 +156,10 @@ try {
             $stmt->bind_param("i", $vehicle_id);
             
             if (!$stmt->execute()) {
-                throw new Exception('Failed to update vehicle status');
+                throw new Exception('Failed to update vehicle status: ' . $stmt->error);
             }
 
-            // 3. If parking space was assigned, decrement the count
+            // Step 3: Decrement parking space count if space was assigned
             if ($parking_space_id) {
                 // Get vehicle type to know which counter to decrement
                 $stmt = $conn->prepare("
@@ -159,14 +174,16 @@ try {
                 $vehicle_info = $result->fetch_assoc();
                 
                 if ($vehicle_info) {
-                    // Decrement the appropriate counter
-                    if ($vehicle_info['vehicle_type_id'] == 1) { // Car
+                    // Decrement the appropriate counter based on vehicle type
+                    if ($vehicle_info['vehicle_type_id'] == 1) {
+                        // Car - decrement car count
                         $stmt = $conn->prepare("
                             UPDATE parking_spaces 
                             SET parked_car_count = GREATEST(0, parked_car_count - 1)
                             WHERE id = ?
                         ");
-                    } else { // Motorcycle
+                    } else {
+                        // Motorcycle - decrement motorcycle count
                         $stmt = $conn->prepare("
                             UPDATE parking_spaces 
                             SET parked_motorcycle_count = GREATEST(0, parked_motorcycle_count - 1)
@@ -177,7 +194,7 @@ try {
                     $stmt->bind_param("i", $parking_space_id);
                     
                     if (!$stmt->execute()) {
-                        throw new Exception('Failed to update parking space count');
+                        throw new Exception('Failed to update parking space count: ' . $stmt->error);
                     }
                 }
             }
@@ -200,24 +217,8 @@ try {
             $result = $stmt->get_result();
             $exit_data = $result->fetch_assoc();
 
-            // Calculate total duration
-            $time_in = new DateTime($exit_data['time_in']);
-            $time_out = new DateTime($exit_data['time_out']);
-            $duration = $time_in->diff($time_out);
-            
-            $duration_text = '';
-            if ($duration->d > 0) {
-                $duration_text .= $duration->d . ' day' . ($duration->d > 1 ? 's' : '') . ' ';
-            }
-            if ($duration->h > 0) {
-                $duration_text .= $duration->h . ' hour' . ($duration->h > 1 ? 's' : '') . ' ';
-            }
-            if ($duration->i > 0) {
-                $duration_text .= $duration->i . ' minute' . ($duration->i > 1 ? 's' : '');
-            }
-            if (empty($duration_text)) {
-                $duration_text = 'Less than a minute';
-            }
+            // Simple: subtract time_out from time_in
+            $duration_text = calculateDuration($exit_data['time_in'], $exit_data['time_out']);
 
             echo json_encode([
                 'success' => true,
@@ -225,7 +226,7 @@ try {
                 'exit_summary' => [
                     'plate_number' => $exit_data['plate_number'],
                     'exit_time' => date('M d, Y h:i A', strtotime($exit_data['time_out'])),
-                    'total_duration' => trim($duration_text)
+                    'total_duration' => $duration_text
                 ]
             ]);
 
@@ -241,7 +242,7 @@ try {
     // Invalid action
     echo json_encode([
         'success' => false,
-        'message' => 'Invalid action'
+        'message' => 'Invalid action specified'
     ]);
 
 } catch (Exception $e) {

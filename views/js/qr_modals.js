@@ -98,47 +98,41 @@ document.addEventListener('DOMContentLoaded', function() {
 /* ===========================
     VEHICLE INFO & PARKING SELECTION
     =========================== */
-// Handle "Proceed to Parking" button click
-document.addEventListener('DOMContentLoaded', function() {
-    const proceedBtn = document.getElementById('proceed-to-parking-btn');
-    
-    if (proceedBtn) {
-        proceedBtn.addEventListener('click', function() {
-            // Close the vehicle info modal
-            const vehicleModal = bootstrap.Modal.getInstance(document.getElementById('vehicleInfoModal'));
-            if (vehicleModal) {
-                vehicleModal.hide();
-            }
-            
-            // Open the parking selection modal
-            const parkingModal = new bootstrap.Modal(document.getElementById('parkingSelectionModal'));
-            parkingModal.show();
-            
-            // Initialize filters and search for the parking modal
-            initializeModalFilters();
-        });
-    }
-    
-    // Handle parking space selection
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('select-parking-btn') || 
-            e.target.closest('.select-parking-btn')) {
-            
-            const btn = e.target.classList.contains('select-parking-btn') ? 
-                        e.target : e.target.closest('.select-parking-btn');
-            
-            const parkingId = btn.getAttribute('data-id');
-            const parkingName = btn.getAttribute('data-name');
-            
-            // Get vehicle information from the previous modal
-            const vehiclePlate = document.getElementById('v-plate').textContent;
-            
-            // Confirm selection
-            if (confirm(`Assign vehicle ${vehiclePlate} to ${parkingName}?`)) {
-                assignVehicleToParking(parkingId, vehiclePlate);
-            }
+// Handle parking space selection - NO CONFIRMATION NEEDED
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('select-parking-btn') || 
+        e.target.closest('.select-parking-btn')) {
+        
+        // STOP event from bubbling to other listeners
+        e.stopImmediatePropagation();
+        e.preventDefault();
+        
+        const btn = e.target.classList.contains('select-parking-btn') ? 
+                    e.target : e.target.closest('.select-parking-btn');
+        
+        // Check if button is already being processed
+        if (btn.hasAttribute('data-processing')) {
+            console.log('Button already being processed, ignoring click');
+            return;
         }
-    });
+        
+        // Mark as processing
+        btn.setAttribute('data-processing', 'true');
+        
+        const parkingId = btn.getAttribute('data-id');
+        const parkingName = btn.getAttribute('data-name');
+        
+        // Get vehicle information from the previous modal
+        const vehiclePlate = document.getElementById('v-plate').textContent;
+        
+        // NO CONFIRMATION - assign immediately
+        assignVehicleToParking(parkingId, vehiclePlate);
+        
+        // Remove processing flag after a delay
+        setTimeout(() => {
+            btn.removeAttribute('data-processing');
+        }, 1000);
+    }
 });
 
 // Initialize filters for the parking modal
@@ -274,4 +268,133 @@ window.displayVehicleInfo = function(plateNumber) {
             console.error('Error:', error);
             alert('An error occurred while fetching vehicle information');
         });
+}
+
+// Assignment Modal Functions
+function showAssignmentSuccessModal(plateNumber, parkingName) {
+    const modal = document.getElementById('assignment-success-modal');
+    if (!modal) {
+        console.error('Assignment success modal not found');
+        alert('✅ Vehicle successfully assigned to parking space!');
+        location.reload();
+        return;
+    }
+
+    console.log('Showing assignment success modal for:', plateNumber, parkingName);
+
+    // Populate modal content
+    const plateEl = document.getElementById('success-assigned-plate');
+    const nameEl = document.getElementById('success-parking-name');
+    const timeEl = document.getElementById('success-assigned-time');
+    
+    if (plateEl) plateEl.textContent = plateNumber;
+    if (nameEl) nameEl.textContent = parkingName;
+    if (timeEl) timeEl.textContent = new Date().toLocaleString();
+
+    // Show modal
+    modal.style.display = 'flex';
+
+    // Set up close handlers
+    const closeBtn = modal.querySelector('.close-btn');
+    const okBtn = modal.querySelector('.close-modal');
+    
+    const closeModal = () => {
+        modal.style.display = 'none';
+        location.reload();
+    };
+    
+    // Remove existing listeners and add new ones
+    closeBtn.replaceWith(closeBtn.cloneNode(true));
+    okBtn.replaceWith(okBtn.cloneNode(true));
+    
+    modal.querySelector('.close-btn').addEventListener('click', closeModal);
+    modal.querySelector('.close-modal').addEventListener('click', closeModal);
+    
+    // Auto-refresh after 3 seconds
+    setTimeout(() => {
+        location.reload();
+    }, 3000);
+}
+
+function showAssignmentErrorModal(errorMessage) {
+    const modal = document.getElementById('assignment-error-modal');
+    if (!modal) {
+        console.error('Assignment error modal not found');
+        alert('❌ ' + errorMessage);
+        return;
+    }
+
+    console.log('Showing assignment error modal:', errorMessage);
+
+    // Populate modal content
+    const messageEl = document.getElementById('error-assignment-message');
+    if (messageEl) messageEl.textContent = errorMessage;
+
+    // Show modal
+    modal.style.display = 'flex';
+
+    // Set up close handlers
+    const closeBtn = modal.querySelector('.close-btn');
+    const cancelBtn = modal.querySelector('.close-modal');
+    const retryBtn = document.getElementById('retry-assignment-btn');
+    
+    const closeModal = () => {
+        modal.style.display = 'none';
+    };
+    
+    // Remove existing listeners and add new ones
+    closeBtn.replaceWith(closeBtn.cloneNode(true));
+    cancelBtn.replaceWith(cancelBtn.cloneNode(true));
+    
+    modal.querySelector('.close-btn').addEventListener('click', closeModal);
+    modal.querySelector('.close-modal').addEventListener('click', closeModal);
+    
+    // Retry button
+    if (retryBtn) {
+        retryBtn.replaceWith(retryBtn.cloneNode(true));
+        modal.querySelector('#retry-assignment-btn').addEventListener('click', closeModal);
+    }
+}
+
+function closeVehicleInfoModal() {
+    const vehicleInfoModal = document.getElementById('vehicleInfoModal');
+    if (!vehicleInfoModal) return;
+
+    console.log('Closing vehicle info modal');
+
+    if (typeof bootstrap !== 'undefined') {
+        const modal = bootstrap.Modal.getInstance(vehicleInfoModal);
+        if (modal) {
+            modal.hide();
+        } else {
+            // Fallback if Bootstrap modal instance not found
+            vehicleInfoModal.style.display = 'none';
+            document.body.classList.remove('modal-open');
+            const backdrop = document.querySelector('.modal-backdrop');
+            if (backdrop) backdrop.remove();
+        }
+    } else {
+        // Vanilla JS fallback
+        vehicleInfoModal.style.display = 'none';
+        document.body.classList.remove('modal-open');
+        const backdrop = document.getElementById('vehicle-modal-backdrop');
+        if (backdrop) backdrop.remove();
+    }
+}
+
+// Function to close vehicle info modal
+function closeVehicleInfoModal() {
+    const vehicleInfoModal = document.getElementById('vehicleInfoModal');
+    if (!vehicleInfoModal) return;
+
+    if (typeof bootstrap !== 'undefined') {
+        const modal = bootstrap.Modal.getInstance(vehicleInfoModal);
+        modal?.hide();
+    } else {
+        vehicleInfoModal.classList.remove('show');
+        vehicleInfoModal.style.display = 'none';
+        document.body.classList.remove('modal-open');
+        const backdrop = document.getElementById('vehicle-modal-backdrop');
+        if (backdrop) backdrop.remove();
+    }
 }

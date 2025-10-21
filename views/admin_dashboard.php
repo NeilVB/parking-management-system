@@ -376,7 +376,6 @@ $distribution = $model->getSlotDistribution();
                                     <th style="padding: 10px; border: 1px solid #ddd;">Status</th>
                                     <th style="padding: 10px; border: 1px solid #ddd;">Time In</th>
                                     <th style="padding: 10px; border: 1px solid #ddd;">Time Out</th>
-                                    <th style="padding: 10px; border: 1px solid #ddd;">Last Updated</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -395,7 +394,6 @@ $distribution = $model->getSlotDistribution();
                                         </td>
                                         <td style="padding: 8px; border: 1px solid #ddd;"><?= htmlspecialchars($row['time_in'] ?? '—') ?></td>
                                         <td style="padding: 8px; border: 1px solid #ddd;"><?= htmlspecialchars($row['time_out'] ?? '—') ?></td>
-                                        <td style="padding: 8px; border: 1px solid #ddd;"><?= htmlspecialchars($row['updated_at']) ?></td>
                                     </tr>
                                 <?php endwhile; ?>
                             </tbody>
@@ -607,11 +605,11 @@ $distribution = $model->getSlotDistribution();
 <script src="https://unpkg.com/html5-qrcode"></script>
 
 <!-- JS -->
-<script src="../views/js/qr_scanner.js"></script>
 <script src="../views/js/helpers.js"></script>
 <script src="../views/js/navigation.js"></script>
 <script src="../views/js/modals.js"></script>
 <script src="../views/js/qr_modals.js"></script>
+<script src="../views/js/qr_scanner.js"></script>
 <script src="../views/js/forms.js"></script>
 <script src="../views/js/imagePreview.js"></script>
 <script src="../views/js/refresh.js"></script>

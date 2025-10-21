@@ -173,8 +173,8 @@
                                     <p><strong>Vehicle Types:</strong>
                                         <?php
                                         $types = [];
-                                        if ($row['supports_car']) $types[] = '🚗 Car (' . $carSlots . ' slots)';
-                                        if ($row['supports_motorcycle']) $types[] = '🏍️ Motorcycle (' . $motorcycleSlots . ' slots)';
+                                        if ($row['supports_car']) $types[] = 'Car (' . $carSlots . ' slots)';
+                                        if ($row['supports_motorcycle']) $types[] = 'Motorcycle (' . $motorcycleSlots . ' slots)';
                                         echo implode(', ', $types);
                                         ?>
                                     </p>
@@ -221,6 +221,92 @@
             <div class="modal-footer">
                 <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- =============================
+     ASSIGNMENT SUCCESS MODAL
+============================= -->
+<div id="assignment-success-modal" class="modal" role="dialog" aria-modal="true" style="display: none;">
+    <div class="modal-content success-modal">
+        <div class="modal-header success-header">
+            <h2><i class="fas fa-check-circle"></i> Assignment Successful</h2>
+            <button type="button" class="close-btn" aria-label="Close">&times;</button>
+        </div>
+
+        <div class="modal-body">
+            <div class="success-icon">
+                <i class="fas fa-car-side"></i> <i class="fas fa-arrow-right"></i> <i class="fas fa-parking"></i>
+            </div>
+            
+            <h3>Vehicle Assigned to Parking Space</h3>
+            
+            <!-- Assignment Summary -->
+            <div class="assignment-summary-card">
+                <div class="info-row">
+                    <strong>Plate Number:</strong>
+                    <span id="success-assigned-plate">-</span>
+                </div>
+                <div class="info-row">
+                    <strong>Parking Space:</strong>
+                    <span id="success-parking-name">-</span>
+                </div>
+                <div class="info-row">
+                    <strong>Assigned At:</strong>
+                    <span id="success-assigned-time">-</span>
+                </div>
+            </div>
+            
+            <div class="auto-refresh-notice">
+                <i class="fas fa-sync-alt fa-spin"></i>
+                <span>Page will refresh automatically...</span>
+            </div>
+        </div>
+
+        <div class="modal-actions">
+            <button type="button" class="btn btn-primary close-modal">
+                <i class="fas fa-check"></i> OK
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- =============================
+     ASSIGNMENT ERROR MODAL
+============================= -->
+<div id="assignment-error-modal" class="modal" role="dialog" aria-modal="true" style="display: none;">
+    <div class="modal-content error-modal">
+        <div class="modal-header error-header">
+            <h2><i class="fas fa-exclamation-triangle"></i> Assignment Failed</h2>
+            <button type="button" class="close-btn" aria-label="Close">&times;</button>
+        </div>
+
+        <div class="modal-body">
+            <div class="error-icon">
+                <i class="fas fa-times-circle"></i>
+            </div>
+            
+            <h3>Could Not Assign Parking Space</h3>
+            
+            <!-- Error Message -->
+            <div class="error-message-card">
+                <p id="error-assignment-message">An error occurred</p>
+            </div>
+            
+            <div class="error-help">
+                <i class="fas fa-info-circle"></i>
+                <span>Please try again or contact support if the problem persists.</span>
+            </div>
+        </div>
+
+        <div class="modal-actions">
+            <button type="button" class="btn btn-secondary close-modal">
+                <i class="fas fa-times"></i> Cancel
+            </button>
+            <button type="button" class="btn btn-primary" id="retry-assignment-btn">
+                <i class="fas fa-redo"></i> Try Again
+            </button>
         </div>
     </div>
 </div>

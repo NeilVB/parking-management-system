@@ -588,47 +588,122 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    async function assignVehicleToParking(parkingId, vehicleData) {
-        try {
-            const formData = new FormData();
-            formData.append('action', 'assign_parking');
-            formData.append('parking_id', parkingId);
-            formData.append('vehicle_id', vehicleData.id || vehicleData.vehicle_id);
-            formData.append('plate_number', vehicleData.plate_number);
-
-            const response = await fetch('../ajax/assign_parking.php', {
-                method: 'POST',
-                body: formData
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-                alert('✅ Vehicle successfully assigned to parking space!');
-
-                // Close modal
-                if (typeof bootstrap !== 'undefined') {
-                    const modal = bootstrap.Modal.getInstance(elements.vehicleInfoModal);
-                    modal?.hide();
-                } else {
-                    elements.vehicleInfoModal?.classList.remove('show');
-                    elements.vehicleInfoModal.style.display = 'none';
-                    document.body.classList.remove('modal-open');
-                    document.getElementById('vehicle-modal-backdrop')?.remove();
-                }
-
-                currentVehicleData = null;
-
-                // Refresh page
-                setTimeout(() => location.reload(), 500);
-            } else {
-                alert('❌ ' + (data.message || 'Failed to assign parking space'));
-            }
-        } catch (error) {
-            console.error('[QR] Error assigning parking:', error);
-            alert('❌ Error assigning parking space. Please try again.');
-        }
+// Debug: Check what's happening when parking button is clicked
+document.addEventListener('click', function(e) {
+    if (e.target.closest('.select-parking-btn')) {
+        console.log('=== PARKING BUTTON CLICK DEBUG ===');
+        console.log('Button clicked:', e.target.closest('.select-parking-btn'));
+        console.log('Current vehicle data:', window.qrScanner?.currentVehicleData);
+        console.log('Stack trace:', new Error().stack);
     }
+}, true);
+
+async function assignVehicleToParking(parkingId, vehicleData) {
+    console.log('=== assignVehicleToParking CALLED ===');
+    console.log('parkingId:', parkingId);
+    console.log('vehicleData:', vehicleData);
+    
+    try {
+        const formData = new FormData();
+        formData.append('action', 'assign_parking');
+        formData.append('parking_id', parkingId);
+        formData.append('vehicle_id', vehicleData.id || vehicleData.vehicle_id);
+        formData.append('plate_number', vehicleData.plate_number);
+
+        console.log('Sending request to assign_parking.php...');
+
+        const response = await fetch('../ajax/assign_parking.php', {
+            method: 'POST',
+            body: formData
+        });
+
+        console.log('Response status:', response.status);
+        const data = await response.json();
+        console.log('Response data:', data);
+
+        if (data.success) {
+            console.log('Assignment SUCCESS - attempting to show modal');
+            
+            // Get parking space name
+            const parkingBtn = document.querySelector(`.select-parking-btn[data-id="${parkingId}"]`);
+            const parkingName = parkingBtn ? parkingBtn.getAttribute('data-name') : 'Parking Space';
+            console.log('Parking name:', parkingName);
+            
+            // DIRECT MODAL SHOW - no function calls
+            const successModal = document.getElementById('assignment-success-modal');
+            console.log('Success modal element:', successModal);
+            
+            if (successModal) {
+                console.log('Modal found, populating content...');
+                
+                // Populate content directly
+                const plateEl = document.getElementById('success-assigned-plate');
+                const nameEl = document.getElementById('success-parking-name');
+                const timeEl = document.getElementById('success-assigned-time');
+                
+                if (plateEl) {
+                    plateEl.textContent = vehicleData.plate_number;
+                    console.log('Plate element updated');
+                }
+                if (nameEl) {
+                    nameEl.textContent = parkingName;
+                    console.log('Name element updated');
+                }
+                if (timeEl) {
+                    timeEl.textContent = new Date().toLocaleString();
+                    console.log('Time element updated');
+                }
+                
+                // SHOW THE MODAL
+                successModal.style.display = 'flex';
+                console.log('Modal display set to flex');
+                
+                // Add close handlers
+                const closeBtn = successModal.querySelector('.close-btn');
+                const okBtn = successModal.querySelector('.close-modal');
+                
+                if (closeBtn && okBtn) {
+                    const closeHandler = () => {
+                        successModal.style.display = 'none';
+                        location.reload();
+                    };
+                    
+                    closeBtn.onclick = closeHandler;
+                    okBtn.onclick = closeHandler;
+                    console.log('Close handlers attached');
+                }
+                
+                // Auto refresh
+                setTimeout(() => {
+                    console.log('Auto-refreshing page...');
+                    location.reload();
+                }, 3000);
+                
+            } else {
+                console.error('Success modal not found in DOM');
+                alert('✅ Vehicle successfully assigned to parking space!');
+                location.reload();
+            }
+
+            // Close vehicle info modal
+            console.log('Closing vehicle info modal...');
+            const vehicleModal = document.getElementById('vehicleInfoModal');
+            if (vehicleModal) {
+                vehicleModal.style.display = 'none';
+                console.log('Vehicle modal closed');
+            }
+
+            currentVehicleData = null;
+
+        } else {
+            console.log('Assignment FAILED - showing error');
+            alert('❌ ' + (data.message || 'Failed to assign parking space'));
+        }
+    } catch (error) {
+        console.error('[QR] Error assigning parking:', error);
+        alert('❌ Error assigning parking space. Please try again.');
+    }
+}
 
     // ============================
     // UTILITY FUNCTIONS
