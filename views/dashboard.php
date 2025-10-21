@@ -211,35 +211,47 @@ $distribution = $model->getSlotDistribution();
                             // Get allocations for this parking space
                             $allocations = $parkingModel->getAllocations($row['id']);
 
-                            // Compute slots and user types
-                            $carSlots = 0;
-                            $motorcycleSlots = 0;
-                            $userTypesSet = []; // use associative to avoid duplicates
-                            $allocationDetails = [];
+                            // Organize allocations by vehicle type and user type
+                            $carAlloc = ['General' => 0, 'Faculty' => 0, 'Executive' => 0, 'Guest' => 0];
+                            $motoAlloc = ['General' => 0, 'Faculty' => 0, 'Executive' => 0, 'Guest' => 0];
+                            $userTypesSet = [];
 
                             foreach ($allocations as $alloc) {
-                                if ($alloc['vehicle_type_id'] == 1) {
-                                    $carSlots += (int)$alloc['allocated_slots'];
-                                } else {
-                                    $motorcycleSlots += (int)$alloc['allocated_slots'];
-                                }
-
                                 if ((int)$alloc['allocated_slots'] > 0) {
-                                    // record user type (use the user_type field from join)
-                                    $ut = strtolower(trim($alloc['user_type']));
-                                    // normalize to simple keys: student/visitor -> general
-                                    if (strpos($ut, 'student') !== false || strpos($ut, 'visitor') !== false) {
-                                        $userTypesSet['general'] = true;
-                                    } elseif (strpos($ut, 'faculty') !== false) {
+                                    $ut = trim($alloc['user_type']);
+                                    $slots = (int)$alloc['allocated_slots'];
+                                    
+                                    // Map user type to simplified name
+                                    $utKey = 'General';
+                                    if (stripos($ut, 'faculty') !== false) {
+                                        $utKey = 'Faculty';
                                         $userTypesSet['faculty'] = true;
-                                    } elseif (strpos($ut, 'executive') !== false) {
+                                    } elseif (stripos($ut, 'executive') !== false) {
+                                        $utKey = 'Executive';
                                         $userTypesSet['executive'] = true;
-                                    } elseif (strpos($ut, 'guest') !== false) {
+                                    } elseif (stripos($ut, 'guest') !== false) {
+                                        $utKey = 'Guest';
                                         $userTypesSet['guest'] = true;
+                                    } else {
+                                        $userTypesSet['general'] = true;
                                     }
-                                    $allocationDetails[] = $alloc['user_type'] . ': ' . (int)$alloc['allocated_slots'];
+                                    
+                                    // Assign to car or motorcycle
+                                    if ($alloc['vehicle_type_id'] == 1) {
+                                        $carAlloc[$utKey] += $slots;
+                                    } else {
+                                        $motoAlloc[$utKey] += $slots;
+                                    }
                                 }
                             }
+
+                            // Calculate totals
+                            $carSlots = array_sum($carAlloc);
+                            $motorcycleSlots = array_sum($motoAlloc);
+                            $totalSlots = $carSlots + $motorcycleSlots;
+                            $parkedCount = (int)$row['parked_car_count'] + (int)$row['parked_motorcycle_count'];
+                            $available = $totalSlots - $parkedCount;
+                            $status = $available > 0 ? 'Available' : 'Full';
 
                             // Prepare data attributes
                             $userTypes = !empty($userTypesSet) ? implode(',', array_keys($userTypesSet)) : '';
@@ -248,13 +260,7 @@ $distribution = $model->getSlotDistribution();
                             if ($row['supports_motorcycle']) $vehicles[] = 'motorcycle';
                             $vehiclesAttr = implode(',', $vehicles);
 
-                            // Calculate totals
-                            $totalSlots = $carSlots + $motorcycleSlots;
-                            $parkedCount = (int)$row['parked_car_count'] + (int)$row['parked_motorcycle_count'];
-                            $available = $totalSlots - $parkedCount;
-                            $status = $available > 0 ? 'Available' : 'Full';
-
-                            // image path safe output
+                            // Safe output
                             $imgSafe = htmlspecialchars($imagePath, ENT_QUOTES, 'UTF-8');
                             $nameSafe = htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8');
                         ?>
@@ -267,29 +273,30 @@ $distribution = $model->getSlotDistribution();
                                 <div class="overlay">
                                     <h3><?php echo $nameSafe; ?></h3>
 
-                                    <p><strong>Vehicle Types:</strong>
-                                        <?php
-                                        $types = [];
-                                        if ($row['supports_car']) $types[] = '🚗 Car (' . $carSlots . ' slots)';
-                                        if ($row['supports_motorcycle']) $types[] = '🏍️ Motorcycle (' . $motorcycleSlots . ' slots)';
-                                        echo implode(', ', $types);
-                                        ?>
-                                    </p>
+                                    <div class="allocations-grid">
+                                        <!-- Car Column -->
+                                        <?php if ($row['supports_car']): ?>
+                                        <div class="alloc-column">
+                                            <div class="alloc-title">Cars: <?php echo $carSlots; ?></div>
+                                            <?php foreach ($carAlloc as $type => $count): ?>
+                                                <div class="alloc-row"><?php echo $type; ?>: <?php echo $count; ?></div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                        <?php endif; ?>
 
-                                    <p><strong>User Type Allocations:</strong><br>
-                                        <?php
-                                        if (!empty($allocationDetails)) {
-                                            echo '<small>' . implode('<br>', array_slice($allocationDetails, 0, 4)) . '</small>';
-                                            if (count($allocationDetails) > 4) {
-                                                echo '<br><small>+' . (count($allocationDetails) - 4) . ' more...</small>';
-                                            }
-                                        } else {
-                                            echo '<small>No allocations</small>';
-                                        }
-                                        ?>
-                                    </p>
+                                        <!-- Motorcycle Column -->
+                                        <?php if ($row['supports_motorcycle']): ?>
+                                        <div class="alloc-column">
+                                            <div class="alloc-title">Motors: <?php echo $motorcycleSlots; ?></div>
+                                            <?php foreach ($motoAlloc as $type => $count): ?>
+                                                <div class="alloc-row"><?php echo $type; ?>: <?php echo $count; ?></div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                        <?php endif; ?>
+                                    </div>
 
-                                    <p><strong>Occupancy:</strong>
+                                    <p class="occupancy-info">
+                                        <strong>Occupancy:</strong>
                                         <?php echo $parkedCount; ?> / <?php echo $totalSlots; ?>
                                         <span class="status-badge <?php echo strtolower($status); ?>">
                                             <?php echo htmlspecialchars($status); ?>
@@ -309,7 +316,6 @@ $distribution = $model->getSlotDistribution();
                         <?php
                         endwhile;
                         ?>
-
                     </div>
                 </div>
 

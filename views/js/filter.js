@@ -12,42 +12,46 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function filterParkingSpaces() {
-        const parkingCards = document.querySelectorAll(".parking-container .parking-card:not(.add-card)");
-        let visibleCount = 0;
+    const parkingCards = document.querySelectorAll(".parking-container .parking-card:not(.add-card)");
+    const visibleIds = new Set();
+    const totalIds = new Set();
 
-        parkingCards.forEach(card => {
-            const name = normalize(card.dataset.name);
-            const userTypes = (card.dataset.userTypes || "")
-                .split(",")
-                .map(normalize)
-                .filter(v => v !== "");
-            const vehicles = (card.dataset.vehicles || "")
-                .split(",")
-                .map(normalize)
-                .filter(v => v !== "");
+    parkingCards.forEach(card => {
+        const name = normalize(card.dataset.name);
+        const userTypes = (card.dataset.userTypes || "")
+            .split(",")
+            .map(normalize)
+            .filter(v => v !== "");
+        const vehicles = (card.dataset.vehicles || "")
+            .split(",")
+            .map(normalize)
+            .filter(v => v !== "");
 
-            const matchesSearch =
-                currentSearchTerm === "" ||
-                name.includes(currentSearchTerm);
+        const matchesSearch =
+            currentSearchTerm === "" ||
+            name.includes(currentSearchTerm);
 
-            const matchesType =
-                currentTypeFilter === "all" ||
-                userTypes.includes(normalize(currentTypeFilter));
+        const matchesType =
+            currentTypeFilter === "all" ||
+            userTypes.includes(normalize(currentTypeFilter));
 
-            const matchesVehicle =
-                currentVehicleFilter === "all" ||
-                vehicles.includes(normalize(currentVehicleFilter));
+        const matchesVehicle =
+            currentVehicleFilter === "all" ||
+            vehicles.includes(normalize(currentVehicleFilter));
 
-            if (matchesSearch && matchesType && matchesVehicle) {
-                card.style.display = "";
-                visibleCount++;
-            } else {
-                card.style.display = "none";
-            }
-        });
+        totalIds.add(card.dataset.id);
 
-        updateVisibleCount(visibleCount, parkingCards.length);
-    }
+        if (matchesSearch && matchesType && matchesVehicle) {
+            card.style.display = "";
+            visibleIds.add(card.dataset.id);
+        } else {
+            card.style.display = "none";
+        }
+    });
+
+    updateVisibleCount(visibleIds.size, totalIds.size);
+}
+
 
     function updateVisibleCount(visible, total) {
         const countElement = document.getElementById("spaces-count");
@@ -77,7 +81,8 @@ document.addEventListener("DOMContentLoaded", () => {
             filterParkingSpaces();
         });
     }
-
     // Run once after everything is rendered
     setTimeout(filterParkingSpaces, 300);
 });
+
+
