@@ -1,6 +1,7 @@
 /**
- * QR Scanner Module
- * Handles QR code scanning for vehicle entry and exit
+ * qr_scanner.js - QR Scanner & Business Logic
+ * Handles QR code scanning, vehicle processing, and parking assignments
+ * UI modal controls are handled in qr_modals.js
  */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -28,41 +29,39 @@ document.addEventListener("DOMContentLoaded", () => {
     // INITIALIZATION
     // ============================
 
-    initializeScannerControls();
+    initializeScanButton();
     initializeExitModalHandlers();
     initializeParkingSpaceSelection();
+    setupCleanupHandlers();
 
     // ============================
-    // SCANNER CONTROLS
+    // SCAN BUTTON INITIALIZATION
     // ============================
 
-    function initializeScannerControls() {
-        // Open scan modal button
+    function initializeScanButton() {
         const openScanBtn = document.getElementById("open-scan-modal-btn");
+        
         if (openScanBtn) {
             openScanBtn.addEventListener("click", (e) => {
                 e.preventDefault();
-                openScanModal();
+                console.log("[Scanner] Scan button clicked");
+                
+                // Use modal UI function from qr_modals.js
+                if (typeof window.openScanModal === "function") {
+                    window.openScanModal();
+                }
             });
+            console.log("[Scanner] Scan button listener attached");
+        } else {
+            console.warn("[Scanner] open-scan-modal-btn not found in DOM");
         }
+    }
 
-        // Close buttons
-        const closeBtns = elements.scanModal?.querySelectorAll(".close-btn");
-        closeBtns?.forEach(btn => {
-            btn.addEventListener("click", closeScanModal);
-        });
+    // ============================
+    // CLEANUP HANDLERS
+    // ============================
 
-        // Start/Stop buttons
-        elements.startBtn?.addEventListener("click", startScanning);
-        elements.stopBtn?.addEventListener("click", stopScanning);
-
-        // Click outside modal to close
-        elements.scanModal?.addEventListener("click", (e) => {
-            if (e.target === elements.scanModal) {
-                closeScanModal();
-            }
-        });
-
+    function setupCleanupHandlers() {
         // Cleanup on page visibility change
         document.addEventListener("visibilitychange", () => {
             if (document.hidden && isScanning) {
@@ -70,43 +69,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
+        // Cleanup on page unload
         window.addEventListener("beforeunload", stopQrScanner);
-    }
-
-    function openScanModal() {
-        if (!elements.scanModal) return;
-
-        elements.scanModal.style.display = "flex";
-        elements.resultContainer.style.display = "none";
-        elements.resultText.textContent = "Processing...";
-        elements.stopBtn.style.display = "none";
-        elements.startBtn.style.display = "inline-block";
-
-        console.log("[QR] Scan modal opened");
-    }
-
-    function closeScanModal() {
-        if (!elements.scanModal) return;
-
-        elements.scanModal.style.display = "none";
-        stopQrScanner();
-        console.log("[QR] Scan modal closed");
-    }
-
-    function startScanning() {
-        elements.startBtn.style.display = "none";
-        elements.stopBtn.style.display = "inline-block";
-
-        const placeholder = document.getElementById("placeholder-canvas");
-        if (placeholder) placeholder.style.display = "none";
-
-        startQrScanner();
-    }
-
-    function stopScanning() {
-        elements.stopBtn.style.display = "none";
-        elements.startBtn.style.display = "inline-block";
-        stopQrScanner();
     }
 
     // ============================
@@ -129,11 +93,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function startQrScanner() {
         if (isScanning) {
-            console.warn("[QR] Scanner already running");
+            console.warn("[Scanner] Scanner already running");
             return;
         }
 
-        console.log("[QR] Starting scanner...");
+        console.log("[Scanner] Starting scanner...");
         isScanning = true;
         isProcessing = false;
         videoElem = createVideoElement();
@@ -160,18 +124,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     qrScanner.start()
                         .then(() => {
-                            console.log("[QR] Scanner started successfully");
+                            console.log("[Scanner] Scanner started successfully");
                             elements.resultContainer.style.display = "none";
                         })
                         .catch(err => {
-                            console.error("[QR] Camera access denied:", err);
+                            console.error("[Scanner] Camera access denied:", err);
                             showError("Unable to access camera. Please allow permissions.");
                             isScanning = false;
                         });
                 });
             })
             .catch(err => {
-                console.error("[QR] Import failed:", err);
+                console.error("[Scanner] Import failed:", err);
                 showError("Failed to load QR scanner");
                 isScanning = false;
             });
@@ -180,7 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function stopQrScanner() {
         if (!isScanning) return;
 
-        console.log("[QR] Stopping scanner...");
+        console.log("[Scanner] Stopping scanner...");
         isScanning = false;
         isProcessing = false;
 
@@ -201,18 +165,22 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // Expose scanner control functions globally
+    window.startQrScanner = startQrScanner;
+    window.stopQrScanner = stopQrScanner;
+
     // ============================
     // QR CODE PROCESSING
     // ============================
 
     async function handleQrCodeDetected(result) {
         if (isProcessing) {
-            console.log("[QR] Already processing, ignoring duplicate scan");
+            console.log("[Scanner] Already processing, ignoring duplicate scan");
             return;
         }
 
         isProcessing = true;
-        console.log("[QR] QR Code detected:", result.data);
+        console.log("[Scanner] QR Code detected:", result.data);
 
         if (qrScanner) qrScanner.stop();
 
@@ -237,22 +205,24 @@ document.addEventListener("DOMContentLoaded", () => {
             const contentType = response.headers.get("content-type");
             if (!contentType?.includes("application/json")) {
                 const text = await response.text();
-                console.error("[QR] Non-JSON response:", text);
+                console.error("[Scanner] Non-JSON response:", text);
                 throw new Error("Server returned invalid response");
             }
 
             const data = await response.json();
-            console.log("[QR] Server response:", data);
+            console.log("[Scanner] Server response:", data);
 
             if (data.success && data.vehicle) {
                 await processVehicleData(data.vehicle);
             } else {
                 showError(data.message || "Vehicle not found");
-                setTimeout(closeScanModal, 2000);
+                setTimeout(() => {
+                    if (window.closeScanModal) window.closeScanModal();
+                }, 2000);
             }
 
         } catch (error) {
-            console.error("[QR] Error processing QR code:", error);
+            console.error("[Scanner] Error processing QR code:", error);
             showError("Server error. Please try again.");
             setTimeout(() => {
                 isProcessing = false;
@@ -265,10 +235,10 @@ document.addEventListener("DOMContentLoaded", () => {
         currentVehicleData = vehicle;
         const status = vehicle.status.toLowerCase();
 
-        // Close QR modal
-        closeScanModal();
+        // Close QR modal using UI function
+        if (window.closeScanModal) window.closeScanModal();
 
-        console.log(`[QR] Vehicle status: ${status}`);
+        console.log(`[Scanner] Vehicle status: ${status}`);
 
         // Route based on vehicle status
         if (status === 'parked' || status === 'waiting') {
@@ -307,7 +277,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 isProcessing = false;
             }
         } catch (error) {
-            console.error('[QR] Error getting exit info:', error);
+            console.error('[Scanner] Error getting exit info:', error);
             alert('❌ Error processing vehicle exit');
             isProcessing = false;
         }
@@ -336,7 +306,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Show exit modal
         if (elements.exitModal) {
             elements.exitModal.style.display = 'flex';
-            console.log('[QR] Exit confirmation modal shown');
+            console.log('[Scanner] Exit confirmation modal shown');
         }
 
         isProcessing = false;
@@ -352,48 +322,39 @@ document.addEventListener("DOMContentLoaded", () => {
         // Cancel buttons in exit modal
         const exitCancelBtns = elements.exitModal?.querySelectorAll('.close-btn, .close-modal');
         exitCancelBtns?.forEach(btn => {
-            btn.addEventListener('click', closeExitModal);
+            btn.addEventListener('click', () => {
+                if (window.closeExitModal) window.closeExitModal();
+                isProcessing = false;
+            });
         });
 
         // Click outside to close
         elements.exitModal?.addEventListener('click', (e) => {
             if (e.target === elements.exitModal) {
-                closeExitModal();
+                if (window.closeExitModal) window.closeExitModal();
+                isProcessing = false;
             }
         });
 
         // Success modal close buttons
         const successCloseBtns = elements.exitSuccessModal?.querySelectorAll('.close-btn, .close-modal');
         successCloseBtns?.forEach(btn => {
-            btn.addEventListener('click', closeExitSuccessModal);
+            btn.addEventListener('click', () => {
+                if (window.closeExitSuccessModal) window.closeExitSuccessModal();
+                // Optionally reopen scan modal
+                if (window.openScanModal) window.openScanModal();
+            });
         });
 
         // Click outside success modal to close
         elements.exitSuccessModal?.addEventListener('click', (e) => {
             if (e.target === elements.exitSuccessModal) {
-                closeExitSuccessModal();
+                if (window.closeExitSuccessModal) window.closeExitSuccessModal();
+                if (window.openScanModal) window.openScanModal();
             }
         });
 
-        console.log('[QR] Exit modal handlers initialized');
-    }
-
-    function closeExitModal() {
-        if (elements.exitModal) {
-            elements.exitModal.style.display = 'none';
-            isProcessing = false;
-            console.log('[QR] Exit modal closed');
-        }
-    }
-
-    function closeExitSuccessModal() {
-        if (elements.exitSuccessModal) {
-            elements.exitSuccessModal.style.display = 'none';
-            console.log('[QR] Exit success modal closed');
-            
-            // Optionally reopen scan modal for next vehicle
-            openScanModal();
-        }
+        console.log('[Scanner] Exit modal handlers initialized');
     }
 
     async function confirmVehicleExit() {
@@ -428,13 +389,15 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await response.json();
 
             if (data.success) {
-                // Close exit confirmation modal
-                closeExitModal();
+                // Close exit confirmation modal using UI function
+                if (window.closeExitModal) window.closeExitModal();
 
-                // Show success modal
-                showExitSuccessModal(data);
+                // Show success modal using UI function
+                if (window.showExitSuccessModal) {
+                    window.showExitSuccessModal(data);
+                }
 
-                console.log('[QR] Vehicle exit successful');
+                console.log('[Scanner] Vehicle exit successful');
             } else {
                 alert('❌ ' + (data.message || 'Failed to process exit'));
                 
@@ -445,7 +408,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
         } catch (error) {
-            console.error('[QR] Error confirming exit:', error);
+            console.error('[Scanner] Error confirming exit:', error);
             alert('❌ Error processing exit. Please try again.');
             
             // Re-enable button
@@ -453,18 +416,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 confirmBtn.disabled = false;
                 confirmBtn.innerHTML = '<i class="fas fa-check-circle"></i> Confirm Exit';
             }
-        }
-    }
-
-    function showExitSuccessModal(data) {
-        // Populate success modal - FIX: access exit_summary object
-        document.getElementById('success-plate-number').textContent = data.exit_summary?.plate_number || 'N/A';
-        document.getElementById('success-exit-time').textContent = data.exit_summary?.exit_time || new Date().toLocaleString();
-        document.getElementById('success-total-duration').textContent = data.exit_summary?.total_duration || 'N/A';
-
-        // Show success modal
-        if (elements.exitSuccessModal) {
-            elements.exitSuccessModal.style.display = 'flex';
         }
     }
 
@@ -492,7 +443,7 @@ document.addEventListener("DOMContentLoaded", () => {
         initializeParkingFilters();
 
         isProcessing = false;
-        console.log('[QR] Vehicle entry modal shown');
+        console.log('[Scanner] Vehicle entry modal shown');
     }
 
     function showVanillaModal(modal) {
@@ -515,7 +466,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ============================
-    // PARKING SPACE SELECTION
+    // PARKING SPACE FILTERS
     // ============================
 
     function initializeParkingFilters() {
@@ -566,10 +517,23 @@ document.addEventListener("DOMContentLoaded", () => {
         filterSpaces();
     }
 
+    // ============================
+    // PARKING SPACE SELECTION
+    // ============================
+
     function initializeParkingSpaceSelection() {
         document.addEventListener('click', (e) => {
             const btn = e.target.closest('.select-parking-btn');
             if (!btn) return;
+
+            // Prevent duplicate processing
+            e.stopImmediatePropagation();
+            e.preventDefault();
+
+            if (btn.hasAttribute('data-processing')) {
+                console.log('[Scanner] Button already being processed');
+                return;
+            }
 
             const parkingId = btn.dataset.id;
             const parkingName = btn.dataset.name;
@@ -579,128 +543,115 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            if (confirm(`Assign ${currentVehicleData.plate_number} to ${parkingName}?`)) {
-                assignVehicleToParking(parkingId, currentVehicleData);
-            }
+            console.log('[Scanner] Assigning vehicle to parking:', parkingName);
+
+            // Mark as processing
+            btn.setAttribute('data-processing', 'true');
+
+            // Assign immediately (no confirmation as per original qr_modals.js)
+            assignVehicleToParking(parkingId, parkingName, currentVehicleData);
+
+            // Remove processing flag after delay
+            setTimeout(() => {
+                btn.removeAttribute('data-processing');
+            }, 1000);
         });
     }
 
-// Debug: Check what's happening when parking button is clicked
-document.addEventListener('click', function(e) {
-    if (e.target.closest('.select-parking-btn')) {
-        console.log('=== PARKING BUTTON CLICK DEBUG ===');
-        console.log('Button clicked:', e.target.closest('.select-parking-btn'));
-        console.log('Current vehicle data:', window.qrScanner?.currentVehicleData);
-        console.log('Stack trace:', new Error().stack);
-    }
-}, true);
+    // ============================
+    // PARKING ASSIGNMENT
+    // ============================
 
-async function assignVehicleToParking(parkingId, vehicleData) {
-    console.log('=== assignVehicleToParking CALLED ===');
-    console.log('parkingId:', parkingId);
-    console.log('vehicleData:', vehicleData);
-    
-    try {
-        const formData = new FormData();
-        formData.append('action', 'assign_parking');
-        formData.append('parking_id', parkingId);
-        formData.append('vehicle_id', vehicleData.id || vehicleData.vehicle_id);
-        formData.append('plate_number', vehicleData.plate_number);
-
-        console.log('Sending request to assign_parking.php...');
-
-        const response = await fetch('../ajax/assign_parking.php', {
-            method: 'POST',
-            body: formData
-        });
-
-        console.log('Response status:', response.status);
-        const data = await response.json();
-        console.log('Response data:', data);
-
-        if (data.success) {
-            console.log('Assignment SUCCESS - attempting to show modal');
-            
-            // Get parking space name
-            const parkingBtn = document.querySelector(`.select-parking-btn[data-id="${parkingId}"]`);
-            const parkingName = parkingBtn ? parkingBtn.getAttribute('data-name') : 'Parking Space';
-            console.log('Parking name:', parkingName);
-            
-            // DIRECT MODAL SHOW - no function calls
-            const successModal = document.getElementById('assignment-success-modal');
-            console.log('Success modal element:', successModal);
-            
-            if (successModal) {
-                console.log('Modal found, populating content...');
-                
-                // Populate content directly
-                const plateEl = document.getElementById('success-assigned-plate');
-                const nameEl = document.getElementById('success-parking-name');
-                const timeEl = document.getElementById('success-assigned-time');
-                
-                if (plateEl) {
-                    plateEl.textContent = vehicleData.plate_number;
-                    console.log('Plate element updated');
-                }
-                if (nameEl) {
-                    nameEl.textContent = parkingName;
-                    console.log('Name element updated');
-                }
-                if (timeEl) {
-                    timeEl.textContent = new Date().toLocaleString();
-                    console.log('Time element updated');
-                }
-                
-                // SHOW THE MODAL
-                successModal.style.display = 'flex';
-                console.log('Modal display set to flex');
-                
-                // Add close handlers
-                const closeBtn = successModal.querySelector('.close-btn');
-                const okBtn = successModal.querySelector('.close-modal');
-                
-                if (closeBtn && okBtn) {
-                    const closeHandler = () => {
-                        successModal.style.display = 'none';
-                        location.reload();
-                    };
-                    
-                    closeBtn.onclick = closeHandler;
-                    okBtn.onclick = closeHandler;
-                    console.log('Close handlers attached');
-                }
-                
-                // Auto refresh
-                setTimeout(() => {
-                    console.log('Auto-refreshing page...');
-                    location.reload();
-                }, 3000);
-                
-            } else {
-                console.error('Success modal not found in DOM');
-                alert('✅ Vehicle successfully assigned to parking space!');
-                location.reload();
-            }
-
-            // Close vehicle info modal
-            console.log('Closing vehicle info modal...');
-            const vehicleModal = document.getElementById('vehicleInfoModal');
-            if (vehicleModal) {
-                vehicleModal.style.display = 'none';
-                console.log('Vehicle modal closed');
-            }
-
-            currentVehicleData = null;
-
-        } else {
-            console.log('Assignment FAILED - showing error');
-            alert('❌ ' + (data.message || 'Failed to assign parking space'));
+    async function assignVehicleToParking(parkingId, parkingName, vehicleData) {
+        console.log('[Scanner] Starting assignment:', { parkingId, parkingName, vehicleData });
+        
+        // Show loading state
+        const btn = document.querySelector(`.select-parking-btn[data-id="${parkingId}"]`);
+        const originalText = btn?.innerHTML;
+        if (btn) {
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Assigning...';
+            btn.disabled = true;
         }
-    } catch (error) {
-        console.error('[QR] Error assigning parking:', error);
-        alert('❌ Error assigning parking space. Please try again.');
+
+        try {
+            // Use JSON format like original qr_modals.js
+            const response = await fetch('../controller/assign_parking.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    parking_space_id: parkingId,
+                    plate_number: vehicleData.plate_number
+                })
+            });
+
+            console.log('[Scanner] Response status:', response.status);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('[Scanner] Assignment response:', data);
+
+            if (data.success) {
+                console.log('[Scanner] Assignment successful');
+                
+                // Close vehicle info modal using UI function
+                if (window.closeVehicleInfoModal) {
+                    window.closeVehicleInfoModal();
+                }
+
+                // Close parking selection modal if using Bootstrap
+                const parkingModal = bootstrap.Modal.getInstance(document.getElementById('parkingSelectionModal'));
+                if (parkingModal) {
+                    parkingModal.hide();
+                }
+
+                // Show success modal using UI function
+                if (window.showAssignmentSuccessModal) {
+                    window.showAssignmentSuccessModal({
+                        plate_number: vehicleData.plate_number,
+                        parking_name: parkingName,
+                        assigned_time: new Date().toLocaleString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric',
+                            hour: 'numeric',
+                            minute: '2-digit',
+                            hour12: true
+                        })
+                    });
+                }
+
+                currentVehicleData = null;
+
+            } else {
+                console.log('[Scanner] Assignment failed:', data.message);
+                
+                // Show error using alert like original
+                alert('Error: ' + (data.message || 'Failed to assign vehicle'));
+                
+                // Restore button
+                if (btn) {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            }
+        } catch (error) {
+            console.error('[Scanner] Assignment error:', error);
+            
+            // Show error using alert like original
+            alert('An error occurred while assigning the vehicle');
+
+            // Restore button
+            if (btn) {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
     }
-}
 
     // ============================
     // UTILITY FUNCTIONS
@@ -711,11 +662,9 @@ async function assignVehicleToParking(parkingId, vehicleData) {
         elements.resultContainer.style.display = "block";
     }
 
-    // Expose necessary functions globally
-    window.openScanModal = openScanModal;
-    window.closeScanModal = closeScanModal;
-    window.startQrScanner = startQrScanner;
-    window.stopQrScanner = stopQrScanner;
+    // ============================
+    // INITIALIZATION COMPLETE
+    // ============================
 
-    console.log("[QR] Scanner module initialized successfully");
+    console.log("[Scanner] QR Scanner module initialized successfully");
 });
