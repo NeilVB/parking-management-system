@@ -499,6 +499,118 @@ body {
     margin-top: 2rem;
 }
 
+/* User Management */
+
+.search-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#user-search {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+#user-type-filter {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.users-table {
+    width: 100%;  /* Fixed width */
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+/* Fixed column widths */
+.users-table th:nth-child(1), 
+.users-table td:nth-child(1) { /* ID */
+    width: 5%;
+}
+
+.users-table th:nth-child(2),
+.users-table td:nth-child(2) { /* Name */
+    width: 20%;
+}
+
+.users-table th:nth-child(3),
+.users-table td:nth-child(3) { /* Email */
+    width: 20%;
+}
+
+.users-table th:nth-child(4),
+.users-table td:nth-child(4) { /* Phone */
+    width: 15%;
+}
+
+.users-table th:nth-child(5),
+.users-table td:nth-child(5) { /* User Type */
+    width: 15%;
+}
+
+.users-table th:nth-child(6),
+.users-table td:nth-child(6) { /* Registered Date */
+    width: 15%;
+}
+
+.users-table th:nth-child(7),
+.users-table td:nth-child(7) { /* Actions */
+    width: 10%;
+}
+
+/* Text overflow handling */
+.users-table th,
+.users-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.users-table tr:hover {
+    background-color: #f5f5f5;
+}
+
+.btn-view,
+.btn-edit,
+.btn-delete {
+    padding: 6px 10px;
+    margin: 0 2px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-view {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.btn-edit {
+    background-color: #ffc107;
+    color: white;
+}
+
+.btn-delete {
+    background-color: #dc3545;
+    color: white;
+}
+
 /* --- Footer --- */
 .footer {
     position: fixed;

@@ -320,13 +320,64 @@ $distribution = $model->getSlotDistribution();
                 <div class="page-header">
                     <h3><i class="fas fa-users"></i> Users Management</h3>
                 </div>
-                <div class="admin-info-card">
-                    <h4><i class="fas fa-user-shield"></i> Current Admin Session</h4>
-                    <p><strong>Name:</strong> <?php echo htmlspecialchars($firstname . ' ' . $lastname); ?></p>
-                    <p><strong>Email:</strong> <?php echo htmlspecialchars($email); ?></p>
-                    <p><strong>Role:</strong> <?php echo htmlspecialchars($user_type); ?></p>
-                    <p><strong>Admin ID:</strong> #<?php echo htmlspecialchars($admin_id); ?></p>
-                    <p><strong>Session Started:</strong> <?php echo date('Y-m-d H:i:s'); ?></p>
+                <div class="search-container">
+                    <input type="text" id="user-search" placeholder="Search users by name, email, or type...">
+                    <select id="user-type-filter">
+                        <option value="">All User Types</option>
+                        <?php
+                        $typeQuery = "SELECT * FROM user_type_table ORDER BY user_type_id";
+                        $typeResult = $conn->query($typeQuery);
+                        while($type = $typeResult->fetch_assoc()): ?>
+                            <option value="<?php echo $type['user_type_id']; ?>">
+                                <?php echo htmlspecialchars($type['user_type']); ?>
+                            </option>
+                        <?php endwhile; ?>
+                    </select>
+                </div>
+
+                <!-- Users Table -->
+                <div class="table-container">
+                    <table class="users-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>User Type</th>
+                                <th>Registered Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body">
+                            <?php
+                            $query = "SELECT u.*, ut.user_type 
+                                    FROM users_table u 
+                                    JOIN user_type_table ut ON u.user_type_id = ut.user_type_id 
+                                    ORDER BY u.user_id";
+                            $result = $conn->query($query);
+
+                            while ($user = $result->fetch_assoc()):
+                            ?>
+                            <tr data-type-id="<?php echo $user['user_type_id']; ?>">
+                                <td><?php echo htmlspecialchars($user['user_id']); ?></td>
+                                <td><?php echo htmlspecialchars($user['firstname'] . ' ' . $user['lastname']); ?></td>
+                                <td><?php echo htmlspecialchars($user['email']); ?></td>
+                                <td>0<?php echo htmlspecialchars($user['phone_number']); ?></td>
+                                <td><?php echo htmlspecialchars($user['user_type']); ?></td>
+                                <td><?php echo date('M d, Y', strtotime($user['created_at'])); ?></td>
+                                <td>
+                                    <button class="btn-edit" data-id="<?php echo $user['user_id']; ?>">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-delete" data-id="<?php echo $user['user_id']; ?>">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <?php endwhile; ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -617,6 +668,8 @@ $distribution = $model->getSlotDistribution();
 <script src="../views/js/deleteMode.js"></script>
 <script src="../views/js/init.js"></script>
 <script src="../views/js/filter.js"></script>
+<script src="../views/js/users.js"></script>
+<script src="../views/js/user-management.js"></script>
 
 </body>
 </html>
