@@ -131,19 +131,48 @@ $distribution = $model->getSlotDistribution();
                     <div class="map-container">
                         <img src="../assets/nu-map.png" alt="NU Laguna Park Space Map" class="map-image">
                         <div class="parking-slots-list">
-                            
+
                             <!-- Bottom Right: Display Location with Available Spaces count -->
                             <h4><i class="fas fa-list"></i> Parking Areas Distribution</h4>
-                            <?php if (!empty($distribution)): ?>
-                                <?php foreach ($distribution as $slot): ?>
-                                    <div class="slot-item">
-                                        <span class="slot-count"><?php echo $slot['slots']; ?></span>
-                                        <span class="slot-name"><?php echo htmlspecialchars($slot['location']); ?></span>
-                                    </div>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <p>No parking areas found.</p>
-                            <?php endif; ?>                          
+
+                            <!-- Filter Dropdowns -->
+                            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                                <!-- User Type Filter -->
+                                <div class="filter-container">
+                                    <select id="distribution-type-filter" class="filter-select" 
+                                            style="padding: 10px 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; cursor: pointer; background: white;">
+                                        <option value="all">All Types</option>
+                                        <option value="general">General</option>
+                                        <option value="faculty">Faculty</option>
+                                        <option value="executive">Executive</option>
+                                        <option value="guest">Guest</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Vehicle Type Filter -->
+                                <div class="filter-container">
+                                    <select id="distribution-vehicle-filter" class="filter-select" 
+                                            style="padding: 10px 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; cursor: pointer; background: white;">
+                                        <option value="all">All Vehicles</option>
+                                        <option value="car">Car</option>
+                                        <option value="motorcycle">Motorcycle</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Distribution List -->
+                            <div id="distribution-container">
+                                <?php if (!empty($distribution)): ?>
+                                    <?php foreach ($distribution as $slot): ?>
+                                        <div class="slot-item">
+                                            <span class="slot-count"><?php echo $slot['slots']; ?></span>
+                                            <span class="slot-name"><?php echo htmlspecialchars($slot['location']); ?></span>
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <p>No parking areas found.</p>
+                                <?php endif; ?>
+                            </div>                      
 
                         </div>
                     </div>
@@ -187,8 +216,8 @@ $distribution = $model->getSlotDistribution();
                             <select id="vehicle-filter" class="filter-select" 
                                     style="padding: 10px 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; cursor: pointer; background: white;">
                                 <option value="all">All Vehicles</option>
-                                <option value="car">Car Only</option>
-                                <option value="motorcycle">Motorcycle Only</option>
+                                <option value="car">Car</option>
+                                <option value="motorcycle">Motorcycle</option>
                             </select>
                         </div>
                         

@@ -1,112 +1,51 @@
 <?php
-session_start();
-
-// Set JSON header first
 header('Content-Type: application/json');
 
-// Check database file exists
-if (!file_exists('../models/Database.php')) {
-    echo json_encode(['success' => false, 'message' => 'Database config not found']);
-    exit;
-}
-
-require_once '../models/Database.php';
+// Suppress errors in production - log them instead
+error_reporting(0);
+ini_set('display_errors', 0);
 
 try {
-    // Check if Database class exists
-    if (!class_exists('Database')) {
-        echo json_encode(['success' => false, 'message' => 'Database class not found']);
-        exit;
-    }
+    require_once __DIR__ . '/../models/Database.php';
+    require_once __DIR__ . '/../models/ParkingSpace.php';
 
+    // Get and validate filter parameters
+    $userType = $_GET['userType'] ?? 'all';
+    $vehicleType = $_GET['vehicleType'] ?? 'all';
+
+    $validUserTypes = ['all', 'general', 'faculty', 'executive', 'guest'];
+    $validVehicleTypes = ['all', 'car', 'motorcycle'];
+
+    if (!in_array($userType, $validUserTypes)) $userType = 'all';
+    if (!in_array($vehicleType, $validVehicleTypes)) $vehicleType = 'all';
+
+    // Get data
     $database = new Database();
     $db = $database->getConnection();
-
+    
     if (!$db) {
-        echo json_encode(['success' => false, 'message' => 'Failed to connect to database']);
-        exit;
-    }
-
-    // Get available parking spaces based on capacity
-    $query = "SELECT 
-                id,
-                name,
-                supports_car,
-                supports_motorcycle,
-                is_general,
-                is_faculty,
-                is_executive,
-                is_guest,
-                max_car_slots,
-                max_motorcycle_slots,
-                parked_car_count,
-                parked_motorcycle_count,
-                (max_car_slots - parked_car_count) as available_car_slots,
-                (max_motorcycle_slots - parked_motorcycle_count) as available_motorcycle_slots
-              FROM parking_spaces
-              WHERE (max_car_slots - parked_car_count > 0) 
-                 OR (max_motorcycle_slots - parked_motorcycle_count > 0)
-              ORDER BY name";
-
-    $stmt = $db->prepare($query);
-    
-    if (!$stmt) {
-        echo json_encode(['success' => false, 'message' => 'Query preparation failed']);
-        exit;
+        throw new Exception('Database connection failed');
     }
     
-    $stmt->execute();
-
-    $spaces = [];
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        // Determine what vehicle types this space supports
-        $supported_types = [];
-        if ($row['supports_car'] == 1 && $row['available_car_slots'] > 0) {
-            $supported_types[] = 'Car';
-        }
-        if ($row['supports_motorcycle'] == 1 && $row['available_motorcycle_slots'] > 0) {
-            $supported_types[] = 'Motorcycle';
-        }
-
-        // Only add if there are available slots
-        if (count($supported_types) > 0) {
-            $spaces[] = [
-                'id' => (int)$row['id'],
-                'name' => $row['name'],
-                'vehicle_type' => implode(' / ', $supported_types),
-                'is_general' => $row['is_general'] == 1,
-                'is_faculty' => $row['is_faculty'] == 1,
-                'is_executive' => $row['is_executive'] == 1,
-                'is_guest' => $row['is_guest'] == 1,
-                'available_car_slots' => (int)$row['available_car_slots'],
-                'available_motorcycle_slots' => (int)$row['available_motorcycle_slots']
-            ];
-        }
-    }
-
-    if (count($spaces) > 0) {
-        echo json_encode([
-            'success' => true,
-            'spaces' => $spaces,
-            'count' => count($spaces)
-        ]);
-    } else {
-        echo json_encode([
-            'success' => false,
-            'message' => 'No available parking spaces',
-            'spaces' => []
-        ]);
-    }
-
-} catch (PDOException $e) {
+    $parkingSpace = new ParkingSpace($db);
+    $distribution = $parkingSpace->getSlotDistribution($userType, $vehicleType);
+    
+    // Success response
     echo json_encode([
-        'success' => false,
-        'message' => 'Database error: ' . $e->getMessage()
+        'success' => true,
+        'distribution' => $distribution,
+        'filters' => [
+            'userType' => $userType,
+            'vehicleType' => $vehicleType
+        ]
     ]);
+    
 } catch (Exception $e) {
+    // Error response
+    http_response_code(500);
     echo json_encode([
         'success' => false,
-        'message' => 'Error: ' . $e->getMessage()
+        'message' => $e->getMessage(),
+        'distribution' => []
     ]);
 }
-?>

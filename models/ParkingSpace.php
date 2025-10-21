@@ -70,23 +70,17 @@ class ParkingSpace
     }
 
     /**
-     * Get distribution of parking slots by location with optional filters.
-     * Returns: array of ['location' => string, 'slots' => int]
+     * Get distribution of AVAILABLE parking slots by location with optional filters.
+     * Returns: array of ['location' => string, 'slots' => int (available)]
      */
     public function getSlotDistribution($userTypeFilter = 'all', $vehicleTypeFilter = 'all')
     {
         $distribution = [];
 
-        // Base query
-        $query = "
-            SELECT 
-                ps.name,
-                SUM(psa.allocated_slots) AS total_slots
-            FROM parking_spaces ps
-            LEFT JOIN parking_slot_allocations psa 
-                ON ps.id = psa.parking_space_id
-            WHERE 1=1
-        ";
+        // Build WHERE conditions for filters
+        $whereConditions = ["1=1"];
+        $params = [];
+        $types = "";
 
         // Apply user type filter
         if ($userTypeFilter !== 'all') {
@@ -98,7 +92,9 @@ class ParkingSpace
             ];
             
             if (isset($userTypeMap[$userTypeFilter])) {
-                $query .= " AND psa.user_type_id = " . $userTypeMap[$userTypeFilter];
+                $whereConditions[] = "psa.user_type_id = ?";
+                $params[] = $userTypeMap[$userTypeFilter];
+                $types .= "i";
             }
         }
 
@@ -110,25 +106,62 @@ class ParkingSpace
             ];
             
             if (isset($vehicleTypeMap[$vehicleTypeFilter])) {
-                $query .= " AND psa.vehicle_type_id = " . $vehicleTypeMap[$vehicleTypeFilter];
+                $whereConditions[] = "psa.vehicle_type_id = ?";
+                $params[] = $vehicleTypeMap[$vehicleTypeFilter];
+                $types .= "i";
             }
         }
 
-        $query .= "
+        $whereClause = implode(" AND ", $whereConditions);
+
+        // Query to get total allocated slots and occupied slots per location
+        $query = "
+            SELECT 
+                ps.id,
+                ps.name,
+                SUM(psa.allocated_slots) AS total_slots,
+                COALESCE((
+                    SELECT COUNT(*)
+                    FROM parking_logs pl
+                    JOIN vehicles_table v ON pl.vehicle_id = v.vehicle_id
+                    WHERE pl.parking_space_id = ps.id
+                    AND pl.status = 'Parked'
+                    " . ($vehicleTypeFilter !== 'all' && isset($vehicleTypeMap[$vehicleTypeFilter]) ? 
+                        "AND v.vehicle_type_id = " . $vehicleTypeMap[$vehicleTypeFilter] : "") . "
+                ), 0) AS occupied_slots
+            FROM parking_spaces ps
+            LEFT JOIN parking_slot_allocations psa 
+                ON ps.id = psa.parking_space_id
+            WHERE $whereClause
             GROUP BY ps.id, ps.name
             HAVING total_slots > 0
             ORDER BY ps.name
         ";
 
-        $result = $this->conn->query($query);
+        if (!empty($params)) {
+            $stmt = $this->conn->prepare($query);
+            $stmt->bind_param($types, ...$params);
+            $stmt->execute();
+            $result = $stmt->get_result();
+        } else {
+            $result = $this->conn->query($query);
+        }
 
         if ($result) {
             while ($row = $result->fetch_assoc()) {
+                $totalSlots = (int) $row['total_slots'];
+                $occupiedSlots = (int) $row['occupied_slots'];
+                $availableSlots = max(0, $totalSlots - $occupiedSlots);
+
                 $distribution[] = [
                     'location' => $row['name'],
-                    'slots' => (int) $row['total_slots']
+                    'slots' => $availableSlots  // Return AVAILABLE slots, not total
                 ];
             }
+        }
+
+        if (isset($stmt)) {
+            $stmt->close();
         }
 
         return $distribution;
