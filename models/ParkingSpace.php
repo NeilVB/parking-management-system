@@ -392,5 +392,55 @@ class ParkingSpace
         }
     }
 
+    /**
+     * Check if a parking space has any parked vehicles.
+     * Returns: ['has_parked' => bool, 'count' => int, 'vehicles' => array]
+     */
+    public function hasParkedVehicles($parking_space_id)
+    {
+        $query = "
+            SELECT 
+                pl.vehicle_id,
+                v.plate_number,
+                v.color,
+                v.make,
+                v.model,
+                vt.vehicle_type,
+                u.firstname,
+                u.lastname
+            FROM parking_logs pl
+            JOIN vehicles_table v ON pl.vehicle_id = v.vehicle_id
+            JOIN vehicle_type_table vt ON v.vehicle_type_id = vt.vehicle_type_id
+            JOIN users_table u ON v.user_id = u.user_id
+            WHERE pl.parking_space_id = ? 
+            AND pl.status = 'Parked'
+        ";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $parking_space_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $vehicles = [];
+        while ($row = $result->fetch_assoc()) {
+            $vehicles[] = [
+                'plate_number' => $row['plate_number'],
+                'vehicle_type' => $row['vehicle_type'],
+                'color' => $row['color'],
+                'make' => $row['make'],
+                'model' => $row['model'],
+                'owner' => $row['firstname'] . ' ' . $row['lastname']
+            ];
+        }
+
+        $stmt->close();
+
+        return [
+            'has_parked' => count($vehicles) > 0,
+            'count' => count($vehicles),
+            'vehicles' => $vehicles
+        ];
+    }
+    
 }
 ?>

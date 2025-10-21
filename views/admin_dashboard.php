@@ -521,12 +521,15 @@ $distribution = $model->getSlotDistribution();
 <script src="../views/js/forms.js"></script>
 <script src="../views/js/imagePreview.js"></script>
 <script src="../views/js/refresh.js"></script>
+<script src="../views/js/warning_modal.js"></script>
 <script src="../views/js/editMode.js"></script>
 <script src="../views/js/deleteMode.js"></script>
 <script src="../views/js/init.js"></script>
 <script src="../views/js/filter.js"></script>
 <script src="../views/js/users.js"></script>
 <script src="../views/js/user-management.js"></script>
+
+
 
 </body>
 </html>

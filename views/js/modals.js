@@ -185,52 +185,80 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // Populate edit modal
+        // Populate edit modal with parked vehicle warning
         editButtons.forEach(button => {
             button.addEventListener("click", async () => {
                 const id = button.dataset.id;
-                editModal.style.display = "flex";
+                const name = button.dataset.name;
 
-                document.getElementById("edit-space-id").value = id;
-                document.getElementById("edit-space-name").value = button.dataset.name;
-
-                editSupportsCar.checked = button.dataset.supportsCar === "1";
-                editSupportsMotorcycle.checked = button.dataset.supportsMotorcycle === "1";
-
-                const imagePath = button.dataset.image;
-                document.getElementById("edit-current-image").value = imagePath || "";
-                if (imagePath) {
-                    editPreview.src = imagePath;
-                    editPreview.style.display = "block";
-                } else {
-                    editPreview.style.display = "none";
-                }
-
-                // Fetch allocations
+                // 🆕 Check for parked vehicles first
                 try {
-                    const response = await fetch(`../controller/get_allocations.php?parking_space_id=${id}`);
-                    const data = await response.json();
+                    const checkResponse = await fetch(`../ajax/check_parking_space.php?space_id=${id}`);
+                    const checkData = await checkResponse.json();
 
-                    // Reset inputs
-                    document.querySelectorAll('#edit-car-allocations .allocation-input, #edit-motorcycle-allocations .allocation-input')
-                        .forEach(input => input.value = 0);
-
-                    if (data.success && data.allocations) {
-                        const userTypeMap = {1:'general',2:'faculty',3:'executive',4:'guest'};
-                        data.allocations.forEach(a => {
-                            const type = a.vehicle_type_id === 1 ? 'car' : 'motorcycle';
-                            const user = userTypeMap[a.user_type_id];
-                            const input = document.getElementById(`edit-${type}-${user}`);
-                            if (input) input.value = a.allocated_slots;
+                    if (checkData.success && checkData.has_parked) {
+                        // Show warning modal
+                        showWarningModal('edit', id, name, checkData);
+                        
+                        // Set callback to proceed with edit
+                        setWarningCallback(() => {
+                            openEditModalContent(id, button);
                         });
+                        return; // Stop here, wait for user decision
                     }
-                } catch (err) {
-                    console.error("Error fetching allocations:", err);
+                } catch (error) {
+                    console.error('Error checking parking space:', error);
+                    // If check fails, proceed normally
                 }
 
-                toggleEditAllocations();
+                // If no parked vehicles or check failed, open directly
+                openEditModalContent(id, button);
             });
         });
+
+        // 🆕 Extracted function to open edit modal content
+        async function openEditModalContent(id, button) {
+            editModal.style.display = "flex";
+
+            document.getElementById("edit-space-id").value = id;
+            document.getElementById("edit-space-name").value = button.dataset.name;
+
+            editSupportsCar.checked = button.dataset.supportsCar === "1";
+            editSupportsMotorcycle.checked = button.dataset.supportsMotorcycle === "1";
+
+            const imagePath = button.dataset.image;
+            document.getElementById("edit-current-image").value = imagePath || "";
+            if (imagePath) {
+                editPreview.src = imagePath;
+                editPreview.style.display = "block";
+            } else {
+                editPreview.style.display = "none";
+            }
+
+            // Fetch allocations
+            try {
+                const response = await fetch(`../controller/get_allocations.php?parking_space_id=${id}`);
+                const data = await response.json();
+
+                // Reset inputs
+                document.querySelectorAll('#edit-car-allocations .allocation-input, #edit-motorcycle-allocations .allocation-input')
+                    .forEach(input => input.value = 0);
+
+                if (data.success && data.allocations) {
+                    const userTypeMap = {1:'general',2:'faculty',3:'executive',4:'guest'};
+                    data.allocations.forEach(a => {
+                        const type = a.vehicle_type_id === 1 ? 'car' : 'motorcycle';
+                        const user = userTypeMap[a.user_type_id];
+                        const input = document.getElementById(`edit-${type}-${user}`);
+                        if (input) input.value = a.allocated_slots;
+                    });
+                }
+            } catch (err) {
+                console.error("Error fetching allocations:", err);
+            }
+
+            toggleEditAllocations();
+        }
     }
 
     /* ===========================

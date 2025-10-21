@@ -178,3 +178,29 @@
         <input type="hidden" id="delete-space-id" value="">
     </div>
 </div>
+
+<!-- =============================
+     WARNING MODAL
+============================= -->
+<div id="warningModal" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 500px;">
+        <span class="close" onclick="closeWarningModal()">&times;</span>
+        <h2 style="color: #f39c12; display: flex; align-items: center; gap: 10px;">
+            <i class="fas fa-exclamation-triangle"></i>
+            Warning
+        </h2>
+        <div id="warningContent" style="margin: 20px 0;">
+            <!-- Warning content will be inserted here -->
+        </div>
+        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+            <button onclick="closeWarningModal()" 
+                    style="padding: 10px 20px; background: #95a5a6; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                Cancel
+            </button>
+            <button id="warningProceedBtn" 
+                    style="padding: 10px 20px; background: #f39c12; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                Proceed Anyway
+            </button>
+        </div>
+    </div>
+</div>
