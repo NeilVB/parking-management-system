@@ -7,7 +7,7 @@ if (!isset($_SESSION['user_id'])) {
 
 // Optional: fetch session variables for display
 $user_id = $_SESSION['user_id'];
-$firstname = $_SESSION['firstname'] ?? 'User'; 
+$firstname = $_SESSION['firstname'] ?? 'User';
 
 require_once __DIR__ . '/../controller/config.php';
 require_once __DIR__ . '/../models/ParkingSpace.php';
@@ -56,7 +56,7 @@ $distribution = $model->getSlotDistribution();
             <div class="user-profile">
                 <i class="fas fa-bell"></i>
                 <a href="account.php" class="user-profile-link">
-                    <span>Hi, <?php echo htmlspecialchars($firstname); ?></span> 
+                    <span>Hi, <?php echo htmlspecialchars($firstname); ?></span>
                     <img src="https://i.pravatar.cc/150" alt="User Avatar" class="avatar">
                 </a>
             </div>
@@ -78,19 +78,20 @@ $distribution = $model->getSlotDistribution();
                                 Spaces</span></a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" data-target="vehicle-registration"><i class="fas fa-solid fa-briefcase"></i><span>Vehicle Registration</span></a>
+                        <a href="#" data-target="vehicle-registration"><i
+                                class="fas fa-solid fa-briefcase"></i><span>Vehicle Registration</span></a>
                     </li>
                     <li class="nav-item">
                         <a href="account.php"><i class="fas fa-user"></i><span>Account</span></a>
                     </li>
                 </ul>
-				<div class="log-out">
-					<!-- Admin logout with confirmation -->
-					<a href="?logout=1" onclick="return confirm('Are you sure you want to logout?')">
-						<i class="fas fa-sign-out-alt"></i>
-						<span>Logout</span>
-					</a>
-				</div>
+                <div class="log-out">
+                    <!-- Admin logout with confirmation -->
+                    <a href="?logout=1" onclick="return confirm('Are you sure you want to logout?')">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
             </nav>
 
             <main class="main-content">
@@ -99,25 +100,26 @@ $distribution = $model->getSlotDistribution();
                     <h3>Featured</h3>
                     <p class="section-subtitle">Availability</p>
                     <div class="featured-cards">
-                        <div class="card">
+                        <div class="card <?php echo ($counts['car'] > 0) ? 'available' : 'full'; ?>">
                             <div class="card-icon"><i class="fas fa-car"></i></div>
                             <div class="card-content">
-                            <div class="card-value available">
-                                <?php echo $counts['car']; ?>
-                            </div>
+                                <div class="card-value">
+                                    <?php echo $counts['car']; ?>
+                                </div>
                                 <div class="card-label">Available Spaces</div>
                             </div>
                         </div>
-                        <div class="card">
+                        <div class="card <?php echo ($counts['motorcycle'] > 0) ? 'available' : 'full'; ?>">
                             <div class="card-icon"><i class="fa-solid fa-motorcycle"></i></div>
                             <div class="card-content">
-                            <div class="card-value taken">
-                                <?php echo $counts['motorcycle']; ?>
-                            </div>
+                                <div class="card-value">
+                                    <?php echo $counts['motorcycle']; ?>
+                                </div>
                                 <div class="card-label">Available Spaces</div>
                             </div>
                         </div>
                     </div>
+
                     <div class="availability-legend">
                         <div class="legend-item">
                             <i class="fa-solid fa-square-full"></i>
@@ -134,7 +136,7 @@ $distribution = $model->getSlotDistribution();
                         <div class="map-container">
                             <img src="../assets/nu-map.png" alt="NU Laguna Park Space Map" class="map-image">
                             <div class="parking-slots-list">
-                                
+
                                 <!-- Bottom Right: Display Location with Available Spaces count -->
                                 <h4><i class="fas fa-list"></i> Parking Areas Distribution</h4>
                                 <?php if (!empty($distribution)): ?>
@@ -146,7 +148,7 @@ $distribution = $model->getSlotDistribution();
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <p>No parking areas found.</p>
-                                <?php endif; ?>                          
+                                <?php endif; ?>
 
                             </div>
                         </div>
@@ -160,17 +162,18 @@ $distribution = $model->getSlotDistribution();
                     </div>
 
                     <!-- Search and Filter Bar -->
-                    <div class="filter-bar" style="display: flex; gap: 15px; margin-bottom: 20px; align-items: center; flex-wrap: wrap;">
+                    <div class="filter-bar"
+                        style="display: flex; gap: 15px; margin-bottom: 20px; align-items: center; flex-wrap: wrap;">
                         <!-- Search Input -->
                         <div class="search-container" style="flex: 1; min-width: 250px;">
-                            <input type="text" id="space-search" placeholder="Search parking spaces..." 
+                            <input type="text" id="space-search" placeholder="Search parking spaces..."
                                 style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;">
                         </div>
-                        
+
                         <!-- Filter Dropdown -->
                         <div class="filter-container">
-                            <select id="type-filter" class="filter-select" 
-                                    style="padding: 10px 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; cursor: pointer; background: white;">
+                            <select id="type-filter" class="filter-select"
+                                style="padding: 10px 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; cursor: pointer; background: white;">
                                 <option value="all">All Types</option>
                                 <option value="general">General</option>
                                 <option value="faculty">Faculty</option>
@@ -178,17 +181,17 @@ $distribution = $model->getSlotDistribution();
                                 <option value="guest">Guest</option>
                             </select>
                         </div>
-                        
+
                         <!-- Vehicle Type Filter -->
                         <div class="filter-container">
-                            <select id="vehicle-filter" class="filter-select" 
-                                    style="padding: 10px 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; cursor: pointer; background: white;">
+                            <select id="vehicle-filter" class="filter-select"
+                                style="padding: 10px 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; cursor: pointer; background: white;">
                                 <option value="all">All Vehicles</option>
                                 <option value="car">Car Only</option>
                                 <option value="motorcycle">Motorcycle Only</option>
                             </select>
                         </div>
-                        
+
                         <!-- Count Display -->
                         <div class="count-display">
                             <span id="spaces-count" style="color: #666; font-size: 14px;">Loading...</span>
@@ -217,10 +220,10 @@ $distribution = $model->getSlotDistribution();
                             $userTypesSet = [];
 
                             foreach ($allocations as $alloc) {
-                                if ((int)$alloc['allocated_slots'] > 0) {
+                                if ((int) $alloc['allocated_slots'] > 0) {
                                     $ut = trim($alloc['user_type']);
-                                    $slots = (int)$alloc['allocated_slots'];
-                                    
+                                    $slots = (int) $alloc['allocated_slots'];
+
                                     // Map user type to simplified name
                                     $utKey = 'General';
                                     if (stripos($ut, 'faculty') !== false) {
@@ -235,7 +238,7 @@ $distribution = $model->getSlotDistribution();
                                     } else {
                                         $userTypesSet['general'] = true;
                                     }
-                                    
+
                                     // Assign to car or motorcycle
                                     if ($alloc['vehicle_type_id'] == 1) {
                                         $carAlloc[$utKey] += $slots;
@@ -249,23 +252,24 @@ $distribution = $model->getSlotDistribution();
                             $carSlots = array_sum($carAlloc);
                             $motorcycleSlots = array_sum($motoAlloc);
                             $totalSlots = $carSlots + $motorcycleSlots;
-                            $parkedCount = (int)$row['parked_car_count'] + (int)$row['parked_motorcycle_count'];
+                            $parkedCount = (int) $row['parked_car_count'] + (int) $row['parked_motorcycle_count'];
                             $available = $totalSlots - $parkedCount;
                             $status = $available > 0 ? 'Available' : 'Full';
 
                             // Prepare data attributes
                             $userTypes = !empty($userTypesSet) ? implode(',', array_keys($userTypesSet)) : '';
                             $vehicles = [];
-                            if ($row['supports_car']) $vehicles[] = 'car';
-                            if ($row['supports_motorcycle']) $vehicles[] = 'motorcycle';
+                            if ($row['supports_car'])
+                                $vehicles[] = 'car';
+                            if ($row['supports_motorcycle'])
+                                $vehicles[] = 'motorcycle';
                             $vehiclesAttr = implode(',', $vehicles);
 
                             // Safe output
                             $imgSafe = htmlspecialchars($imagePath, ENT_QUOTES, 'UTF-8');
                             $nameSafe = htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8');
-                        ?>
-                            <div class="parking-card"
-                                data-id="<?php echo (int)$row['id']; ?>"
+                            ?>
+                            <div class="parking-card" data-id="<?php echo (int) $row['id']; ?>"
                                 data-name="<?php echo $nameSafe; ?>"
                                 data-user-types="<?php echo htmlspecialchars($userTypes, ENT_QUOTES, 'UTF-8'); ?>"
                                 data-vehicles="<?php echo htmlspecialchars($vehiclesAttr, ENT_QUOTES, 'UTF-8'); ?>"
@@ -276,22 +280,22 @@ $distribution = $model->getSlotDistribution();
                                     <div class="allocations-grid">
                                         <!-- Car Column -->
                                         <?php if ($row['supports_car']): ?>
-                                        <div class="alloc-column">
-                                            <div class="alloc-title">Cars: <?php echo $carSlots; ?></div>
-                                            <?php foreach ($carAlloc as $type => $count): ?>
-                                                <div class="alloc-row"><?php echo $type; ?>: <?php echo $count; ?></div>
-                                            <?php endforeach; ?>
-                                        </div>
+                                            <div class="alloc-column">
+                                                <div class="alloc-title">Cars: <?php echo $carSlots; ?></div>
+                                                <?php foreach ($carAlloc as $type => $count): ?>
+                                                    <div class="alloc-row"><?php echo $type; ?>: <?php echo $count; ?></div>
+                                                <?php endforeach; ?>
+                                            </div>
                                         <?php endif; ?>
 
                                         <!-- Motorcycle Column -->
                                         <?php if ($row['supports_motorcycle']): ?>
-                                        <div class="alloc-column">
-                                            <div class="alloc-title">Motors: <?php echo $motorcycleSlots; ?></div>
-                                            <?php foreach ($motoAlloc as $type => $count): ?>
-                                                <div class="alloc-row"><?php echo $type; ?>: <?php echo $count; ?></div>
-                                            <?php endforeach; ?>
-                                        </div>
+                                            <div class="alloc-column">
+                                                <div class="alloc-title">Motors: <?php echo $motorcycleSlots; ?></div>
+                                                <?php foreach ($motoAlloc as $type => $count): ?>
+                                                    <div class="alloc-row"><?php echo $type; ?>: <?php echo $count; ?></div>
+                                                <?php endforeach; ?>
+                                            </div>
                                         <?php endif; ?>
                                     </div>
 
@@ -303,17 +307,16 @@ $distribution = $model->getSlotDistribution();
                                         </span>
                                     </p>
 
-                                    <button class="btn edit-space-btn edit-btn"
-                                        data-id="<?php echo (int)$row['id']; ?>"
+                                    <button class="btn edit-space-btn edit-btn" data-id="<?php echo (int) $row['id']; ?>"
                                         data-name="<?php echo $nameSafe; ?>"
-                                        data-supports-car="<?php echo (int)$row['supports_car']; ?>"
-                                        data-supports-motorcycle="<?php echo (int)$row['supports_motorcycle']; ?>"
+                                        data-supports-car="<?php echo (int) $row['supports_car']; ?>"
+                                        data-supports-motorcycle="<?php echo (int) $row['supports_motorcycle']; ?>"
                                         data-image="<?php echo $imgSafe; ?>">
                                         <i class="fas fa-edit"></i> Edit
                                     </button>
                                 </div>
                             </div>
-                        <?php
+                            <?php
                         endwhile;
                         ?>
                     </div>
@@ -360,18 +363,18 @@ $distribution = $model->getSlotDistribution();
                             </div>
                             <div class="input-group">
                                 <label for="year">Year</label>
-                                <input type="number" id="year" name="year" required placeholder="2020" min="1900" max="2099"
-                                    value="<?php echo htmlspecialchars($form_data['year'] ?? ''); ?>">
+                                <input type="number" id="year" name="year" required placeholder="2020" min="1900"
+                                    max="2099" value="<?php echo htmlspecialchars($form_data['year'] ?? ''); ?>">
                             </div>
                             <button type="submit" class="register-button">Register Vehicle</button>
                         </form>
                     </div>
                 </div>
- 
+
 
 
                 <!-- Works well in the main dashboard page however doesn't work when inside account.php view, fixed redirectory -->
-                 
+
                 <!-- Terms and Conditions Content -->
                 <div id="terms-container" class="content-section">
                     <h3>Parking Terms and Conditions</h3>

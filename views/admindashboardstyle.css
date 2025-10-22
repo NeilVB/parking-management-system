@@ -242,7 +242,6 @@ body {
 }
 
 .card {
-    background-color: var(--accent-yellow);
     color: var(--primary-blue);
     padding: 20px;
     display: flex;
@@ -250,20 +249,34 @@ body {
     flex-grow: 1;
     border-radius: 0;
     box-shadow: none;
+    transition: background-color 0.3s ease;
+}
+
+.card.available {
+    background-color: var(--card-color-green) !important;
+    color: white !important;
+}
+
+.card.full {
+    background-color: var(--card-color-red) !important;
+    color: white !important;
+}
+
+.card.available .card-value,
+.card.available .card-icon,
+.card.available .card-content {
+    color: var(--primary-blue) !important;
+    font-weight: 700;
 }
 
 .card-icon {
     font-size: 2.5rem;
     margin-right: 20px;
-    color: var(--primary-blue);
-
 }
 
 .card-content {
     display: flex;
     flex-direction: column;
-    color: var(--primary-blue);
-
 }
 
 .card-value {
@@ -274,15 +287,6 @@ body {
 .card-label {
     font-size: 1rem;
     font-weight: 500;
-}
-
-.card:nth-child(1) {
-    background-color: var(--card-color-green);
-}
-
-.card:nth-child(2) {
-    background-color: var(--card-color-green);
-    color: var(--main-bg);
 }
 
 .availability-legend {
@@ -1354,16 +1358,16 @@ body {
         background: white;
         border-radius: 8px;
         padding: 10px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
-    
+
     .users-table {
-        width: max-content !important; 
+        width: max-content !important;
         min-width: 100%;
         border-collapse: collapse;
         table-layout: auto !important;
     }
-    
+
     .users-table th,
     .users-table td {
         padding: 8px 12px;
@@ -1374,42 +1378,42 @@ body {
         text-overflow: clip !important;
         min-width: fit-content;
     }
-    
-    .users-table th:nth-child(1), 
+
+    .users-table th:nth-child(1),
     .users-table td:nth-child(1) {
         min-width: 50px;
     }
-    
+
     .users-table th:nth-child(2),
     .users-table td:nth-child(2) {
         min-width: 150px;
     }
-    
+
     .users-table th:nth-child(3),
     .users-table td:nth-child(3) {
         min-width: 200px;
     }
-    
+
     .users-table th:nth-child(4),
     .users-table td:nth-child(4) {
         min-width: 120px;
     }
-    
+
     .users-table th:nth-child(5),
     .users-table td:nth-child(5) {
         min-width: 100px;
     }
-    
+
     .users-table th:nth-child(6),
     .users-table td:nth-child(6) {
         min-width: 120px;
     }
-    
+
     .users-table th:nth-child(7),
-    .users-table td:nth-child(7) { 
+    .users-table td:nth-child(7) {
         min-width: 100px;
     }
-    
+
     .btn-edit,
     .btn-delete {
         padding: 4px 8px;
