@@ -242,7 +242,6 @@ body {
 }
 
 .card {
-    background-color: var(--accent-yellow);
     color: var(--primary-blue);
     padding: 20px;
     display: flex;
@@ -250,6 +249,24 @@ body {
     flex-grow: 1;
     border-radius: 0;
     box-shadow: none;
+    transition: background-color 0.3s ease;
+}
+
+.card.available {
+    background-color: var(--card-color-green) !important;
+    color: white !important;
+}
+
+.card.full {
+    background-color: var(--card-color-red) !important;
+    color: white !important;
+}
+
+.card.available .card-value,
+.card.available .card-icon,
+.card.available .card-content {
+    color: var(--primary-blue) !important;
+    font-weight: 700;
 }
 
 .card-icon {
@@ -270,15 +287,6 @@ body {
 .card-label {
     font-size: 1rem;
     font-weight: 500;
-}
-
-.card:nth-child(1) {
-    background-color: var(--card-color-green);
-}
-
-.card:nth-child(2) {
-    background-color: var(--card-color-red);
-    color: var(--main-bg);
 }
 
 .availability-legend {

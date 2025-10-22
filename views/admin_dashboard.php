@@ -113,22 +113,21 @@ $distribution = $model->getSlotDistribution();
                     <h3>Featured</h3>
                     <p class="section-subtitle">Availability</p>
                     <div class="featured-cards">
-                        <div class="card">
+                        <div class="card <?php echo ($counts['car'] > 0) ? 'available' : 'full'; ?>">
                             <div class="card-icon"><i class="fas fa-car"></i></div>
                             <div class="card-content">
-                                <div class="card-value available">
+                                <div class="card-value">
                                     <?php echo $counts['car']; ?>
                                 </div>
                                 <div class="card-label">Available Spaces</div>
                             </div>
                         </div>
-                        <div class="card">
+                        <div class="card <?php echo ($counts['motorcycle'] > 0) ? 'available' : 'full'; ?>">
                             <div class="card-icon"><i class="fa-solid fa-motorcycle"></i></div>
                             <div class="card-content">
-                                <div class="card-value taken">
+                                <div class="card-value">
                                     <?php echo $counts['motorcycle']; ?>
                                 </div>
-
                                 <div class="card-label">Available Spaces</div>
                             </div>
                         </div>
