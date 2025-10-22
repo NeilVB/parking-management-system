@@ -273,6 +273,12 @@
             </div>
         </footer>
 	</div>
-
+    <div id="feedback-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="feedback-title"></h2>
+            <p id="feedback-message"></p>
+            <button id="feedback-btn" class="close-modal">Close</button>
+        </div>
+    </div>
 </body>
 </html>
