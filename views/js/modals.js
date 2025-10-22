@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
         modal.style.display = "flex";
 
         if (type === "error") {
-            buttonEl.textContent = "Ok";
+            buttonEl.textContent = "OK";
             buttonEl.onclick = () => {
                 modal.style.display = "none";
                 document.getElementById("Email")?.focus();
