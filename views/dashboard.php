@@ -398,10 +398,6 @@ $distribution = $model->getSlotDistribution();
                     </div>
                 </div>
 
-
-
-                <!-- Works well in the main dashboard page however doesn't work when inside account.php view, fixed redirectory -->
-
                 <!-- Terms and Conditions Content -->
                 <div id="terms-container" class="content-section">
                     <h3>Parking Terms and Conditions</h3>

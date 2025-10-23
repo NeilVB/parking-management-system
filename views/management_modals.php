@@ -1,6 +1,4 @@
-<!-- =============================
-     USER MANAGEMENT MODAL
-============================= -->
+<!-- === USER MANAGEMENT MODAL === -->
 <div id="user-modal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
@@ -60,9 +58,7 @@
     </div>
 </div>
 
-<!-- =============================
-     VEHICLE MANAGEMENT MODAL
-============================= -->
+<!-- === VEHICLE MANAGEMENT MODAL === -->
 <div id="vehicle-modal" class="modal">
     <div class="modal-content">
         <div class="modal-header">

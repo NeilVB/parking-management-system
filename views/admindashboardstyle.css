@@ -1,4 +1,4 @@
-/* --- Global Styles & Variables --- */
+/* === Global Styles & Variables === */
 :root {
     --primary-blue: #35408E;
     --accent-yellow: #FFD41C;
@@ -27,7 +27,7 @@ body {
     color: var(--text-color-dark);
 }
 
-/* --- Main Dashboard Layout --- */
+/* === Main Dashboard Layout === */
 .dashboard-container {
     display: flex;
     flex-direction: column;
@@ -111,7 +111,7 @@ body {
     align-items: stretch;
 }
 
-/* --- User Profile Link --- */
+/* === User Profile Link === */
 .user-profile-link {
     display: flex;
     align-items: center;
@@ -120,7 +120,7 @@ body {
     color: inherit;
 }
 
-/* --- Sidebar Navigation --- */
+/* === Sidebar Navigation === */
 .sidebar {
     width: 280px;
     background-color: #F9FBFC;
@@ -226,7 +226,7 @@ body {
     font-weight: 400;
 }
 
-/* --- Map Section --- */
+/* === Map Section === */
 .map-section h3 {
     font-size: 1.5rem;
     font-weight: 600;
@@ -234,7 +234,7 @@ body {
     margin-bottom: 1rem;
 }
 
-/* --- Cards and Legend --- */
+/* === Cards and Legend === */
 .featured-cards {
     display: flex;
     gap: 20px;
@@ -313,7 +313,7 @@ body {
     margin-left: 0.5rem;
 }
 
-/* --- Map Container --- */
+/* === Map Container === */
 .map-container {
     display: flex;
     gap: 30px;
@@ -483,7 +483,7 @@ body {
     font-weight: 500;
 }
 
-/* --- Parking Spaces Page --- */
+/* === Parking Spaces Page === */
 .page-header {
     display: flex;
     justify-content: space-between;
@@ -657,7 +657,7 @@ body {
     color: white;
 }
 
-/* --- Footer --- */
+/* === Footer === */
 .footer {
     position: fixed;
     bottom: 0;
@@ -703,7 +703,7 @@ body {
 }
 
 
-/* Chad: Filter Bar Styles */
+/* === Filter Bar Styles === */
 .filter-bar {
     background: #f8f9fa;
     padding: 15px;
@@ -774,7 +774,7 @@ body {
 
 
 
-/* --- Terms & Policy Page Styles --- */
+/* === Terms & Policy Page Styles === */
 #terms-container,
 #policy-container {
     min-width: 50%;
@@ -885,7 +885,7 @@ body {
     margin-bottom: 1rem;
 }
 
-/* --- Modal Styles --- */
+/* === Modal Styles === */
 .modal {
     display: none;
     /* Hidden by default */

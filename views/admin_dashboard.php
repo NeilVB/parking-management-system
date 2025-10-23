@@ -88,7 +88,7 @@ $distribution = $model->getSlotDistribution();
                                 Reports</span></a>
                     </li>
 
-                    <!-- qr scanner button -->
+                    <!-- QR scanner button -->
                     <li class="nav-item">
                         <button id="open-scan-modal-btn" class="btn btn-primary" style="width: 100%;">
                             <i class="fas fa-qrcode"></i> Scan Vehicle

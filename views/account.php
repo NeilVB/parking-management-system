@@ -31,13 +31,13 @@ $vehicles = $vehicleModel->getVehiclesByUser($user_id);
 function generateQrIfMissing($vehicle)
 {
     $qrPath = __DIR__ . "/../assets/QR/qr-" . $vehicle['plate_number'] . ".png";
-    $token = $vehicle['qr_token']; // ✅ Just the token
+    $token = $vehicle['qr_token'];
 
     $builder = new Builder(
         writer: new PngWriter(),
         writerOptions: [],
         validateResult: false,
-        data: $token, // ✅ Use token directly
+        data: $token,
         encoding: new Encoding('UTF-8'),
         errorCorrectionLevel: ErrorCorrectionLevel::High,
         size: 300,

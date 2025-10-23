@@ -22,9 +22,7 @@
 </div>
 
 
-<!-- =======================================
-     MERGED: Vehicle Info + Parking Selection Modal
-======================================= -->
+<!-- === MERGED: Vehicle Info + Parking Selection Modal === -->
 <div class="modal fade" id="vehicleInfoModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -225,9 +223,7 @@
     </div>
 </div>
 
-<!-- =============================
-     ASSIGNMENT SUCCESS MODAL
-============================= -->
+<!-- === ASSIGNMENT SUCCESS MODAL === -->
 <div id="assignment-success-modal" class="modal" role="dialog" aria-modal="true" style="display: none;">
     <div class="modal-content success-modal">
         <div class="modal-header success-header">
@@ -272,9 +268,7 @@
     </div>
 </div>
 
-<!-- =============================
-     ASSIGNMENT ERROR MODAL
-============================= -->
+<!-- === ASSIGNMENT ERROR MODAL === -->
 <div id="assignment-error-modal" class="modal" role="dialog" aria-modal="true" style="display: none;">
     <div class="modal-content error-modal">
         <div class="modal-header error-header">
@@ -311,9 +305,7 @@
     </div>
 </div>
 
-<!-- =============================
-     EXIT VEHICLE CONFIRMATION MODAL
-============================= -->
+<!-- === EXIT VEHICLE CONFIRMATION MODAL === -->
 <div id="exit-vehicle-modal" class="modal" role="dialog" aria-modal="true">
     <div class="modal-content exit-modal">
         <div class="modal-header exit-header">
@@ -376,9 +368,7 @@
     </div>
 </div>
 
-<!-- =============================
-     EXIT SUCCESS MODAL
-============================= -->
+<!-- === EXIT SUCCESS MODAL === -->
 <div id="exit-success-modal" class="modal" role="dialog" aria-modal="true" style="display: none;">
     <div class="modal-content success-modal">
         <div class="modal-header success-header">

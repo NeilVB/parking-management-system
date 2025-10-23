@@ -1,6 +1,4 @@
-<!-- =============================
-     ADD PARKING SPACE MODAL
-============================= -->
+<!-- === ADD PARKING SPACE MODAL === -->
 <div id="add-space-modal" class="modal" role="dialog" aria-modal="true">
     <div class="modal-content add-space-modal">
         <div class="modal-header">
@@ -68,9 +66,7 @@
 </div>
 
 
-<!-- =============================
-     EDIT PARKING SPACE MODAL
-============================= -->
+<!-- === DIT PARKING SPACE MODAL === -->
 <div id="edit-space-modal" class="modal" role="dialog" aria-modal="true">
     <div class="modal-content edit-space-modal">
         <div class="modal-header">
@@ -141,9 +137,7 @@
     </div>
 </div>
 
-<!-- =============================
-     DELETE CONFIRMATION MODAL
-============================= -->
+<!-- === DELETE CONFIRMATION MODAL === -->
 <div id="delete-space-modal" class="modal" role="dialog" aria-modal="true">
     <div class="modal-content delete-modal">
         <div class="modal-header delete-header">
@@ -179,9 +173,7 @@
     </div>
 </div>
 
-<!-- =============================
-     WARNING MODAL
-============================= -->
+<!-- === WARNING MODAL === -->
 <div id="warningModal" class="modal" style="display: none;">
     <div class="modal-content" style="max-width: 500px;">
         <span class="close" onclick="closeWarningModal()">&times;</span>
@@ -190,7 +182,6 @@
             Warning
         </h2>
         <div id="warningContent" style="margin: 20px 0;">
-            <!-- Warning content will be inserted here -->
         </div>
         <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
             <button onclick="closeWarningModal()" 

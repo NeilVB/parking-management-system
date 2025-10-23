@@ -1,4 +1,4 @@
-/* --- Global Styles & Variables --- */
+/* === Global Styles & Variables === */
 :root {
     --primary-blue: #35408E;
     --accent-yellow: #FFD41C;
@@ -40,20 +40,19 @@ body {
 body::before {
   content: "";
   position: absolute;
-  inset: 0; /* shorthand for top:0; right:0; bottom:0; left:0 */
-  background: rgba(53, 64, 142, 0.50); /* bluish tone with low opacity */
+  inset: 0;
+  background: rgba(53, 64, 142, 0.50);
   z-index: 1;
 }
 
 
-/* --- Main Dashboard Layout --- */
+/* === Main Dashboard Layout === */
 .login-container {
     display: flex;
     flex-direction: column;
     height: 100vh;
 }
 
-/* Make sure your form content appears above the overlay */
 .login-container,
 .login-box {
   position: relative;
@@ -306,7 +305,7 @@ body::before {
     padding: 20px 0;
 }
 
-/* --- Footer --- */
+/* === Footer === */
 .footer {
     position: fixed;
     bottom: 0;
@@ -351,7 +350,7 @@ body::before {
     color: var(--active-blue-border);
 }
 
-/* --- Terms & Policy Page Styles --- */
+/* === Terms & Policy Page Styles === */
 #terms-container,
 #policy-container {
     min-width: 50%;
