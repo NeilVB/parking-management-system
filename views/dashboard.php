@@ -139,6 +139,33 @@ $distribution = $model->getSlotDistribution();
 
                                 <!-- Bottom Right: Display Location with Available Spaces count -->
                                 <h4><i class="fas fa-list"></i> Parking Areas Distribution</h4>
+
+                                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                                    <!-- User Type Filter -->
+                                    <div class="filter-bar">
+                                        <div class="filter-container">
+                                            <select id="distribution-type-filter" class="filter-select"
+                                                style="padding: 10px 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; cursor: pointer; background: white;">
+                                                <option value="all">All Types</option>
+                                                <option value="general">General</option>
+                                                <option value="faculty">Faculty</option>
+                                                <option value="executive">Executive</option>
+                                                <option value="guest">Guest</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Vehicle Type Filter -->
+                                        <div class="filter-container">
+                                            <select id="distribution-vehicle-filter" class="filter-select"
+                                                style="padding: 10px 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; cursor: pointer; background: white;">
+                                                <option value="all">All Vehicles</option>
+                                                <option value="car">Car</option>
+                                                <option value="motorcycle">Motorcycle</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>                                
+
                                 <?php if (!empty($distribution)): ?>
                                     <?php foreach ($distribution as $slot): ?>
                                         <div class="slot-item">
