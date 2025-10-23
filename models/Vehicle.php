@@ -32,7 +32,7 @@ class Vehicle {
         $check_stmt->execute();
         $result = $check_stmt->get_result();
 
-        $count = 0; // ✅ Initialize first
+        $count = 0;
         if ($row = $result->fetch_assoc()) {
             $count = (int)$row['total'];
         }

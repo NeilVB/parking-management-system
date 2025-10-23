@@ -89,7 +89,7 @@ class ParkingLog {
     }
 
     /**
-     * Get all parking logs with vehicle and owner details - IMPROVED VERSION
+     * Get all parking logs with vehicle and owner details
      */
     public function getAllLogs() {
         $query = "SELECT 

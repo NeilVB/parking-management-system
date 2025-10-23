@@ -14,7 +14,7 @@ class User {
         $firstName    = trim($userData['FirstName']);
         $lastName     = trim($userData['LastName']);
         // $plate_number = trim($userData['PlateNumber']);
-        $phone_number = trim($userData['PhoneNumber']);   // ✅ Fixed
+        $phone_number = trim($userData['PhoneNumber']);
         $userType     = $userData['Type'];
         // $vehicleType  = $userData['VehicleType'];
         $email        = trim($userData['Email']);

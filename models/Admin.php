@@ -32,7 +32,7 @@ class Admin {
             $input_hash = hash('sha256', $password);
             $stored_hash = $admin['admin_password'];
 
-            // DEBUG OUTPUT 
+            // Debug output
             echo "<pre>";
             echo "Input Email: $email\n";
             echo "Input Password: $password\n";
