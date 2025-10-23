@@ -1,6 +1,11 @@
 /* === GLOBAL LAYOUT === */
 .content-section {
     padding: 50px;
+    /* background: rgba(53, 64, 142, 0.75);  */
+    backdrop-filter: blur(4px);
+}
+
+section#parking-spaces.content-section{
     background: rgba(53, 64, 142, 0.75); 
     backdrop-filter: blur(4px);
 }
