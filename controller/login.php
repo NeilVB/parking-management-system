@@ -39,8 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['lastname']     = $login_result['user']['lastname'];
         $_SESSION['email']        = $login_result['user']['email'];
         $_SESSION['user_type']    = $login_result['user']['user_type'];
-        $_SESSION['phone_number'] = $login_result['user']['phone_number'];  // ✅ newly added
-        $_SESSION['plate_number'] = $login_result['user']['plate_number'];  // ✅ newly added
+        $_SESSION['phone_number'] = $login_result['user']['phone_number'];
+        $_SESSION['plate_number'] = $login_result['user']['plate_number']; 
 
 
         // Remember Me cookie
@@ -67,8 +67,8 @@ if (!isset($_SESSION['user_id']) && isset($_COOKIE['remember_user'])) {
         $_SESSION['lastname']     = $user_data['lastname'];
         $_SESSION['email']        = $user_data['email'];
         $_SESSION['user_type']    = $user_data['user_type'];
-        $_SESSION['phone_number'] = $user_data['phone_number'];  // ✅ newly added
-        $_SESSION['plate_number'] = $user_data['plate_number'];  // ✅ newly added
+        $_SESSION['phone_number'] = $user_data['phone_number']; 
+        $_SESSION['plate_number'] = $user_data['plate_number']; 
 
 
         header("Location: dashboard.php");

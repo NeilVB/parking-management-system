@@ -21,7 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Generate secure QR token
     $qr_token = bin2hex(random_bytes(16));
 
-    // Normalize keys to match Vehicle.php expectations
     $form_data = [
         'user_id'         => $_SESSION['user_id'] ?? null,
         'plate_number'    => trim($_POST['plate_number'] ?? ''),
