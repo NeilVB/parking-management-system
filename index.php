@@ -57,13 +57,13 @@
     <!-- Parking Spaces Section -->
     <section id="parking-spaces" class="content-section">
         <!-- Parking Spaces -->
-        <div id="parking-spaces" class="content-section">
+        <div class="parking-spaces-content">
             <div class="page-header">
                 <h3><i class="fas fa-car-alt"></i> Parking Spaces Management</h3>
             </div>
 
             <!-- Search and Filter Bar -->
-            <div class="filter-bar" style="display: flex; gap: 15px; margin-bottom: 20px; align-items: center; flex-wrap: wrap;">
+            <div class="filter-bar" >
                 <!-- Search Input -->
                 <div class="search-container" style="flex: 1; min-width: 250px;">
                     <input type="text" id="space-search" placeholder="Search parking spaces..." 
@@ -92,10 +92,6 @@
                     </select>
                 </div>
                 
-                <!-- Count Display -->
-                <div class="count-display">
-                    <span id="spaces-count" style="color: #666; font-size: 14px;">Loading...</span>
-                </div>
             </div>
 
             <div class="parking-container">
