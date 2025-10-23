@@ -1,6 +1,4 @@
-/* ===============================
-   GLOBAL LAYOUT
-   =============================== */
+/* === GLOBAL LAYOUT === */
 .content-section {
     padding: 50px;
     background: rgba(53, 64, 142, 0.75); 
@@ -26,9 +24,7 @@
     margin-left: 10px;
 }
 
-/* ===============================
-   FILTER BAR
-   =============================== */
+/* === FILTER BAR === */
 .filter-bar {
     display: flex;
     gap: 15px;
@@ -72,24 +68,22 @@
     font-size: 14px;
 }
 
-/* ===============================
-   PARKING CARDS GRID
-   =============================== */
+/* === PARKING CARDS GRID === */
 .parking-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 20px;
-    justify-content: start;   /* align grid items to the left */
-    align-items: stretch;     /* make all cards equal height */
+    justify-content: start;
+    align-items: stretch;
 }
 
 
-/* Parking card base */
+/* === PARKING CARD BASE === */
 .parking-card {
     position: relative;
-    max-width: 100%;             /* fill entire grid cell horizontally */    
-    aspect-ratio: 1 / 1;     /* perfect square */
-    background-size: cover;  /* image covers fully */
+    max-width: 100%;
+    aspect-ratio: 1 / 1;
+    background-size: cover; 
     background-position: center;
     border-radius: 8px;
     overflow: hidden;

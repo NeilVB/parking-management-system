@@ -1,7 +1,4 @@
-/* =======================================
-   QR Scanner Modal Styles
-======================================= */
-
+/* === QR Scanner Modal Styles === */
 .modal-overlay {
     display: none;
     position: fixed;
@@ -69,7 +66,7 @@
     color: #333;
 }
 
-/* QR Video Container */
+/* === QR VIDEO CONTAINER === */
 #qr-video-container {
     width: 100%;
     min-height: 300px;
@@ -85,7 +82,7 @@
     display: block;
 }
 
-/* Scan Controls */
+/* === SCAN CONTROLS === */
 .scan-controls {
     display: flex;
     justify-content: center;
@@ -134,7 +131,7 @@
     cursor: not-allowed;
 }
 
-/* Scan Result */
+/* === SCAN RESULT === */
 #scan-result {
     background: #f8f9fa;
     padding: 15px;
@@ -148,9 +145,7 @@
     color: #333;
 }
 
-/* =======================================
-   Vehicle Info & Parking Selection Modal
-======================================= */
+/* === VEHICLE INFO & PARKING SELECTION MODAL === */
 
 .vehicle-info-section {
     background: #f8f9fa;
@@ -180,7 +175,7 @@
     font-weight: 600;
 }
 
-/* Filter Bar */
+/* === FILTER BAR === */
 .filter-bar {
     background: #f8f9fa;
     padding: 15px;
