@@ -1,7 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // ========================================
-    // PARKING SPACES FILTER
-    // ========================================
+    // Parking space filter
     const searchInput = document.getElementById("space-search");
     const typeFilter = document.getElementById("type-filter");
     const vehicleFilter = document.getElementById("vehicle-filter");
@@ -79,9 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Run once after everything is rendered
     setTimeout(filterParkingSpaces, 300);
 
-    // ========================================
-    // DISTRIBUTION FILTER (AJAX)
-    // ========================================
+    // Distribution filter (ajax)
     const distributionTypeFilter = document.getElementById("distribution-type-filter");
     const distributionVehicleFilter = document.getElementById("distribution-vehicle-filter");
 

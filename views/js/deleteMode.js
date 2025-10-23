@@ -1,7 +1,4 @@
-/* ===========================
-   deleteMode.js - Delete Mode with Warning Integration
-============================ */
-
+/* deleteMode.js - Delete Mode with Warning Integration */
 let deleteModeActive = false;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -43,9 +40,7 @@ function disableDeleteMode() {
     });
 }
 
-/**
- * Handle delete click - checks for parked vehicles first
- */
+/* Handle delete click - checks for parked vehicles first */
 async function handleDeleteClick(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -86,9 +81,7 @@ async function handleDeleteClick(e) {
     }
 }
 
-/**
- * Open delete confirmation modal
- */
+/* Open delete confirmation modal */
 function openDeleteConfirmationModal(parkingId, parkingName, cardElement) {
     const deleteModal = document.getElementById('delete-space-modal');
     const deleteSpaceIdInput = document.getElementById('delete-space-id');
@@ -115,9 +108,7 @@ function openDeleteConfirmationModal(parkingId, parkingName, cardElement) {
     console.log('✅ Delete modal opened');
 }
 
-/**
- * Perform the actual delete operation
- */
+/* Perform the actual delete operation */
 function performDelete(parkingId, cardElement) {
     const formData = new FormData();
     formData.append("action", "delete");
@@ -146,9 +137,7 @@ function performDelete(parkingId, cardElement) {
     });
 }
 
-/**
- * Global function to handle final delete confirmation from the delete modal
- */
+/* Global function to handle final delete confirmation from the delete modal */
 window.confirmDeleteFromModal = function() {
     const deleteModal = document.getElementById('delete-space-modal');
     const parkingId = document.getElementById('delete-space-id').value;

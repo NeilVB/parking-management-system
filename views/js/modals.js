@@ -1,7 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    /* ===========================
-    views/js/modals.js
-    ============================ */
+    /* === views/js/modals.js === */
     window.openFeedbackModal = function (title, message, type = "success", context = "register") {
         const modal = document.getElementById("feedback-modal");
         const modalContent = modal?.querySelector(".modal-content");
@@ -44,9 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    /* ===========================
-       ADD SPACE MODAL
-    ============================ */
+    /* === ADD SPACE MODAL === */
     const addSpaceBtn = document.getElementById("add-space-btn");
     const addModal = document.getElementById("add-space-modal");
     const addCloseBtns = addModal ? addModal.querySelectorAll(".close-btn, .close-modal") : [];
@@ -126,9 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .forEach(input => input.addEventListener("input", () => updateTotals("add")));
     }
 
-    /* ===========================
-       EDIT SPACE MODAL
-    ============================ */
+    /* === EDIT SPACE MODAL === */
     const editModal = document.getElementById("edit-space-modal");
     const editCloseBtns = editModal ? editModal.querySelectorAll(".close-btn, .close-modal") : [];
     const editSupportsCar = document.getElementById("edit-supports-car");
@@ -191,7 +185,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const id = button.dataset.id;
                 const name = button.dataset.name;
 
-                // 🆕 Check for parked vehicles first
+                // Check for parked vehicles first
                 try {
                     const checkResponse = await fetch(`../ajax/check_parking_space.php?space_id=${id}`);
                     const checkData = await checkResponse.json();
@@ -216,7 +210,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
-        // 🆕 Extracted function to open edit modal content
+        // Extracted function to open edit modal content
         async function openEditModalContent(id, button) {
             editModal.style.display = "flex";
 
@@ -261,9 +255,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    /* ===========================
-    DELETE CONFIRMATION MODAL
-    ============================ */
+    /* === DELETE CONFIRMATION MODAL === */
     const deleteModal = document.getElementById('delete-space-modal');
     const deleteSpaceIdInput = document.getElementById('delete-space-id');
     const deleteSpaceNameSpan = document.getElementById('delete-space-name');
@@ -401,9 +393,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    /* ===========================
-       Totals helper (shared)
-    ============================ */
+    /* === Totals helper (shared) === */
     function updateTotals(prefix) {
         let carTotal = 0;
         document.querySelectorAll(`#${prefix}-car-allocations .allocation-input`).forEach(input => {
@@ -419,7 +409,5 @@ document.addEventListener("DOMContentLoaded", () => {
         const motoTotalEl = document.getElementById(`${prefix}-motorcycle-total`);
         if (motoTotalEl) motoTotalEl.textContent = motoTotal;
     }
-    
-
     
 });

@@ -1,7 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    /* ===========================
-    init.js
-    ============================ */
+    /* === init.js === */
     console.log("Admin Dashboard initialized successfully");
 
     // Shared global state
@@ -18,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Initialize delete button as hidden
     const deleteSpaceBtn = document.getElementById("delete-space-btn");
     if (deleteSpaceBtn) {
-        deleteSpaceBtn.style.display = "none"; // ✅ Only if not in editMode
+        deleteSpaceBtn.style.display = "none";
     }
 
     function updateDashboardStats() {

@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // 🚗 VEHICLE MANAGEMENT
+    // === VEHICLE MANAGEMENT ===
 
     // Handle Vehicle Form Submit
     vehicleForm.addEventListener('submit', async (e) => {

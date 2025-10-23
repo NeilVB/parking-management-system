@@ -1,7 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    /* ===========================
-    views/js/helpers.js
-    ============================ */
+    /* === views/js/helpers.js === */
 
     /**
      * Safely fetch JSON from a given URL with error handling.
@@ -28,8 +26,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    /**
-     * Global endpoint for parking manager actions
-     */
+    /* Global endpoint for parking manager actions */
     window.endpoint = "/parking-management-system/controller/parking_manager.php";
 });

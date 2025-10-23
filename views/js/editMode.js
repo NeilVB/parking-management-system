@@ -1,7 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    /* ===========================
-    editMode.js
-    ============================ */
+    /* === editMode.js === */
 
     const editModeBtn = document.getElementById("edit-mode-btn");
     const editButtons = document.querySelectorAll(".edit-btn");
@@ -10,9 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Initialize global editMode state
     window.editMode = false;
 
-    /**
-     * Toggle edit mode UI and button states
-     */
+    /* Toggle edit mode UI and button states */
     function toggleEditMode() {
         window.editMode = !window.editMode;
 

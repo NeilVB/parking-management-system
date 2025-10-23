@@ -1,14 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
-    /* ===========================
-       views/js/forms.js (Updated)
-    ============================ */
+    /* === views/js/forms.js (Updated) === */
     const endpoint = "../controller/parking_manager.php";
     const addForm = document.getElementById("add-space-form");
     const editForm = document.getElementById("edit-space-form");
 
-    /**
-     * Collect allocation data from form inputs
-     */
+    /* Collect allocation data from form inputs */
     function collectAllocations(prefix) {
         const allocations = [];
         const userTypeMap = { 'general': 1, 'faculty': 2, 'executive': 3, 'guest': 4 };
@@ -98,9 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (motoTotalEl) motoTotalEl.textContent = motoTotal;
     }
 
-    /**
-     * Handle Add Form Submission
-     */
+    /* Handle Add Form Submission */
     if (addForm) {
         addForm.addEventListener("submit", async e => {
             e.preventDefault();
@@ -146,9 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .forEach(input => input.addEventListener('input', () => updateTotals('add')));
     }
 
-    /**
-     * Handle Edit Form Submission
-     */
+    /* Handle Edit Form Submission */
     if (editForm) {
         editForm.addEventListener("submit", async e => {
             e.preventDefault();

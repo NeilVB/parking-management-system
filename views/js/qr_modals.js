@@ -2,9 +2,7 @@
  * qr_modals.js - Modal UI Management Only
  */
 
-/* ===========================
-    SCAN MODAL UI CONTROLS
-    =========================== */
+/* === SCAN MODAL UI CONTROLS === */
 const scanModal = document.getElementById("scan-vehicle-modal");
 const startScanBtn = document.getElementById("start-scan-btn");
 const stopScanBtn = document.getElementById("stop-scan-btn");
@@ -69,9 +67,7 @@ if (scanModal && startScanBtn && stopScanBtn) {
     });
 }
 
-/* ===========================
-    EXIT MODAL UI CONTROLS
-    =========================== */
+/* ===  EXIT MODAL UI CONTROLS === */
 const exitModal = document.getElementById("exit-vehicle-modal");
 const exitSuccessModal = document.getElementById("exit-success-modal");
 
@@ -91,9 +87,7 @@ window.closeExitSuccessModal = function() {
     }
 };
 
-/* ===========================
-    VEHICLE INFO MODAL UI CONTROLS
-    =========================== */
+/* === VEHICLE INFO MODAL UI CONTROLS === */
 // Close vehicle info modal function
 window.closeVehicleInfoModal = function() {
     const vehicleInfoModal = document.getElementById('vehicleInfoModal');
@@ -125,9 +119,7 @@ window.closeVehicleInfoModal = function() {
     }
 };
 
-/* ===========================
-    ASSIGNMENT MODAL UI CONTROLS
-    =========================== */
+/* === ASSIGNMENT MODAL UI CONTROLS === */
 // Show assignment success modal
 window.showAssignmentSuccessModal = function(data) {
     const modal = document.getElementById('assignment-success-modal');
@@ -178,9 +170,7 @@ window.showAssignmentErrorModal = function(errorMessage) {
     setupModalCloseHandlers(modal, false);
 };
 
-/* ===========================
-    EXIT SUCCESS MODAL UI
-    =========================== */
+/* === EXIT SUCCESS MODAL UI === */
 window.showExitSuccessModal = function(data) {
     const modal = document.getElementById('exit-success-modal');
     if (!modal) {
@@ -208,9 +198,7 @@ window.showExitSuccessModal = function(data) {
     setupModalCloseHandlers(modal, false);
 };
 
-/* ===========================
-    HELPER FUNCTIONS
-    =========================== */
+/* === HELPER FUNCTIONS === */
 function setupModalCloseHandlers(modal, autoRefresh = false) {
     const closeBtns = modal.querySelectorAll('.close-btn, .close-modal');
     

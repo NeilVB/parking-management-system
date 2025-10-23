@@ -1,5 +1,4 @@
 // exit_modal_handler.js - Handle Exit Confirmation and Success Modals
-
 document.addEventListener('DOMContentLoaded', function() {
     console.log('[EXIT] Exit modal handler initialized');
 

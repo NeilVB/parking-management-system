@@ -23,18 +23,14 @@ document.addEventListener("DOMContentLoaded", () => {
     let videoElem = null;
     let currentVehicleData = null;
 
-    // ============================
-    // INITIALIZATION
-    // ============================
+    // === INITIALIZATION ===
 
     initializeScanButton();
     initializeExitModalHandlers();
     initializeParkingSpaceSelection();
     setupCleanupHandlers();
 
-    // ============================
-    // SCAN BUTTON INITIALIZATION
-    // ============================
+    // === SCAN BUTTON INITIALIZATION ===
 
     function initializeScanButton() {
         const openScanBtn = document.getElementById("open-scan-modal-btn");
@@ -55,9 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // ============================
-    // CLEANUP HANDLERS
-    // ============================
+    // === CLEANUP HANDLERS ===
 
     function setupCleanupHandlers() {
         // Cleanup on page visibility change
@@ -71,9 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
         window.addEventListener("beforeunload", stopQrScanner);
     }
 
-    // ============================
-    // QR SCANNER CORE
-    // ============================
+    // === QR SCANNER CORE ===
 
     function createVideoElement() {
         const oldVideo = document.getElementById("qr-video");
@@ -167,9 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.startQrScanner = startQrScanner;
     window.stopQrScanner = stopQrScanner;
 
-    // ============================
-    // QR CODE PROCESSING
-    // ============================
+    // === QR CODE PROCESSING ===
 
     async function handleQrCodeDetected(result) {
         if (isProcessing) {
@@ -251,9 +241,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // ============================
-    // VEHICLE EXIT FLOW
-    // ============================
+    // === VEHICLE EXIT FLOW ===
 
     async function handleVehicleExit(vehicle) {
         try {
@@ -417,9 +405,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // ============================
-    // VEHICLE ENTRY FLOW
-    // ============================
+    // === VEHICLE ENTRY FLOW ===
 
     function handleVehicleEntry(vehicle) {
         // Populate vehicle information
@@ -429,7 +415,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("v-type").textContent = vehicle.vehicle_type || "N/A";
         document.getElementById("v-status").textContent = vehicle.status || "N/A";
 
-        // Show vehicle info modal (Bootstrap or vanilla)
+        // Show vehicle info modal
         if (typeof bootstrap !== 'undefined') {
             const modal = new bootstrap.Modal(elements.vehicleInfoModal);
             modal.show();
@@ -463,9 +449,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // ============================
-    // PARKING SPACE FILTERS
-    // ============================
+    // === PARKING SPACE FILTERS ===
 
     function initializeParkingFilters() {
         const searchInput = document.getElementById('modal-space-search');
@@ -515,9 +499,7 @@ document.addEventListener("DOMContentLoaded", () => {
         filterSpaces();
     }
 
-    // ============================
-    // PARKING SPACE SELECTION
-    // ============================
+    // === PARKING SPACE SELECTION ===
 
     function initializeParkingSpaceSelection() {
         document.addEventListener('click', (e) => {
@@ -556,9 +538,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // ============================
-    // PARKING ASSIGNMENT
-    // ============================
+    // === PARKING ASSIGNMENT ===
 
     async function assignVehicleToParking(parkingId, parkingName, vehicleData) {
         console.log('[Scanner] Starting assignment:', { parkingId, parkingName, vehicleData });
@@ -651,18 +631,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // ============================
-    // UTILITY FUNCTIONS
-    // ============================
+    // === UTILITY FUNCTIONS ===
 
     function showError(message) {
         elements.resultText.textContent = `❌ ${message}`;
         elements.resultContainer.style.display = "block";
     }
 
-    // ============================
-    // INITIALIZATION COMPLETE
-    // ============================
+    // === INITIALIZATION COMPLETE ===
 
     console.log("[Scanner] QR Scanner module initialized successfully");
 });

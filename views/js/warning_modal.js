@@ -1,7 +1,4 @@
-/* ===========================
-   warning_modal.js - Warning Modal Handler for Parked Vehicles
-============================ */
-
+/* === warning_modal.js - Warning Modal Handler for Parked Vehicles === */
 let warningCallback = null;
 
 /**
@@ -76,9 +73,7 @@ function showWarningModal(action, spaceId, spaceName, parkedData) {
     modal.style.display = 'block';
 }
 
-/**
- * Close warning modal
- */
+/* Close warning modal */
 function closeWarningModal() {
     const modal = document.getElementById('warningModal');
     if (modal) {
