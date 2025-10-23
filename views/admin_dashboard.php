@@ -87,9 +87,6 @@ $distribution = $model->getSlotDistribution();
                         <a href="#" data-target="monitoring"><i class="fas fa-desktop"></i><span>Monitoring &
                                 Reports</span></a>
                     </li>
-                    <li class="nav-item">
-                        <a href="#" data-target="settings"><i class="fas fa-cog"></i><span>System Settings</span></a>
-                    </li>
 
                     <!-- qr scanner button -->
                     <li class="nav-item">
@@ -197,7 +194,7 @@ $distribution = $model->getSlotDistribution();
                         <div class="header-actions">
                             <button class="btn btn-primary" id="edit-mode-btn"><i class="fas fa-edit"></i> Edit
                                 Mode</button>
-                            <button class="btn delete-mode-btn" class="mode-toggle-btn" id="delete-mode-btn">Delete Mode</button>
+                            <button class="btn delete-mode-btn" class="mode-toggle-btn">Delete Mode</button>
                             <button class="btn btn-success" id="add-space-btn"><i class="fas fa-plus"></i> Add New
                                 Space</button>
                         </div>
@@ -519,12 +516,6 @@ $distribution = $model->getSlotDistribution();
                             </p>
                         <?php endif; ?>
                     </div>
-                </div>
-
-                <!-- Settings -->
-                <div id="settings" class="content-section">
-                    <h3><i class="fas fa-cog"></i> System Settings</h3>
-                    <p class="placeholder-text">System configuration interface.</p>
                 </div>
 
             </main>
