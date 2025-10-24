@@ -18,14 +18,16 @@
 </head>
 <body>
 	<div class="login-container">
-		<header class="header">
-			<div class="header-logo">
-                <h2><img src="../assets/NULogo.png" alt="NUSpace_Logo" class="nu-logo"> NUSpace</h2>
-			</div>
-			<div class="user-profile">
-				<i class="fas fa-bell"></i>
-			</div>
-		</header>
+
+        <header class="header">
+            <div class="header-logo">
+                <a href="../index.php" class="logo-link">
+                    <img src="../assets/NULogo.png" alt="NU Logo" class="nu-logo">
+                    <span class="site-title">NUSpace</span>
+                </a>
+            </div>
+        </header>
+
         <div class="bottom">
             <div class="login-box">
                 <div class="maincontainer text-container">

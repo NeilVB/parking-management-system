@@ -1,18 +1,19 @@
+/* ===== Base Styles ===== */
 body {
     margin: 0;
     font-family: 'Roboto', sans-serif;
-    /* background-color: #3fa2ff; */
     color: #333;
     background: url("assets/NUImage.png") no-repeat center center/cover;
     background-attachment: fixed !important;
-    margin: 0;
 }
 
+/* ===== Header ===== */
 .header {
     display: flex;
     align-items: center;
+    justify-content: space-between; /* Add this to push notification to the right */
     padding: 15px 30px;
-    background: #35408E; /* solid NU blue */
+    background: #35408E; /* NU blue */
     color: #fff;
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     position: sticky;
@@ -20,24 +21,27 @@ body {
     z-index: 1000;
 }
 
-.header-logo {
+.logo-link {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
+    text-decoration: none;
 }
 
 .nu-logo {
-    height: 45px;
+    height: 55px;
     width: auto;
 }
 
 .site-title {
-    font-size: 1.8rem;
+    font-size: 2rem;
     font-weight: 700;
     margin: 0;
-    color: #fff;
+    color: #ffffff;
+    letter-spacing: -0.5px;
 }
 
+/* ===== Hero Section ===== */
 .hero {
     position: relative;
     height: 100vh;
@@ -45,52 +49,113 @@ body {
     align-items: center;
     justify-content: center;
     text-align: center;
-    color: white;
+    color: #fff;
     overflow: hidden;
 }
 
 .hero .overlay {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(53, 64, 142, 0.75); 
-    backdrop-filter: blur(4px);
+    background: rgba(53, 64, 142, 0.85);
+    backdrop-filter: blur(6px);
 }
 
 .hero-content {
     position: relative;
     z-index: 2;
-    max-width: 700px;
+    max-width: 900px;
+    width: 100%;
     padding: 20px;
 }
 
 .hero-content h1 {
     font-size: 3rem;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
+    font-weight: 700;
 }
 
 .hero-content .tagline {
-    font-size: 1.3rem;
-    margin-bottom: 25px;
+    font-size: 1.2rem;
+    margin-bottom: 35px;
     font-weight: 400;
     color: #ffc107;
 }
 
-.features {
-    list-style: none;
-    padding: 0;
-    margin: 20px 0;
-    font-size: 1.1rem;
+/* ===== Availability Container ===== */
+.availability-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
 }
 
-.features li {
-    margin: 10px 0;
+/* Availability Cards */
+.availability-section {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    border-radius: 20px;
+    padding: 25px;
+    text-align: left;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
+}
+
+.availability-section:hover {
+    transform: translateY(-5px);
+}
+
+.availability-section h4 {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
     display: flex;
     align-items: center;
     gap: 10px;
+    font-weight: 600;
+    color: #fff;
 }
 
+.availability-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.availability-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    padding: 10px 15px;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+    color: #fff;
+    transition: background 0.3s ease;
+}
+
+/* ===== Availability Count Colors ===== */
+.availability-count {
+    font-weight: 700;
+    background: #4caf50;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 10px;
+    min-width: 60px;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.availability-list li.low .availability-count {
+    background: #ff9800;
+}
+
+.availability-list li.critical .availability-count {
+    background: #e53935;
+}
+
+/* ===== Buttons ===== */
 .hero-buttons {
-    margin-top: 30px;
+    margin-top: 20px;
     display: flex;
     gap: 20px;
     justify-content: center;
@@ -99,7 +164,7 @@ body {
 .btn {
     padding: 12px 24px;
     font-size: 1rem;
-    border-radius: 6px;
+    border-radius: 8px;
     text-decoration: none;
     font-weight: 600;
     transition: 0.3s ease;
@@ -128,10 +193,26 @@ body {
     color: #000;
 }
 
+/* ===== Footer ===== */
 .footer {
     background-color: #35408E;
     color: white;
     text-align: center;
     padding: 15px;
     font-size: 0.9rem;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 600px) {
+    .hero-content h1 {
+        font-size: 2.2rem;
+    }
+
+    .hero-content .tagline {
+        font-size: 1rem;
+    }
+
+    .availability-container {
+        grid-template-columns: 1fr;
+    }
 }
