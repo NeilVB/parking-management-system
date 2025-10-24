@@ -19,7 +19,7 @@
     <!-- Header -->
     <header class="header">
         <div class="header-logo">
-            <a href="../index.php" class="logo-link">
+            <a href="#" class="logo-link">
                 <img src="assets/NULogo.png" alt="NU Logo" class="nu-logo">
                 <span class="site-title">NUSpace</span>
             </a>
