@@ -191,7 +191,7 @@ body {
     left: 0 !important;
 }
 
-@media screen and (max-width: 425px) {
+@media screen and (max-width: 425px), screen and (width: 768px) and (height: 1024px) {
     .user-profile {
         display: none;
     }

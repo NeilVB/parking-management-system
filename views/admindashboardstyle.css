@@ -500,7 +500,7 @@ body {
 }
 
 /* Mobile */
-@media screen and (max-width: 425px) {
+@media screen and (max-width: 425px), screen and (width: 768px) and (height: 1024px) {
     .parking-card {
         width: 100%;
     }
@@ -746,7 +746,7 @@ body {
     color: var(--active-blue-border);
 }
 
-/* ===== Parking Spaces Search & Filter Bar (Admin) ===== */
+/* === Parking Spaces Search & Filter Bar (Admin) === */
 .Search-Filter-Bar {
     display: flex;
     align-items: stretch;          /* all children same height */
@@ -782,8 +782,8 @@ body {
     border: 1px solid #ccc;
     border-radius: 6px;
     box-sizing: border-box;
-    height: 42px;                 /* match input/select height */
-    padding: 0 8px;               /* equal internal spacing */
+    height: 42px;
+    padding: 0 8px; 
 }
 
 .Search-Filter-Bar input,
@@ -799,7 +799,7 @@ body {
     line-height: 1.4;
 }
 
-@media (max-width: 900px) {
+@media screen and (max-width: 425px), screen and (width: 768px) and (height: 1024px) {
     .Search-Filter-Bar {
         flex-wrap: wrap;
     }
@@ -1109,7 +1109,7 @@ body {
 }
 
 /* Mobile Display */
-@media screen and (max-width: 425px) {
+@media screen and (max-width: 425px), screen and (width: 768px) and (height: 1024px) {
     .dashboard-container {
         flex-direction: column;
         height: 100vh;

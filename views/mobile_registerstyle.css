@@ -1,4 +1,4 @@
-@media screen and (max-width: 425px) {
+@media screen and (max-width: 425px), screen and (width: 768px) and (height: 1024px) {
     .register-box {
         margin-top: 10%;
         width: 80%;
