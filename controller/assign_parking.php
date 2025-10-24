@@ -75,7 +75,7 @@ try {
         throw new Exception('This parking space does not support motorcycles');
     }
 
-    // 4. Get allocated slots for this user type and vehicle type
+    // 4. Get allocated slots for this specific user type and vehicle type
     $stmt = $conn->prepare("
         SELECT allocated_slots
         FROM parking_slot_allocations
@@ -90,23 +90,58 @@ try {
     }
     
     $allocation = $alloc_result->fetch_assoc();
-    $allocated_slots = $allocation['allocated_slots'];
+    $user_allocated_slots = $allocation['allocated_slots'];
     
-    if ($allocated_slots <= 0) {
+    if ($user_allocated_slots <= 0) {
         throw new Exception('No slots allocated for your user type in this parking space');
     }
 
-    // 5. Check if there are available slots
+    // 5. Get TOTAL allocated slots for this vehicle type (all user types combined)
+    $stmt = $conn->prepare("
+        SELECT SUM(allocated_slots) as total_slots
+        FROM parking_slot_allocations
+        WHERE parking_space_id = ? AND vehicle_type_id = ?
+    ");
+    $stmt->bind_param("ii", $parking_space_id, $vehicle_type_id);
+    $stmt->execute();
+    $total_result = $stmt->get_result();
+    $total_data = $total_result->fetch_assoc();
+    $total_allocated_slots = (int)$total_data['total_slots'];
+
+    // 6. Check if there are available slots (compare total parked vs total allocated)
     $current_parked = $vehicle_type_id == 1 ? $space['parked_car_count'] : $space['parked_motorcycle_count'];
     
-    if ($current_parked >= $allocated_slots) {
-        throw new Exception('No available slots for your user type in this parking space');
+    if ($current_parked >= $total_allocated_slots) {
+        throw new Exception('Parking space is full for this vehicle type');
     }
 
-    // 6. Check if vehicle has an active parking log with status 'entered'
+    // 7. Check how many vehicles of this user type are already parked
+    $stmt = $conn->prepare("
+        SELECT COUNT(*) as user_type_parked
+        FROM parking_logs pl
+        JOIN vehicles_table v ON pl.vehicle_id = v.vehicle_id
+        JOIN users_table u ON v.user_id = u.user_id
+        WHERE pl.parking_space_id = ? 
+            AND v.vehicle_type_id = ?
+            AND u.user_type_id = ?
+            AND pl.status = 'Parked'
+            AND pl.time_out IS NULL
+    ");
+    $stmt->bind_param("iii", $parking_space_id, $vehicle_type_id, $user_type_id);
+    $stmt->execute();
+    $user_parked_result = $stmt->get_result();
+    $user_parked_data = $user_parked_result->fetch_assoc();
+    $user_type_parked_count = (int)$user_parked_data['user_type_parked'];
+
+    // Check if this user type has reached its allocation limit
+    if ($user_type_parked_count >= $user_allocated_slots) {
+        throw new Exception('All slots for your user type are occupied in this parking space');
+    }
+
+    // 8. Check if vehicle has an active parking log with status 'Waiting'
     $stmt = $conn->prepare("
         SELECT log_id FROM parking_logs 
-        WHERE vehicle_id = ? AND status = 'entered' 
+        WHERE vehicle_id = ? AND status = 'Waiting' AND time_out IS NULL
         ORDER BY time_in DESC LIMIT 1
     ");
     $stmt->bind_param("i", $vehicle_id);
@@ -118,22 +153,22 @@ try {
         $log = $log_result->fetch_assoc();
         $stmt = $conn->prepare("
             UPDATE parking_logs 
-            SET parking_space_id = ?, status = 'parked' 
+            SET parking_space_id = ?, status = 'Parked' 
             WHERE log_id = ?
         ");
         $stmt->bind_param("ii", $parking_space_id, $log['log_id']);
         $stmt->execute();
     } else {
-        // Create new parking log
+        // Create new parking log with capitalized status
         $stmt = $conn->prepare("
             INSERT INTO parking_logs (vehicle_id, parking_space_id, status, time_in)
-            VALUES (?, ?, 'parked', NOW())
+            VALUES (?, ?, 'Parked', NOW())
         ");
         $stmt->bind_param("ii", $vehicle_id, $parking_space_id);
         $stmt->execute();
     }
 
-    // 7. Update vehicle status and assigned space
+    // 9. Update vehicle status and assigned space
     $stmt = $conn->prepare("
         UPDATE vehicles_table 
         SET status = 'parked', assigned_space = ?
@@ -142,7 +177,7 @@ try {
     $stmt->bind_param("ii", $parking_space_id, $vehicle_id);
     $stmt->execute();
 
-    // 8. Update parking space occupancy count
+    // 10. Update parking space occupancy count
     if ($vehicle_type_id == 1) {
         $stmt = $conn->prepare("
             UPDATE parking_spaces 
