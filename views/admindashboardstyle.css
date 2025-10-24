@@ -478,7 +478,18 @@ body {
     }
 }
 
+.slot-item {
+    margin-bottom: 4%;
+}
+
+.slot-count {
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin-right: 3%;
+}
+
 .slot-name {
+    font-size: 1.3rem;
     color: var(--map-green);
     font-weight: 500;
 }
