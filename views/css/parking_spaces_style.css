@@ -25,6 +25,10 @@ section#parking-spaces.content-section{
     gap: 10px;
 }
 
+section#parking-spaces .parking-spaces-content .page-header {
+    color: #fff;
+}
+
 .header-actions .btn {
     margin-left: 10px;
 }
