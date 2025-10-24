@@ -93,7 +93,6 @@ section#parking-spaces.content-section{
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 5px 6px rgba(0, 0, 0, 0.1);
-    border: 5px solid transparent;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     display: flex;
     flex-direction: column;

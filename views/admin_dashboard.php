@@ -194,7 +194,7 @@ $distribution = $model->getSlotDistribution();
                         <div class="header-actions">
                             <button class="btn btn-primary" id="edit-mode-btn"><i class="fas fa-edit"></i> Edit
                                 Mode</button>
-                            <button class="btn delete-mode-btn" class="mode-toggle-btn">Delete Mode</button>
+                            <button class="btn delete-mode-btn" class="mode-toggle-btn" id="delete-mode-btn">Delete Mode</button>
                             <button class="btn btn-success" id="add-space-btn"><i class="fas fa-plus"></i> Add New
                                 Space</button>
                         </div>
