@@ -19,7 +19,7 @@ section#parking-spaces.content-section{
 
 .page-header h3 {
     font-size: 2rem;
-    color: #fff;
+    color: var(--text-color-dark);
     display: flex;
     align-items: center;
     gap: 10px;
@@ -124,7 +124,7 @@ section#parking-spaces.content-section{
 }
 
 .parking-card h3 {
-    color: #fff;
+    color: var(--text-color-dark);
     font-size: 24px;
     margin-bottom: 4px;
 }
