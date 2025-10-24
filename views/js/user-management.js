@@ -28,10 +28,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Close Modals
-    document.querySelectorAll('.close-modal, .close-btn').forEach(button => {
+    // Close User Modal
+    document.querySelectorAll('#user-modal .close-modal, #user-modal .close-btn').forEach(button => {
         button.addEventListener('click', () => {
             userModal.style.display = 'none';
+        });
+    });
+
+    // Close Vehicle Modal
+    document.querySelectorAll('#vehicle-modal .close-modal, #vehicle-modal .close-btn').forEach(button => {
+        button.addEventListener('click', () => {
             vehicleModal.style.display = 'none';
         });
     });

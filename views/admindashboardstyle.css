@@ -1098,6 +1098,10 @@ body {
     align-items: center;
 }
 
+#vehicle-modal {
+    z-index: 10000;
+}
+
 #user-modal .modal-content {
     background: #fff;
     padding: 20px 30px;
