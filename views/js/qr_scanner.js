@@ -486,7 +486,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             if (spacesCount) {
-                spacesCount.textContent = `Showing ${visibleCount} spaces (${availableCount} available)`;
+                spacesCount.textContent = `${visibleCount} of ${availableCount} spaces`;
             }
         }
 

@@ -59,19 +59,17 @@
                 <!-- Parking Selection Section -->
                 <div class="parking-selection-section">
                     <h6 class="border-bottom pb-2 mb-3"><i class="fas fa-parking"></i> Select Parking Space</h6>
-                    
+                                        
                     <!-- Search and Filter Bar -->
-                    <div class="filter-bar" style="display: flex; gap: 15px; margin-bottom: 20px; align-items: center; flex-wrap: wrap;">
+                    <div class="modal-filter-bar">
                         <!-- Search Input -->
-                        <div class="search-container" style="flex: 1; min-width: 250px;">
-                            <input type="text" id="modal-space-search" placeholder="Search parking spaces..." 
-                                style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;">
+                        <div class="search-container">
+                            <input type="text" id="modal-space-search" placeholder="Search parking spaces..." class="search-input">
                         </div>
                         
                         <!-- Filter Dropdown -->
                         <div class="filter-container">
-                            <select id="modal-type-filter" class="filter-select" 
-                                    style="padding: 10px 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; cursor: pointer; background: white;">
+                            <select id="modal-type-filter" class="filter-select">
                                 <option value="all">All Types</option>
                                 <option value="general">General</option>
                                 <option value="faculty">Faculty</option>
@@ -82,8 +80,7 @@
                         
                         <!-- Vehicle Type Filter -->
                         <div class="filter-container">
-                            <select id="modal-vehicle-filter" class="filter-select" 
-                                    style="padding: 10px 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; cursor: pointer; background: white;">
+                            <select id="modal-vehicle-filter" class="filter-select">
                                 <option value="all">All Vehicles</option>
                                 <option value="car">Car Only</option>
                                 <option value="motorcycle">Motorcycle Only</option>
@@ -92,7 +89,7 @@
                         
                         <!-- Count Display -->
                         <div class="count-display">
-                            <span id="modal-spaces-count" style="color: #666; font-size: 14px;">Loading...</span>
+                            <span id="modal-spaces-count">Loading...</span>
                         </div>
                     </div>
 

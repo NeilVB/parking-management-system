@@ -76,7 +76,7 @@ function generateQrIfMissing($vehicle)
             </div>
             <div class="user-profile">
                 <i class="fas fa-bell"></i>
-                <a href="../views/account.php" class="user-profile-link">
+                <a href="#" class="user-profile-link">
                     <span>Hi, <?= htmlspecialchars($firstname) ?></span>
                     <img src="https://i.pravatar.cc/150" alt="User Avatar" class="avatar">
                 </a>

@@ -85,6 +85,16 @@
         font-weight: 400;
     }
 
+    #user-view .distribution-filter-bar {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+
+    #user-view .distribution-filter-bar .filter-container,
+    #user-view .distribution-filter-bar .filter-select {
+        width: 100% !important;
+    }
+
     .featured-cards {
         flex-direction: row;
         gap: 1rem;

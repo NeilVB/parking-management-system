@@ -140,29 +140,25 @@ $distribution = $model->getSlotDistribution();
                                 <h4><i class="fas fa-list"></i> Parking Areas Distribution</h4>
 
                                 <!-- Filter Dropdowns -->
-                                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                                <div class="distribution-filter-bar">
                                     <!-- User Type Filter -->
-                                    <div class="filter-bar">
-                                        <div class="filter-container">
-                                            <select id="distribution-type-filter" class="filter-select"
-                                                style="padding: 10px 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; cursor: pointer; background: white;">
-                                                <option value="all">All Types</option>
-                                                <option value="general">General</option>
-                                                <option value="faculty">Faculty</option>
-                                                <option value="executive">Executive</option>
-                                                <option value="guest">Guest</option>
-                                            </select>
-                                        </div>
+                                    <div class="filter-container">
+                                        <select id="distribution-type-filter" class="filter-select">
+                                            <option value="all">All Types</option>
+                                            <option value="general">General</option>
+                                            <option value="faculty">Faculty</option>
+                                            <option value="executive">Executive</option>
+                                            <option value="guest">Guest</option>
+                                        </select>
+                                    </div>
 
-                                        <!-- Vehicle Type Filter -->
-                                        <div class="filter-container">
-                                            <select id="distribution-vehicle-filter" class="filter-select"
-                                                style="padding: 10px 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; cursor: pointer; background: white;">
-                                                <option value="all">All Vehicles</option>
-                                                <option value="car">Car</option>
-                                                <option value="motorcycle">Motorcycle</option>
-                                            </select>
-                                        </div>
+                                    <!-- Vehicle Type Filter -->
+                                    <div class="filter-container">
+                                        <select id="distribution-vehicle-filter" class="filter-select">
+                                            <option value="all">All Vehicles</option>
+                                            <option value="car">Car</option>
+                                            <option value="motorcycle">Motorcycle</option>
+                                        </select>
                                     </div>
                                 </div>
 
@@ -180,8 +176,8 @@ $distribution = $model->getSlotDistribution();
                                         <p>No parking areas found.</p>
                                     <?php endif; ?>
                                 </div>
-
                             </div>
+                            
                         </div>
                     </section>
                 </div>
@@ -201,18 +197,15 @@ $distribution = $model->getSlotDistribution();
                     </div>
 
                     <!-- Search and Filter Bar -->
-                    <div class="filter-bar"
-                        style="display: flex; gap: 15px; margin-bottom: 20px; align-items: center; flex-wrap: wrap;">
+                    <div class="Search-Filter-Bar">
                         <!-- Search Input -->
-                        <div class="search-container" style="flex: 1; min-width: 250px;">
-                            <input type="text" id="space-search" placeholder="Search parking spaces..."
-                                style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;">
+                        <div class="search-container">
+                            <input type="text" id="space-search" placeholder="Search parking spaces...">
                         </div>
 
                         <!-- Filter Dropdown -->
                         <div class="filter-container">
-                            <select id="type-filter" class="filter-select"
-                                style="padding: 10px 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; cursor: pointer; background: white;">
+                            <select id="type-filter" class="filter-select">
                                 <option value="all">All Types</option>
                                 <option value="general">General</option>
                                 <option value="faculty">Faculty</option>
@@ -223,17 +216,16 @@ $distribution = $model->getSlotDistribution();
 
                         <!-- Vehicle Type Filter -->
                         <div class="filter-container">
-                            <select id="vehicle-filter" class="filter-select"
-                                style="padding: 10px 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; cursor: pointer; background: white;">
+                            <select id="vehicle-filter" class="filter-select">
                                 <option value="all">All Vehicles</option>
                                 <option value="car">Car</option>
-                                <option value="motorcycle">Motorcycle Only</option>
+                                <option value="motorcycle">Motorcycle</option>
                             </select>
                         </div>
 
                         <!-- Count Display -->
                         <div class="count-display">
-                            <span id="spaces-count" style="color: #666; font-size: 14px;">Loading...</span>
+                            <span id="spaces-count">Loading...</span>
                         </div>
                     </div>
 

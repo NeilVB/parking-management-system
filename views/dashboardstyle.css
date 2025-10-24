@@ -358,72 +358,36 @@ body {
     width: 7rem;
 }
 
-.filter-bar {
-    background: #f8f9fa;
-    padding: 15px;
-    border-radius: 8px;
-    border: 1px solid #e9ecef;
-    margin-bottom: 20px;
-}
-
-.search-container input {
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.search-container input:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-}
-
-.parking-slots-list .filter-bar {
-    background: transparent;
-    box-shadow: none;
-    padding: 0%;
-    border-radius: none;
-    border: none;
-    margin-bottom: 0%;
-    width: 100%;
-}
-
-.filter-container {
+/* === Parking Areas Distribution Filter Bar === */
+.distribution-filter-bar {
     display: flex;
-    flex-direction: row;
-    gap: 15px;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
 }
 
-.filter-container .filter-select {
-    background: transparent !important;
-    transition: all 0.3s ease;
+.distribution-filter-bar .filter-container {
+    flex: 0 0 auto;
+}
+
+.distribution-filter-bar .filter-select {
     min-width: 150px;
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e") !important;
-    background-repeat: no-repeat !important;
-    background-position: right 10px center !important;
-    background-size: 16px !important;
+    padding: 10px 15px;
     border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 10px 15px;
-    padding-right: 35px;
+    border-radius: 6px;
+    font-size: 14px;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.filter-container .filter-select:hover {
-    border-color: #007bff;
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
-}
-
-.filter-container .filter-select:focus {
+.distribution-filter-bar .filter-select:hover,
+.distribution-filter-bar .filter-select:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-}
-
-.count-display {
-    background: white;
-    padding: 10px 15px;
-    border: 1px solid #e9ecef;
-    border-radius: 5px;
-    font-weight: 500;
 }
 
 .slot-item {
@@ -440,6 +404,60 @@ body {
     font-size: 1.3rem;
     color: var(--map-green);
     font-weight: 500;
+}
+
+/* ===== SEARCH & FILTER (Parking Spaces Section) ===== */
+.Search-Filter-Bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    margin: 15px 0;
+}
+
+.Search-Filter-Bar .search-container {
+    width: 50%;
+}
+
+.Search-Filter-Bar #space-search {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.Search-Filter-Bar .filter-container {
+    width: 20%;
+}
+
+.Search-Filter-Bar .filter-select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #fff;
+}
+
+.Search-Filter-Bar .count-display {
+    width: 10%;
+    text-align: center;
+    font-weight: 600;
+    color: #333;
+}
+
+@media (max-width: 900px) {
+    .Search-Filter-Bar {
+        flex-wrap: wrap;
+    }
+
+    .Search-Filter-Bar .search-container,
+    .Search-Filter-Bar .filter-container,
+    .Search-Filter-Bar .count-display {
+        width: 100%;
+    }
 }
 
 /* Parking Card Base Styles */
@@ -459,6 +477,7 @@ body {
     background-repeat: no-repeat;
 }
 
+/* Adjust This to change the opacity of parking cards */
 .parking-card::before {
     content: '';
     position: absolute;
@@ -466,7 +485,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.3) 100%);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.1) 100%);
     z-index: 1;
     border-radius: 8px;
 }
@@ -478,8 +497,12 @@ body {
 }
 
 .parking-card h3 {
+    color: white;
     font-size: 1.2rem;
     margin-bottom: 15px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    padding: 3px;
 }
 
 /* Side by Side Allocations Grid */
@@ -491,7 +514,7 @@ body {
 }
 
 .alloc-column {
-    background: rgba(255, 255, 255, 0.1);
+    /* background: rgba(255, 255, 255, 0.1); */
     padding: 10px;
     border-radius: 6px;
 }

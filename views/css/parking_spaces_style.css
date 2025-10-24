@@ -29,50 +29,6 @@ section#parking-spaces.content-section{
     margin-left: 10px;
 }
 
-/* === FILTER BAR === */
-.filter-bar {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 20px;
-    align-items: center;
-    flex-wrap: wrap;
-    padding: 15px;
-    border-radius: 10px;
-    background-color: #ffff;
-}
-
-.search-container {
-    flex: 1 1 250px;
-    min-width: 0;
-    max-width: 100%;
-    /* border: 1px solid red; */
-}
-
-.search-container input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 14px;
-    /* border: 1px solid red; */
-    box-sizing: border-box; 
-    min-width: 0;  
-}
-
-.filter-select {
-    padding: 10px 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 14px;
-    cursor: pointer;
-    background: white;
-}
-
-.count-display {
-    color: #666;
-    font-size: 14px;
-}
-
 /* === PARKING CARDS GRID === */
 .parking-container {
     display: grid;
